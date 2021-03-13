@@ -8,19 +8,32 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * 회원정보 등록 DTO
+ */
 @Getter
 @Builder
 @AllArgsConstructor
 public class UserRegistrationData {
+
+    /**
+     * 등록할 회원의 Email
+     */
     @NotBlank
     @Size(min = 3)
     @Mapping("email")
     private String email;
 
+    /**
+     * 등록할 회원의 이름
+     */
     @NotBlank
     @Mapping("name")
     private String name;
 
+    /**
+     * 등록할 회원의 비밀번호
+     */
     @NotBlank
     @Size(min = 4, max = 1024)
     @Mapping("password")

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * User의 CRUD에 대한 HTTP 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,6 +25,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 새로운 User를 생성합니다.
+     *
+     * @param registrationData 새로 등록하려는 User 정보
+     * @return 등록된 User 정보
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -29,6 +38,15 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * User 인증을 확인하고, User의 정보를 수정합니다.
+     *
+     * @param id 수정할 User의 식별자
+     * @param modificationData 수정하려는 User 정보
+     * @param authentication 수정하려는 User의 인증 토큰
+     * @return 수정된 User 정보
+     * @throws AccessDeniedException 본인이 아닐 경우 AccessDeniedException을 던집니다.
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -41,6 +59,11 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * User를 삭제(비활성화)합니다.
+     *
+     * @param id 삭제하려는 User의 식별자
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
