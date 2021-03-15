@@ -37,7 +37,7 @@ public class ProductService {
 
     /**
      * Product를 반환한다.
-     * @param id Product의 신원을 확인하는 변수
+     * @param id Product의 신원을 확인
      * @return id에 따른 Product
      */
     public Product getProduct(Long id) {
@@ -46,8 +46,8 @@ public class ProductService {
 
     /**
      * Product를 생성한다.
-     * @param productData
-     * @return
+     * @param productData 생성할 Product
+     * @return 생성된 Product
      */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
@@ -56,9 +56,9 @@ public class ProductService {
 
     /**
      * Product를 수정한다.
-     * @param id Product의 신원을 확인하는 변수
-     * @param productData 수정하고 싶은 Product 데이터
-     * @return 변경된 Product를 반환한다.
+     * @param id Product의 신원을 확인
+     * @param productData 변경할 Product
+     * @return 변경된 Product
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -70,8 +70,8 @@ public class ProductService {
 
     /**
      * Product를 삭제한다.
-     * @param id Product의 신원을 확인하는 변수
-     * @return 삭제한 Product를 반환한다.
+     * @param id Product의 신원을 확인
+     * @return 삭제된 Product
      */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
@@ -83,9 +83,9 @@ public class ProductService {
 
     /**
      * Product가 존재하면 반환하고 없으면 Exception이 발생한다.
-     * @param id
+     * @param id Product의 신원을 확인
      * @return 주어진 id에 따른 Product
-     * @throws ProductNotFoundException 주어진 id에 따른 Product가 존재하지 않을때 발생한다.
+     * @throws ProductNotFoundException 주어진 id에 따른 Product가 존재하지 않을때 발생
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
