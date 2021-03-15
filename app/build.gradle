@@ -13,6 +13,9 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    // Asciidoctor
+    id 'org.asciidoctor.convert' version '2.4.0'
 }
 
 sourceCompatibility = '1.8'
@@ -78,6 +81,17 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Spring REST Docs
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+javadoc {
+    options.addStringOption("locale","ko_KR");
+    options.addStringOption("encoding","UTF-8");
+    options.addStringOption("charset","UTF-8");
+    options.addStringOption("docencoding","UTF-8");
 }
 
 application {
@@ -88,4 +102,8 @@ application {
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+}
+
+asciidoctor {
+    dependsOn(test)
 }
