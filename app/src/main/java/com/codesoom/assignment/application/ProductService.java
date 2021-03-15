@@ -68,7 +68,11 @@ public class ProductService {
         return product;
     }
 
-
+    /**
+     * Product를 삭제한다.
+     * @param id id Product의 신원을 확인하는 변수
+     * @return 삭제한 Product를 반환한다.
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
