@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * 상품과 관련된 비즈니스 로직을 담당합니다. 이 클래스를 사용하는 사용자는
+ * 상품을 생성(Create), 읽기(Read), 갱신(Update), 삭제(Delete) 할 수 있습니다.
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -24,20 +28,45 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * 모든 상품을 리턴합니다.
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
-    public Product getProduct(Long id) {
+    /**
+     * 주어진 id에 해당하는 상품을 리턴합니다.
+     *
+     * @param id 상품의 식별자
+     * @return 주어진 id에 해당하는 상품
+     * @throws ProductNotFoundException 상품을 찾을 수 없는 경우
+     */
+    public Product getProduct(Long id) throws ProductNotFoundException {
         return findProduct(id);
     }
 
+    /**
+     * 주어진 상품 정보로 상품을 생성한 뒤, 생성된 상품을 리턴합니다.
+     *
+     * @param productData 상품 정보
+     * @return 생성된 상품
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Long id, ProductData productData) {
+    /**
+     * 주어진 id에 해당하는 상품을 주어진 상품 정보로 수정한 뒤, 수정된 상품을 리턴합니다.
+     *
+     * @param id 상품의 식별자
+     * @param productData 상품 정보
+     * @return 수정된 상품
+     * @throws ProductNotFoundException 상품을 찾을 수 없는 경우
+     */
+    public Product updateProduct(Long id, ProductData productData)
+            throws ProductNotFoundException {
         Product product = findProduct(id);
 
         product.changeWith(mapper.map(productData, Product.class));
@@ -45,7 +74,14 @@ public class ProductService {
         return product;
     }
 
-    public Product deleteProduct(Long id) {
+    /**
+     * 주어진 id에 해당하는 상품을 삭제합니다.
+     *
+     * @param id 상품의 식별자
+     * @return 삭제된 상품
+     * @throws ProductNotFoundException 상품을 찾을 수 없는 경우
+     */
+    public Product deleteProduct(Long id) throws ProductNotFoundException {
         Product product = findProduct(id);
 
         productRepository.delete(product);
@@ -53,7 +89,7 @@ public class ProductService {
         return product;
     }
 
-    private Product findProduct(Long id) {
+    private Product findProduct(Long id) throws ProductNotFoundException {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
