@@ -44,6 +44,11 @@ public class ProductService {
         return findProduct(id);
     }
 
+    /**
+     * Product를 생성한다.
+     * @param productData
+     * @return
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
