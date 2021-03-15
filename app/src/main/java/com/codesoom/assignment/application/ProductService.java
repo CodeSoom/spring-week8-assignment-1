@@ -34,7 +34,12 @@ public class ProductService {
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
-    
+
+    /**
+     * Product를 반환한다.
+     * @param id Product의 신원을 확인하는 변수
+     * @return id에 따른 Product
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
