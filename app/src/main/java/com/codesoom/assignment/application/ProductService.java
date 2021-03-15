@@ -26,11 +26,15 @@ public class ProductService {
         this.mapper = dozerMapper;
         this.productRepository = productRepository;
     }
-    
+
+    /**
+     * 모든 Product를 반환한다.
+     * @return 모든 Product
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
-
+    
     public Product getProduct(Long id) {
         return findProduct(id);
     }
