@@ -82,9 +82,10 @@ public class ProductService {
     }
 
     /**
-     *
+     * Product가 존재하면 반환하고 없으면 Exception이 발생한다.
      * @param id
-     * @return
+     * @return 주어진 id에 따른 Product
+     * @throws ProductNotFoundException 주어진 id에 따른 Product가 존재하지 않을때 발생한다.
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
