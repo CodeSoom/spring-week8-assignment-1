@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Service for products.
+ *
+ * @author newoo (newoo4297@naver.com)
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -44,11 +49,25 @@ public class ProductService {
         return findProduct(id);
     }
 
+    /**
+     * Returns the saved product.
+     *
+     * @param productData is given data to save a product in this application.
+     * @return the saved product.
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
 
+    /**
+     * Returns the modified product with given ID.
+     *
+     * @param id is identifier of the product to modify.
+     * @param productData is given data to modify the product with given ID.
+     * @return the modified product.
+     * @throws ProductNotFoundException in case any product doesn't exist with given ID.
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -57,6 +76,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * Returns the removed product in this application.
+     *
+     * @param id is identifier of the product to remove
+     * @return the removed product.
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
