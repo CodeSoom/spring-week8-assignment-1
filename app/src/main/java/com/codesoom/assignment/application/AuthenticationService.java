@@ -30,6 +30,7 @@ public class AuthenticationService {
     }
 
     public String login(String email, String password) {
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
 

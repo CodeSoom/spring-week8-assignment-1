@@ -41,6 +41,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
     }
 
     private static List<GrantedAuthority> authorities(List<Role> roles) {
+
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
