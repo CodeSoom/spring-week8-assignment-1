@@ -54,6 +54,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    /**
+     * Product를 수정한다.
+     * @param id Product의 신원을 확인하는 변수
+     * @param productData 수정하고 싶은 Product 데이터
+     * @return 변경된 Product를 반환한다.
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -61,6 +67,7 @@ public class ProductService {
 
         return product;
     }
+
 
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
