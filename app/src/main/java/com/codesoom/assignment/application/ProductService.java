@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Product 서비스 클래스
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -23,7 +26,7 @@ public class ProductService {
         this.mapper = dozerMapper;
         this.productRepository = productRepository;
     }
-
+    
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
