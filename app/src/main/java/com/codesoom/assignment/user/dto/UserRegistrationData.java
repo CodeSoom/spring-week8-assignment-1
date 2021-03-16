@@ -1,7 +1,6 @@
 package com.codesoom.assignment.user.dto;
 
 import com.github.dozermapper.core.Mapping;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
