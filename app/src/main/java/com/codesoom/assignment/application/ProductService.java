@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * Service for products.
+ * 상품에 대한 서비스를 담당합니다.
  *
  * @author dper
  */
@@ -30,30 +30,41 @@ public class ProductService {
     }
 
     /**
-     * Returns all products in this application.
-     *
-     * @return all products.
+     * 상품 목록 반환.
      */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
     /**
-     * Returns the product with given ID.
+     * 상품을 찾아 반환.
      *
-     * @param id is the identifier of the product.
-     * @return the product with given ID.
-     * @throws ProductNotFoundException in case any product doesn't exist with the given ID.
+     * @param id 검색 상품 id.
+     * @return 상품.
+     * @throws ProductNotFoundException 상품이 존재하지 않는 경우.
      */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
 
+    /**
+     * 상품을 추가하고 반환.
+     *
+     * @param productData 저장될 상품.
+     * @return 상품.
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
 
+    /**
+     * 상품을 수정하고 반환.
+     *
+     * @param id 수정 상품 id
+     * @param productData 수정될 상품.
+     * @return 상품.
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -62,6 +73,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 상품을 삭제하고 반환.
+     *
+     * @param id 삭제 상품 id.
+     * @return 상품.
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -70,6 +87,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 상품을 찾아 반환.
+     *
+     * @param id 검색 상품 id.
+     * @return 상품.
+     */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));

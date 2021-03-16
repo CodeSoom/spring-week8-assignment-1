@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class JwtUtil {
     }
 
     public Claims decode(String token) {
-        if (token == null || token.isEmpty()) {
+        if (token == null || StringUtils.isBlank(token)) {
             throw new InvalidTokenException(token);
         }
 
