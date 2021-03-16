@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 유저 인증 처리를 제공합니다.
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -29,6 +32,14 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 지급된 로그인 정보로 인증한 Token을 반환합니다.
+     *
+     * @param email    유저 email
+     * @param password 유저 password
+     * @return 인증 Token
+     * @throws LoginFailException 유저 인증에 실패한 경우
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +51,23 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * 지급된 인증 토큰을 복호화한 유저 식별자를 반환합니다.
+     *
+     * @param accessToken 인증 토큰
+     * @return 유저 식별자
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * 지급된 유저 식별자에 부여된 권한 목록을 반환합니다.
+     *
+     * @param userId 유저 식별자
+     * @return 유저 권한 목록
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
