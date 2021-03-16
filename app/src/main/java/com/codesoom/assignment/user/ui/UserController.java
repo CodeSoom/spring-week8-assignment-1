@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * 사용자에 대한 요청을 처리한다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -29,6 +32,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 주어진 사용자를 저장하고, 해당 사용자를 리턴한다.
+     * @param registrationData 사용자 등록 명세서
+     * @return 저장된 사용자
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -36,6 +44,14 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 주어진 식별자에 해당하는 사용자를 수정하고, 해당 사용자를 리턴한다.
+     * @param id 사용자 식별자
+     * @param modificationData 사용자 수정 명세서
+     * @param authentication 사용자 인증 정보
+     * @return 수정된 사용자
+     * @throws AccessDeniedException
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -48,6 +64,10 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 주어진 식별자에 해당하는 사용자를 삭제하고, 삭제된 사용자 정보를 리턴한다.
+     * @param id 사용자 식별자
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {

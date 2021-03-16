@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 사용자 정보를 다룬다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -31,6 +34,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 사용자를 등록하고, 등록된 정보를 리턴한다.
+     * @param registrationData 등록할 사용자 정보
+     * @return 등록된 사용자 정보
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -47,6 +55,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 등록된 사용자 정보를 갱신하고, 생신된 정보를 리턴합니다.
+     * @param userId 등록된 사용자 식별자
+     * @param modificationData 갱신할 사용자 정보
+     * @return 갱신된 사용자 정보
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -61,6 +75,11 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 등록된 사용자를 삭제한다.
+     * @param id 등록된 사용자 식별자
+     * @return 삭제된 사용자 id
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
