@@ -82,7 +82,7 @@ public class ProductService {
 
         return product;
     }
-    
+
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
