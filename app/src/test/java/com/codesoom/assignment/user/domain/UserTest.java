@@ -1,6 +1,5 @@
 package com.codesoom.assignment.user.domain;
 
-import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
