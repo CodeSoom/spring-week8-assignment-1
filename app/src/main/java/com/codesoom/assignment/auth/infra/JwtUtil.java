@@ -1,4 +1,4 @@
-package com.codesoom.assignment.global.utils;
+package com.codesoom.assignment.auth.infra;
 
 import com.codesoom.assignment.auth.application.InvalidTokenException;
 import io.jsonwebtoken.Claims;
