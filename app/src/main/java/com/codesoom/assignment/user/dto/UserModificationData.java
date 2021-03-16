@@ -13,8 +13,6 @@ import javax.validation.constraints.Size;
  * 사용자 수정 명세서.
  */
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserModificationData {
     /**
@@ -31,4 +29,10 @@ public class UserModificationData {
     @Size(min = 4, max = 1024)
     @Mapping("password")
     private String password;
+
+    @Builder
+    public UserModificationData(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
 }

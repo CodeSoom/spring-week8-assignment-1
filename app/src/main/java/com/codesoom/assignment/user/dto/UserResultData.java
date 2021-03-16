@@ -8,8 +8,6 @@ import lombok.Getter;
  * 사용자 응답 정보.
  */
 @Getter
-@Builder
-@AllArgsConstructor
 public class UserResultData {
     /**
      * 사용자 식별자.
@@ -25,4 +23,11 @@ public class UserResultData {
      * 사용자 이름.
      */
     private String name;
+
+    @Builder
+    public UserResultData(Long id, String email, String name) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+    }
 }

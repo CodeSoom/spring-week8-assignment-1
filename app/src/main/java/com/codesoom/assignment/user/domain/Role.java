@@ -1,5 +1,6 @@
 package com.codesoom.assignment.user.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import javax.persistence.Id;
  * 사용자 권한.
  */
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Role {
     /**
      * 권한 식별자.

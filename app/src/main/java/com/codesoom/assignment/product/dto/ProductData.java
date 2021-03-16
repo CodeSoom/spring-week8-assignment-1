@@ -13,11 +13,8 @@ import javax.validation.constraints.NotNull;
 /**
  * 상품 명세서.
  */
-@Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProductData {
     /** 상품 식별자. */
     private Long id;
@@ -40,4 +37,13 @@ public class ProductData {
     /** 상품 이미지. */
     @Mapping("imageUrl")
     private String imageUrl;
+
+    @Builder
+    public ProductData(Long id, String name, String maker, Integer price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.maker = maker;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 }

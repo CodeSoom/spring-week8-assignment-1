@@ -21,11 +21,9 @@ class UserTest {
 
         user.changeWith(User.builder()
                 .name("TEST")
-                .password("TEST")
                 .build());
 
         assertThat(user.getName()).isEqualTo("TEST");
-        assertThat(user.getPassword()).isEqualTo("");
     }
 
     @Test

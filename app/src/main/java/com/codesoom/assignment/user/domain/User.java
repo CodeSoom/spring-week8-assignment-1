@@ -1,6 +1,6 @@
 package com.codesoom.assignment.user.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +15,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     /** 사용자 식별자. */
@@ -26,22 +24,35 @@ public class User {
     private Long id;
 
     /** 사용자 이메일. */
-    @Builder.Default
-    private String email = "";
+    private String email;
 
     /** 사용자 이름. */
-    @Builder.Default
-    private String name = "";
+    private String name;
 
     /** 사용자 비밀번호. */
-    @Builder.Default
-    private String password = "";
+    private String password;
 
     /**
      * 삭제된 사용자라면 true, 아니면 false.
      */
-    @Builder.Default
-    private boolean deleted = false;
+    private boolean deleted;
+
+    @Builder
+    public User(Long id, String email, String name, String password, boolean deleted) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.deleted = deleted;
+    }
+
+    public static User of(String name, String email) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .deleted(false)
+                .build();
+    }
 
     /**
      * 사용자의 정보를 갱신합니다.
