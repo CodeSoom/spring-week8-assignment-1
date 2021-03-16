@@ -13,8 +13,6 @@ import javax.validation.constraints.Size;
  * 사용자 등록 명세서.
  */
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserRegistrationData {
     /**
@@ -39,4 +37,11 @@ public class UserRegistrationData {
     @Size(min = 4, max = 1024)
     @Mapping("password")
     private String password;
+
+    @Builder
+    public UserRegistrationData(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
 }

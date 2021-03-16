@@ -36,6 +36,7 @@ public class UserService {
 
     /**
      * 사용자를 등록하고, 등록된 정보를 리턴한다.
+     *
      * @param registrationData 등록할 사용자 정보
      * @return 등록된 사용자 정보
      */
@@ -45,8 +46,9 @@ public class UserService {
             throw new UserEmailDuplicationException(email);
         }
 
-        User user = userRepository.save(
-                mapper.map(registrationData, User.class));
+        User source = User.of(registrationData.getName(),
+                registrationData.getEmail());
+        final User user = userRepository.save(source);
 
         user.changePassword(registrationData.getPassword(), passwordEncoder);
 
@@ -57,6 +59,7 @@ public class UserService {
 
     /**
      * 등록된 사용자 정보를 갱신하고, 생신된 정보를 리턴합니다.
+     *
      * @param userId 등록된 사용자 식별자
      * @param modificationData 갱신할 사용자 정보
      * @return 갱신된 사용자 정보
@@ -77,6 +80,7 @@ public class UserService {
 
     /**
      * 등록된 사용자를 삭제한다.
+     *
      * @param id 등록된 사용자 식별자
      * @return 삭제된 사용자 id
      */
