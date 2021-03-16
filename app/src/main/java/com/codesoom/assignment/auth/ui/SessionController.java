@@ -2,7 +2,7 @@ package com.codesoom.assignment.auth.ui;
 
 import com.codesoom.assignment.auth.application.AuthenticationService;
 import com.codesoom.assignment.auth.dto.SessionRequestData;
-import com.codesoom.assignment.auth.dto.SessionResponseData;
+import com.codesoom.assignment.auth.dto.TokenResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,11 +26,11 @@ public class SessionController {
      * 로그인 처리를 합니다.
      *
      * @param sessionRequestData 로그인 요청 정보
-     * @return 로그인 응답 정보
+     * @return 토큰 응답
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SessionResponseData login(
+    public TokenResponseData login(
             @RequestBody SessionRequestData sessionRequestData
     ) {
         String email = sessionRequestData.getEmail();
@@ -38,7 +38,7 @@ public class SessionController {
 
         String accessToken = authenticationService.login(email, password);
 
-        return SessionResponseData.builder()
+        return TokenResponseData.builder()
                 .accessToken(accessToken)
                 .build();
     }

@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * 사용자 인증 응답.
+ * 인증 토큰 응답.
  */
 @Getter
 @Builder
 @AllArgsConstructor
-public class SessionResponseData {
+public class TokenResponseData {
     /**
      * 사용자 인증 토큰.
      */
