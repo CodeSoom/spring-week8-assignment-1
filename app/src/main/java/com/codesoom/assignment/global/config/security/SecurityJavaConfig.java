@@ -2,6 +2,7 @@ package com.codesoom.assignment.global.config.security;
 
 import com.codesoom.assignment.auth.application.AuthenticationService;
 import com.codesoom.assignment.global.config.security.filters.AuthenticationErrorFilter;
+import com.codesoom.assignment.global.config.security.filters.CharacterFilter;
 import com.codesoom.assignment.global.config.security.filters.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 import javax.servlet.Filter;
 
@@ -28,8 +30,10 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
         Filter authenticationFilter = new JwtAuthenticationFilter(
                 authenticationManager(), authenticationService);
         Filter authenticationErrorFilter = new AuthenticationErrorFilter();
+        CharacterFilter characterFilter = new CharacterFilter();
 
         http
+                .addFilterBefore(characterFilter.getFilter(), CsrfFilter.class)
                 .csrf().disable()
                 .headers()
                 .frameOptions().disable()
