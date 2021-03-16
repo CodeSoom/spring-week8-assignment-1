@@ -97,6 +97,18 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 asciidoctor {
+    inputs.dir snippetsDir
     dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }
