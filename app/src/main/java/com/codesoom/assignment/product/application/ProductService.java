@@ -69,6 +69,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 등록된 상품을 삭제하고, 삭제된 상품 정보를 리턴한다.
+     *
+     * @param id 등록된 상품 식별자
+     * @return 삭제된 상품 정보
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -76,13 +82,7 @@ public class ProductService {
 
         return product;
     }
-
-    /**
-     * 등록된 상품을 삭제하고, 삭제된 상품 정보를 리턴한다.
-     *
-     * @param id 등록된 상품 식별자
-     * @return 삭제된 상품 정보
-     */
+    
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
