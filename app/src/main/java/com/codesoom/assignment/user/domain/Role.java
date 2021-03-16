@@ -7,15 +7,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 사용자 권한.
+ */
 @Entity
 @NoArgsConstructor
 public class Role {
+    /**
+     * 권한 식별자.
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * 사용자 식별자.
+     */
     private Long userId;
 
+    /**
+     * 권한명.
+     */
     @Getter
     private String name;
 
