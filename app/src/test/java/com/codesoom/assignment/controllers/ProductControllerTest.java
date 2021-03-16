@@ -1,5 +1,6 @@
 package com.codesoom.assignment.controllers;
 
+import com.codesoom.RestDocsConfiguration;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.domain.Product;
@@ -15,10 +16,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,7 +35,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -41,8 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
 @WebMvcTest(ProductController.class)
+@Import(RestDocsConfiguration.class)
+@AutoConfigureRestDocs
 @DisplayName("ProductController 테스트")
 class ProductControllerTest {
     private static final String EXISTED_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -71,8 +78,6 @@ class ProductControllerTest {
     private static final String EXISTED_EMAIL = "existedEmail";
 
     @Autowired
-    private WebApplicationContext context;
-
     private MockMvc mockMvc;
 
     @MockBean
@@ -91,11 +96,6 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-
         setupProductOne = Product.builder()
                 .id(EXISTED_ID)
                 .name(SETUP_PRODUCT_NAME)
@@ -133,6 +133,7 @@ class ProductControllerTest {
                     .andExpect(content().string(StringContains.containsString("\"id\":" + EXISTED_ID)))
                     .andExpect(content().string(StringContains.containsString("\"id\":" + CREATED_ID)))
                     .andExpect(status().isOk());
+                    //.andDo(document("get-products"));
 
             verify(productService).getProducts();
         }
@@ -156,7 +157,11 @@ class ProductControllerTest {
                 )
                         .andDo(print())
                         .andExpect(jsonPath("id").value(givenExistedId))
-                        .andExpect(status().isOk());
+                        .andExpect(status().isOk())
+                        .andDo(document("get-product", pathParameters(
+                                parameterWithName("id").description("조회하고자 하는 상품의 식별자")
+                        )));
+//                        .andDo(document("get-product"));
 
                 verify(productService).getProduct(givenExistedId);
             }
@@ -214,12 +219,13 @@ class ProductControllerTest {
                         .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
                 )
                         .andDo(print())
-                        //.andExpect(content().string(containsString("\"id\":" + resultProductTwo.getId())))
-                        //.andExpect(content().string(containsString("name\":\"" + resultProductTwo.getName())))
-                        //.andExpect(content().string(containsString("\"maker\":\"" + resultProductTwo.getMaker())))
-                        //.andExpect(content().string(containsString("\"price\":" + resultProductTwo.getPrice())))
-                        //.andExpect(content().string(containsString("\"imageUrl\":\"" + resultProductTwo.getImageUrl())))
+                        .andExpect(content().string(containsString("\"id\":" + resultProductTwo.getId())))
+                        .andExpect(content().string(containsString("name\":\"" + resultProductTwo.getName())))
+                        .andExpect(content().string(containsString("\"maker\":\"" + resultProductTwo.getMaker())))
+                        .andExpect(content().string(containsString("\"price\":" + resultProductTwo.getPrice())))
+                        .andExpect(content().string(containsString("\"imageUrl\":\"" + resultProductTwo.getImageUrl())))
                         .andExpect(status().isCreated());
+                        //.andDo(document("create-product"));
 
                 verify(productService).createProduct(any(ProductCreateData.class));
             }
@@ -346,6 +352,7 @@ class ProductControllerTest {
                         .andExpect(jsonPath("price").value(productResultData.getPrice()))
                         .andExpect(jsonPath("imageUrl").value(resultProductOne.getImageUrl()))
                         .andExpect(status().isOk());
+                        //.andDo(document("update-product"));
 
                 verify(productService).updateProduct(eq(givenExistedId), any(ProductUpdateData.class));
             }
@@ -464,18 +471,6 @@ class ProductControllerTest {
         @DisplayName("만약 저장되어 있는 상품의 아이디가 주어진다면")
         class Context_WithExistedId {
             private final Long givenExistedId = EXISTED_ID;
-            private ProductResultData productResultData;
-
-            @BeforeEach
-            void setUp() {
-                productResultData = ProductResultData.builder()
-                        .id(EXISTED_ID)
-                        .name(SETUP_PRODUCT_NAME)
-                        .maker(SETUP_PRODUCT_MAKER)
-                        .price(SETUP_PRODUCT_PRICE)
-                        .imageUrl(SETUP_PRODUCT_IMAGEURL)
-                        .build();
-            }
 
             @Test
             @DisplayName("주어진 아이디에 해당하는 상품을 삭제하고 삭제된 상품과 NO_CONTENT를 리턴한다")
@@ -489,6 +484,7 @@ class ProductControllerTest {
                         .andDo(print())
                         .andExpect(jsonPath("id").value(givenExistedId))
                         .andExpect(status().isNoContent());
+                        //.andDo(document("delete-product"));
 
                 verify(productService).deleteProduct(givenExistedId);
             }

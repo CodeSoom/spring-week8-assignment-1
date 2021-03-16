@@ -18,7 +18,7 @@ plugins {
     id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
     developmentOnly
@@ -84,7 +84,7 @@ dependencies {
     }
 
     // Use for Spring Security Test
-    testImplementation 'org.springframework.security:spring-security-test:5.4.5'
+    //testImplementation 'org.springframework.security:spring-security-test:5.4.5'
 
     // Spring REST Docs
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
@@ -108,6 +108,18 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 asciidoctor {
-    dependsOn(test)
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }
