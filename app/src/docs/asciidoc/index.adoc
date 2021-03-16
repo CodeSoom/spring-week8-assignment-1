@@ -291,3 +291,34 @@ include::{snippets}/delete-user/http-request.adoc[]
 Response HTTP Example:
 
 include::{snippets}/delete-user/http-response.adoc[]
+
+[[SESSION]]
+== SESSION
+
+=== Create /session
+
+사용자 인증 요청을 처리하고 인증 정보를 리턴한다.
+
+==== Request
+
+CURL:
+
+include::{snippets}/create-session/curl-request.adoc[]
+
+
+Request Fields:
+
+include::{snippets}/create-session/request-fields.adoc[]
+
+
+Request HTTP Example:
+include::{snippets}/create-session/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{snippets}/create-session/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{snippets}/create-session/http-response.adoc[]
