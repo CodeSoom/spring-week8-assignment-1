@@ -26,7 +26,7 @@ public class JwtUtil {
     }
 
     public Claims decode(String token) {
-        if (token == null || token.isBlank()) {
+        if (token == null || token.isEmpty()) {
             throw new InvalidTokenException(token);
         }
 
