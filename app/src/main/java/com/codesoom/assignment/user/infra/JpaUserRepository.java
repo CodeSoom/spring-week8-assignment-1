@@ -1,4 +1,4 @@
-package com.codesoom.assignment.user.ui;
+package com.codesoom.assignment.user.infra;
 
 import com.codesoom.assignment.user.domain.User;
 import com.codesoom.assignment.user.domain.UserRepository;

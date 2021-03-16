@@ -1,4 +1,4 @@
-package com.codesoom.assignment.user.ui;
+package com.codesoom.assignment.user.infra;
 
 import com.codesoom.assignment.user.domain.Role;
 import com.codesoom.assignment.user.domain.RoleRepository;
