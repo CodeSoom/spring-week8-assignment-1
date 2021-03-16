@@ -1,6 +1,5 @@
 package com.codesoom.assignment.auth.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +8,6 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-@AllArgsConstructor
 public class TokenResponseData {
     /**
      * 사용자 인증 토큰.
