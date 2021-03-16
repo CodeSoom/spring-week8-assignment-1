@@ -20,8 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 상품과 관련된 HTTP 요청 처리를 담당합니다. 이 클래스를 사용하는 사용자는
- * GET, POST, PATCH, DELETE 요청에 응답할 수 있습니다.
+ * 상품과 관련된 HTTP 요청 처리를 담당합니다.
  */
 @RestController
 @RequestMapping("/products")

@@ -11,8 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * 상품과 관련된 비즈니스 로직을 담당합니다. 이 클래스를 사용하는 사용자는
- * 상품을 생성(Create), 읽기(Read), 갱신(Update), 삭제(Delete) 할 수 있습니다.
+ * 상품과 관련된 비즈니스 로직을 담당합니다.
  */
 @Service
 @Transactional
