@@ -11,9 +11,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * 상품에 대한 서비스를 담당합니다.
+ * 상품과 관련된 비즈니스 로직을 담당합니다.
  *
- * @author dper
  */
 @Service
 @Transactional
@@ -48,10 +47,10 @@ public class ProductService {
     }
 
     /**
-     * 상품을 추가하고 반환.
+     * 상품을 생성하고 반환.
      *
      * @param productData 저장될 상품.
-     * @return 상품.
+     * @return 생성된 상품.
      */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
@@ -63,7 +62,7 @@ public class ProductService {
      *
      * @param id 수정 상품 id
      * @param productData 수정될 상품.
-     * @return 상품.
+     * @return 수정된 상품.
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -77,7 +76,7 @@ public class ProductService {
      * 상품을 삭제하고 반환.
      *
      * @param id 삭제 상품 id.
-     * @return 상품.
+     * @return 삭제된 상품.
      */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
@@ -98,3 +97,4 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
+
