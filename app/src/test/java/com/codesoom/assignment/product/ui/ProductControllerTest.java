@@ -177,7 +177,6 @@ class ProductControllerTest {
                         requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
                                 fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
                                 fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
                                 fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
@@ -249,7 +248,6 @@ class ProductControllerTest {
                                 parameterWithName("id").description("상품 아이디")
                         ),
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
                                 fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
                                 fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
