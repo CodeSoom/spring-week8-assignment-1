@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 회원에 관한 비즈니스 로직을 담당합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 전달된 회원 정보로 회원을 생성한 뒤, 그 회원을 리턴합니다.
+     *
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
+     * @throws UserEmailDuplicationException 생성할 회원정보가 이미 회원 목록에 존재하는 경우
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +59,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 전달된 식별자에 해당하는 회원을 찾고, 함께 주어진 회원 정보로 수정한 후 리턴합니다.
+     *
+     * @param id               수정할 회원 식별자
+     * @param modificationData 수정할 회원 정보
+     * @param userId           인증된 회원 식별자
+     * @return 수정된 회원
+     * @throws AccessDeniedException 수정 권한이 없을 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,12 +82,24 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 전달된 식별자에 해당하는 회원을 삭제합니다.
+     *
+     * @param id 회원 식별자
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
         return user;
     }
 
+    /**
+     * 전달된 식별자에 해당하는 회원을 찾습니다.
+     *
+     * @param id 회원 식별자
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
+     */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
