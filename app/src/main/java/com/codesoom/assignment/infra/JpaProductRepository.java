@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** 상품 저장소를 구현한다. */
 public interface JpaProductRepository
         extends ProductRepository, CrudRepository<Product, Long> {
     List<Product> findAll();

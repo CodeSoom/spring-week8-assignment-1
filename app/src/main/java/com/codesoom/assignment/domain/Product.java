@@ -1,35 +1,56 @@
 package com.codesoom.assignment.domain;
 
-import lombok.AllArgsConstructor;
+import com.codesoom.assignment.dto.ProductUpdateData;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/** 상품 정보를 다룬다. */
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+@EqualsAndHashCode
 public class Product {
+
+    /** 상품 식별자 */
     @Id
     @GeneratedValue
     private Long id;
 
+    /** 상품 이름 */
     private String name;
 
+    /** 상품 제조사 */
     private String maker;
 
+    /** 상품 가격 */
     private Integer price;
 
+    /** 상품 제조사 */
     private String imageUrl;
 
-    public void changeWith(Product source) {
-        this.name = source.name;
-        this.maker = source.maker;
-        this.price = source.price;
+    @Builder
+    public Product(Long id, String name, String maker, Integer price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.maker = maker;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    /** 주어진 상품으로 저장되어 있는 상품을 수정한다 */
+    public void updateWith(ProductUpdateData productUpdateData) {
+        this.name = productUpdateData.getName();
+        this.maker = productUpdateData.getMaker();
+        this.price = productUpdateData.getPrice();
+        this.imageUrl = productUpdateData.getImageUrl();
     }
 }

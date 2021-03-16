@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/** 보안을 설정한다. */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
@@ -35,10 +36,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
         if (authorization != null) {
             String accessToken = authorization.substring("Bearer ".length());
-            Long userId = authenticationService.parseToken(accessToken);
-            List<Role> roles = authenticationService.roles(userId);
+            String email = authenticationService.parseToken(accessToken);
+            List<Role> roles = authenticationService.roles(email);
             Authentication authentication =
-                    new UserAuthentication(userId, roles);
+                    new UserAuthentication(email, roles);
 
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
