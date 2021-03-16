@@ -13,9 +13,13 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-}
 
-sourceCompatibility = '1.8'
+    // Asciidoctor
+    id 'org.asciidoctor.convert' version '2.4.0'
+
+    // Jacoco
+    id 'jacoco'
+}
 
 configurations {
     developmentOnly
@@ -78,6 +82,10 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Spring REST Docs
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 application {
@@ -88,4 +96,42 @@ application {
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.6"
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = "CLASS"
+
+            limit {
+                counter = 'LINE'
+                minimum = 1
+            }
+
+            limit {
+                counter = 'BRANCH'
+                minimum = 1
+            }
+
+            excludes = [
+                    "com.codesoom.assignment.App",
+                    "com.codesoom.assignment.dto.*",
+                    "com.codesoom.assignment.controllers.ControllerErrorAdvice"
+            ]
+        }
+    }
+
+    asciidoctor {
+        dependsOn test
+    }
 }
