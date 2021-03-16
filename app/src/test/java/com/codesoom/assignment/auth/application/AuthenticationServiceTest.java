@@ -1,6 +1,6 @@
 package com.codesoom.assignment.auth.application;
 
-import com.codesoom.assignment.global.utils.JwtUtil;
+import com.codesoom.assignment.auth.infra.JwtUtil;
 import com.codesoom.assignment.user.domain.Role;
 import com.codesoom.assignment.user.domain.RoleRepository;
 import com.codesoom.assignment.user.domain.User;

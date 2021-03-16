@@ -1,4 +1,4 @@
-package com.codesoom.assignment.global.config.security;
+package com.codesoom.assignment.global.config.security.filters;
 
 import com.codesoom.assignment.auth.application.InvalidTokenException;
 import org.springframework.http.HttpStatus;
