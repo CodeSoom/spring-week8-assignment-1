@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * 상품의 사용자 요청을 처리한다.
+ */
 @RestController
 @RequestMapping("/products")
 public class ProductController {
