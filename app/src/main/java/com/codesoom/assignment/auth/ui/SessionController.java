@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 사용자 인증 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/session")
 public class SessionController {
@@ -19,6 +22,12 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 로그인 처리를 합니다.
+     *
+     * @param sessionRequestData 로그인 요청 정보
+     * @return 로그인 응답 정보
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(
