@@ -23,9 +23,9 @@ public interface ProductRepository {
     Optional<Product> findById(Long id);
 
     /**
-     * 주어진 상품정보로 상품을 저장하고 반환합니다.
+     * 주어진 상품을 저장하고 반환합니다.
      *
-     * @param product 상품 정보
+     * @param product 상품
      * @return 저장된 상품
      */
     Product save(Product product);
