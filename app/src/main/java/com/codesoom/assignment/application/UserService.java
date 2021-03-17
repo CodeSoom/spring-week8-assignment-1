@@ -40,8 +40,8 @@ public class UserService {
      * 주어진 id에 해당하는 사용자를 반환합니다.
      *
      * @param id 해당 사용자의 식별자
-     * @return 해당 id를 갖는 사용자
-     * @throws UserNotFoundException 주어진 id에 해당하는 사용자가 없을 경우
+     * @return 주어진 id를 갖는 사용자
+     * @throws UserNotFoundException 주어진 id를 갖는 사용자를 찾을 수 없는 경우
      */
     public User getUser(Long id) {
         return findUser(id);
@@ -78,7 +78,7 @@ public class UserService {
      * @param userId 현재 수정하는 행위의 주체가 되는 사용자의 식별자
      * @return 수정된 사용자
      * @throws AccessDeniedException 타겟 사용자와 현재 사용자가 일치하지 않을 경우
-     * @throws UserNotFoundException 주어진 id에 해당하는 사용자가 존재하지 않을 경우
+     * @throws UserNotFoundException 주어진 id를 갖는 사용자를 찾을 수 없을 경우
      */
     public User updateUser(
             Long id,
@@ -102,6 +102,7 @@ public class UserService {
      *
      * @param id 삭제할 사용자의 식별자
      * @return 삭제된 사용자
+     * @throws UserNotFoundException 주어진 id를 갖는 사용자를 찾을 수 없을 경우
      */
     public User deleteUser(Long id) {
         User user = findUser(id);
@@ -115,7 +116,8 @@ public class UserService {
      * 주어진 id에 해당하는 사용자를 반환합니다.
      *
      * @param id 해당 사용자의 식별자
-     * @return 해당 id를 갖는 사용자
+     * @return 주어진 id를 갖는 사용자
+     * @throws UserNotFoundException 주어진 id를 갖는 사용자를 찾을 수 없을 경우
      */
     private User findUser(Long id) {
         return userRepository.findById(id)

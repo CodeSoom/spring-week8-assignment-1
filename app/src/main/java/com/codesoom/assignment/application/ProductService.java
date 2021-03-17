@@ -35,8 +35,8 @@ public class ProductService {
      * 주어진 id에 해당하는 상품을 반환합니다.
      *
      * @param id 해당 상품의 식별자
-     * @return 해당 id를 갖는 상품
-     * @throws ProductNotFoundException 주어진 id에 해당하는 상품이 존재하지 않을 경우
+     * @return 주어진 id를 갖는 상품
+     * @throws ProductNotFoundException 주어진 id를 갖는 상품을 찾을 수 없는 경우
      */
     public Product getProduct(Long id) {
         return findProduct(id);
@@ -61,6 +61,7 @@ public class ProductService {
      * @param id 수정할 상품의 식별자
      * @param productData 수정할 상품 정보
      * @return 수정된 상품
+     * @throws ProductNotFoundException 주어진 id를 갖는 상품을 찾을 수 없는 경우
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -75,6 +76,7 @@ public class ProductService {
      *
      * @param id 삭제할 상품의 식별자
      * @return 삭제된 상품
+     * @throws ProductNotFoundException 주어진 id를 갖는 상품을 찾을 수 없는 경우
      */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
@@ -88,7 +90,8 @@ public class ProductService {
      * 주어진 id에 해당하는 상품을 반환합니다.
      *
      * @param id 해당 상품의 식별자
-     * @return 해당 id를 갖는 상품
+     * @return 주어진 id를 갖는 상품
+     * @throws ProductNotFoundException 주어진 id를 갖는 상품을 찾을 수 없는 경우
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)

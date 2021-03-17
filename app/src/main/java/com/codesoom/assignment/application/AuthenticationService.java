@@ -36,11 +36,11 @@ public class AuthenticationService {
     }
 
     /**
-     * 정상적인 로그인 정보가 주어진다면 인증 토큰을 발급합니다.
+     * 사용자를 인증하고 인증 토큰을 발급합니다.
      *
      * @param userLoginData 로그인 정보, 사용자 이메일과 비밀번호
      * @return 인증 토큰
-     * @throws  LoginFailException 유효하지 않은 이메일이 주어졌을 경우
+     * @throws  LoginFailException 로그인에 실패했을 경우
      */
     public String login(SessionRequestData userLoginData) {
         User user = userRepository.findByEmail(userLoginData.getEmail())
