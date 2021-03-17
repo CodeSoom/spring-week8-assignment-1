@@ -3,28 +3,29 @@ package com.codesoom.assignment.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Entity;
 
+/**
+ * 사용자 권한 정보.
+ */
 @Entity
 @NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue
-    private Long id;
-
     private Long userId;
 
     @Getter
-    private String name;
+    private String role;
 
-    public Role(Long userId, String name) {
+    public Role(Long userId, String role) {
         this.userId = userId;
-        this.name = name;
+        this.role = role;
     }
 
-    public Role(String name) {
-        this(null, name);
+    public Role(String role) {
+        this(null, role);
     }
 }
