@@ -205,11 +205,11 @@ class ProductControllerTest {
                                 parameterWithName("id").description("조회하고자 하는 상품의 식별자")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("상품 식별자"),
-                                fieldWithPath("name").description("상품 이름"),
-                                fieldWithPath("maker").description("상품 제조사"),
-                                fieldWithPath("price").description("상품 가격"),
-                                fieldWithPath("imageUrl").description("상품 이미지").optional()
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
                         )
                 ));
 
