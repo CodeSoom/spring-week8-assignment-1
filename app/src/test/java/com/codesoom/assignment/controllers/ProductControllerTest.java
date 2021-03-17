@@ -40,7 +40,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,10 +89,12 @@ class ProductControllerTest {
     private List<Product> products;
     private Product setupProductOne;
     private Product setupProductTwo;
+    private Product updateProduct;
 
     private List<ProductResultData> resultProducts;
     private ProductResultData resultProductOne;
     private ProductResultData resultProductTwo;
+    private ProductResultData resultUpdateProduct;
 
     @BeforeEach
     void setUp() {
@@ -113,10 +114,18 @@ class ProductControllerTest {
                 .imageUrl(CREATED_PRODUCT_IMAGEURL)
                 .build();
 
+        updateProduct = Product.builder()
+                .name(UPDATED_PRODUCT_NAME)
+                .maker(UPDATED_PRODUCT_MAKER)
+                .price(UPDATED_PRODUCT_PRICE)
+                .imageUrl(UPDATED_PRODUCT_IMAGEURL)
+                .build();
+
         products = Arrays.asList(setupProductOne, setupProductTwo);
 
         resultProductOne = ProductResultData.of(setupProductOne);
         resultProductTwo = ProductResultData.of(setupProductTwo);
+        resultUpdateProduct = ProductResultData.of(updateProduct);
         resultProducts = Arrays.asList(resultProductOne, resultProductTwo);
 
         given(productService.getProducts()).willReturn(resultProducts);
@@ -232,7 +241,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("상품을 저장하고 저장된 상품과 CREATED를 리턴한다")
     void createWithValidProduct() throws Exception {
 
         mockMvc.perform(post("/products")
@@ -318,47 +326,43 @@ class ProductControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    @DisplayName("update 메서드는")
-    class Describe_update {
-        @Nested
-        @DisplayName("만약 저장되어 있는 상품의 아이디와 수정 할 상품이 주어진다면")
-        class Context_WithExistedIdAndProduct {
-            private final Long givenExistedId = EXISTED_ID;
-            private ProductResultData productResultData;
+    @Test
+    void updateWithExistedIdAndProduct() throws Exception {
+        final Long givenExistedId = EXISTED_ID;
 
-            @BeforeEach
-            void setUp() {
-                productResultData = ProductResultData.builder()
-                        .name(UPDATED_PRODUCT_NAME)
-                        .maker(UPDATED_PRODUCT_MAKER)
-                        .price(UPDATED_PRODUCT_PRICE)
-                        .imageUrl(UPDATED_PRODUCT_IMAGEURL)
-                        .build();
-            }
+        mockMvc.perform(
+                patch("/products/" + givenExistedId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
+        )
+                .andDo(print())
+                .andExpect(jsonPath("name").value(resultUpdateProduct.getName()))
+                .andExpect(jsonPath("maker").value(resultUpdateProduct.getMaker()))
+                .andExpect(jsonPath("price").value(resultUpdateProduct.getPrice()))
+                .andExpect(jsonPath("imageUrl").value(resultProductOne.getImageUrl()))
+                .andExpect(status().isOk())
+                .andDo(document("update-product",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                            fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                            fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                            fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                    ),
+                    responseFields(
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                            fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                            fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                            fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                    )
+        ));
 
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 상품을 수정하고 수정된 상품과 OK를 리턴한다")
-            void itUpdatesProductAndReturnsUpdatedProductAndOKHttpStatus() throws Exception {
+        verify(productService).updateProduct(eq(givenExistedId), any(ProductUpdateData.class));
+    }
 
-
-                mockMvc.perform(
-                        patch("/products/" + givenExistedId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(jsonPath("name").value(productResultData.getName()))
-                        .andExpect(jsonPath("maker").value(productResultData.getMaker()))
-                        .andExpect(jsonPath("price").value(productResultData.getPrice()))
-                        .andExpect(jsonPath("imageUrl").value(resultProductOne.getImageUrl()))
-                        .andExpect(status().isOk());
-                        //.andDo(document("update-product"));
-
-                verify(productService).updateProduct(eq(givenExistedId), any(ProductUpdateData.class));
-            }
-        }
 
         @Nested
         @DisplayName("만약 저장되어 있지 않는 상품의 아이디가 주어진다면")
@@ -462,73 +466,74 @@ class ProductControllerTest {
                         .andExpect(status().isUnauthorized());
             }
         }
-    }
-
-    @Nested
-    @DisplayName("delete 메서드는")
-    class Describe_delete {
-        @Nested
-        @DisplayName("만약 저장되어 있는 상품의 아이디가 주어진다면")
-        class Context_WithExistedId {
-            private final Long givenExistedId = EXISTED_ID;
-
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 상품을 삭제하고 삭제된 상품과 NO_CONTENT를 리턴한다")
-            void itDeleteProductAndReturnsNO_CONTENTHttpStatus() throws Exception {
-                given(productService.deleteProduct(givenExistedId)).willReturn(resultProductOne);
-
-                mockMvc.perform(
-                        delete("/products/" + givenExistedId)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                )
-                        .andDo(print())
-                        .andExpect(jsonPath("id").value(givenExistedId))
-                        .andExpect(status().isNoContent());
-                        //.andDo(document("delete-product"));
-
-                verify(productService).deleteProduct(givenExistedId);
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
-        class Context_WithNotExistedId {
-            private final Long givenNotExistedId = NOT_EXISTED_ID;
-
-            @Test
-            @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
 
 
-                mockMvc.perform(
-                        delete("/products/" + givenNotExistedId)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                )
-                        .andDo(print())
-                        .andExpect(status().isNotFound());
 
-                verify(productService).deleteProduct(givenNotExistedId);
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
-        class ContextWith_NotValidToken {
-            private final Long givenExistedId = EXISTED_ID;
-            private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
-
-            @Test
-            @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-            void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
-
-
-                mockMvc.perform(
-                        delete("/products/" + givenExistedId)
-                            .header("Authorization", "Bearer " + givenNotExistedToken)
-                )
-                        .andDo(print())
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-    }
+//    @Nested
+//    @DisplayName("delete 메서드는")
+//    class Describe_delete {
+//        @Nested
+//        @DisplayName("만약 저장되어 있는 상품의 아이디가 주어진다면")
+//        class Context_WithExistedId {
+//            private final Long givenExistedId = EXISTED_ID;
+//
+//            @Test
+//            @DisplayName("주어진 아이디에 해당하는 상품을 삭제하고 삭제된 상품과 NO_CONTENT를 리턴한다")
+//            void itDeleteProductAndReturnsNO_CONTENTHttpStatus() throws Exception {
+//                given(productService.deleteProduct(givenExistedId)).willReturn(resultProductOne);
+//
+//                mockMvc.perform(
+//                        delete("/products/" + givenExistedId)
+//                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
+//                )
+//                        .andDo(print())
+//                        .andExpect(jsonPath("id").value(givenExistedId))
+//                        .andExpect(status().isNoContent());
+//                        //.andDo(document("delete-product"));
+//
+//                verify(productService).deleteProduct(givenExistedId);
+//            }
+//        }
+//
+//        @Nested
+//        @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
+//        class Context_WithNotExistedId {
+//            private final Long givenNotExistedId = NOT_EXISTED_ID;
+//
+//            @Test
+//            @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
+//            void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
+//
+//
+//                mockMvc.perform(
+//                        delete("/products/" + givenNotExistedId)
+//                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
+//                )
+//                        .andDo(print())
+//                        .andExpect(status().isNotFound());
+//
+//                verify(productService).deleteProduct(givenNotExistedId);
+//            }
+//        }
+//
+//        @Nested
+//        @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
+//        class ContextWith_NotValidToken {
+//            private final Long givenExistedId = EXISTED_ID;
+//            private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
+//
+//            @Test
+//            @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
+//            void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
+//
+//
+//                mockMvc.perform(
+//                        delete("/products/" + givenExistedId)
+//                            .header("Authorization", "Bearer " + givenNotExistedToken)
+//                )
+//                        .andDo(print())
+//                        .andExpect(status().isUnauthorized());
+//            }
+//        }
+//    }
 }
