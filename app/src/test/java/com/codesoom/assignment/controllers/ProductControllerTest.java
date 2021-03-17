@@ -12,7 +12,6 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -467,42 +466,30 @@ class ProductControllerTest {
         verify(productService).deleteProduct(givenExistedId);
     }
 
-    @Nested
-    @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
-    class Context_WithNotExistedId {
-        private final Long givenNotExistedId = NOT_EXISTED_ID;
+    @Test
+    void DeleteWithNotExistedId() throws Exception {
+        Long givenNotExistedId = NOT_EXISTED_ID;
 
-        @Test
-        @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-        void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
+        mockMvc.perform(
+                delete("/products/" + givenNotExistedId)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
 
-
-            mockMvc.perform(
-                    delete("/products/" + givenNotExistedId)
-                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
-            )
-                    .andDo(print())
-                    .andExpect(status().isNotFound());
-
-            verify(productService).deleteProduct(givenNotExistedId);
-        }
+        verify(productService).deleteProduct(givenNotExistedId);
     }
 
-    @Nested
-    @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
-    class ContextWith_NotValidToken {
-        private final Long givenExistedId = EXISTED_ID;
-        private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
+    @Test
+    void DeleteWithInvalidToken() throws Exception {
+        Long givenExistedId = EXISTED_ID;
+        String givenNotExistedToken = NOT_EXISTED_TOKEN;
 
-        @Test
-        @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-        void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
-            mockMvc.perform(
-                    delete("/products/" + givenExistedId)
-                        .header("Authorization", "Bearer " + givenNotExistedToken)
-            )
-                    .andDo(print())
-                    .andExpect(status().isUnauthorized());
-        }
+        mockMvc.perform(
+                delete("/products/" + givenExistedId)
+                    .header("Authorization", "Bearer " + givenNotExistedToken)
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }
