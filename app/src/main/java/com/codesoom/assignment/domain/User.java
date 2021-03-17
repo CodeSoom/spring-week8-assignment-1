@@ -48,7 +48,7 @@ public class User {
      * 주어진 비밀번호로 현재 비밀번호를 변경합니다.
      *
      * @param password 변경할 비밀번호
-     * @param passwordEncoder 암호화 도구
+     * @param passwordEncoder 패스워드 인코더
      */
     public void changePassword(String password,
                                PasswordEncoder passwordEncoder) {
@@ -66,7 +66,7 @@ public class User {
      * 주어진 비밀번호와 현재 비밀번호가 일치하고, 회원이 삭제되지 않았다면 true를 리턴합니다.
      *
      * @param password 비밀번호
-     * @param passwordEncoder 암호화 도구
+     * @param passwordEncoder 패스워드 인코더
      */
     public boolean authenticate(String password,
                                 PasswordEncoder passwordEncoder) {
