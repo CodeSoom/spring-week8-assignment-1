@@ -2,7 +2,7 @@
 
 == GET /products
 
-상품 목록을 JSON 형태로 돌려준다.
+전체 상품 목록을 리턴한다.
 
 include::{snippets}/get-products/http-request.adoc[]
 
@@ -10,7 +10,7 @@ include::{snippets}/get-products/http-response.adoc[]
 
 == GET /product/{id}
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+주어진 상품을 저장하고 해당 상품을 리턴한다.
 
 include::{snippets}/get-product/http-request.adoc[]
 

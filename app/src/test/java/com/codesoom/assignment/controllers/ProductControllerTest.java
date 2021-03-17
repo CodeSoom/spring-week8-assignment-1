@@ -36,6 +36,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -230,33 +231,42 @@ class ProductControllerTest {
         verify(productService).getProduct(givenNotExistedId);
     }
 
-    @Nested
-    @DisplayName("create 메서드는")
-    class Describe_create {
-        @Nested
-        @DisplayName("만약 상품이 주어진다면")
-        class Context_WithProduct {
-            @Test
-            @DisplayName("상품을 저장하고 저장된 상품과 CREATED를 리턴한다")
-            void itSaveProductAndReturnsSavedProductAndCreatedHttpStatus() throws Exception {
+    @Test
+    @DisplayName("상품을 저장하고 저장된 상품과 CREATED를 리턴한다")
+    void createWithValidProduct() throws Exception {
 
-                mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                        .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(content().string(containsString("\"id\":" + resultProductTwo.getId())))
-                        .andExpect(content().string(containsString("name\":\"" + resultProductTwo.getName())))
-                        .andExpect(content().string(containsString("\"maker\":\"" + resultProductTwo.getMaker())))
-                        .andExpect(content().string(containsString("\"price\":" + resultProductTwo.getPrice())))
-                        .andExpect(content().string(containsString("\"imageUrl\":\"" + resultProductTwo.getImageUrl())))
-                        .andExpect(status().isCreated());
-                        //.andDo(document("create-product"));
+        mockMvc.perform(post("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("\"id\":" + resultProductTwo.getId())))
+                .andExpect(content().string(containsString("name\":\"" + resultProductTwo.getName())))
+                .andExpect(content().string(containsString("\"maker\":\"" + resultProductTwo.getMaker())))
+                .andExpect(content().string(containsString("\"price\":" + resultProductTwo.getPrice())))
+                .andExpect(content().string(containsString("\"imageUrl\":\"" + resultProductTwo.getImageUrl())))
+                .andExpect(status().isCreated())
+                .andDo(document("create-product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                        )
+                ));
 
-                verify(productService).createProduct(any(ProductCreateData.class));
-            }
-        }
+        verify(productService).createProduct(any(ProductCreateData.class));
+    }
 
         @Nested
         @DisplayName("만약 이름값이 비어있는 상품이 주어진다면")
@@ -275,22 +285,22 @@ class ProductControllerTest {
             }
         }
 
-        @Nested
-        @DisplayName("만약 메이커값이 비어있는 상품이 주어진다면")
-        class Context_WithProductWithoutMaker {
-            @Test
-            @DisplayName("요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        post("/products")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"createdName\" , \"maker\":\"\", \"price\":200, \"imageUrl\":\"createdImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
+    @Nested
+    @DisplayName("만약 메이커값이 비어있는 상품이 주어진다면")
+    class Context_WithProductWithoutMaker {
+        @Test
+        @DisplayName("요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
+        void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
+            mockMvc.perform(
+                    post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                        .content("{\"name\":\"createdName\" , \"maker\":\"\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+            )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
         }
+    }
 
         @Nested
         @DisplayName("만약 가격값이 비어있는 상품이 주어진다면")
@@ -321,15 +331,15 @@ class ProductControllerTest {
 
                 mockMvc.perform(
                         post("/products")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + givenNotExistedToken)
-                            .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + givenNotExistedToken)
+                                .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
                 )
                         .andDo(print())
                         .andExpect(status().isUnauthorized());
             }
         }
-    }
+
 
     @Nested
     @DisplayName("update 메서드는")
