@@ -43,7 +43,7 @@ public class ProductService {
     }
 
     /**
-     * 새로운 상품을 등록하고 반환합니다.
+     * 새로운 상품을 등록합니다.
      *
      * @param productData 등록할 상품 정보
      * @return 등록된 상품
@@ -56,7 +56,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id에 해당하는 상품의 정보를 수정하고 반환합니다.
+     * 주어진 id에 해당하는 상품의 정보를 수정합니다.
      *
      * @param id 수정할 상품의 식별자
      * @param productData 수정할 상품 정보
@@ -71,7 +71,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 삭제하고 반환합니다.
+     * 주어진 id에 해당하는 상품을 삭제합니다.
      *
      * @param id 삭제할 상품의 식별자
      * @return 삭제된 상품

@@ -45,9 +45,9 @@ public class UserService {
     }
 
     /**
-     * 새로운 사용자를 등록하고 반환합니다.
+     * 새로운 사용자를 등록합니다.
      *
-     * @param createRequest 등록할 정보
+     * @param createRequest 등록할 사용자 정보
      * @return 등록된 사용자
      * @throws UserEmailDuplicationException 등록하려는 이메일이 이미 존재하는 경우
      */
@@ -71,7 +71,7 @@ public class UserService {
      * 주어진 id에 해당하는 사용자의 정보를 수정합니다.
      *
      * @param id 수정하고자 하는 타겟 사용자의 식별자
-     * @param updateRequest 수정할 정보
+     * @param updateRequest 수정할 사용자 정보
      * @param userId 현재 수정하는 행위의 주체가 되는 사용자의 식별자
      * @return 수정된 사용자
      * @throws AccessDeniedException 타겟 사용자와 현재 사용자가 일치하지 않을 경우
