@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * 어플리케이션에서 사용하는 bean을 등록합니다.
- */
 @Configuration
 public class AppConfig {
 
