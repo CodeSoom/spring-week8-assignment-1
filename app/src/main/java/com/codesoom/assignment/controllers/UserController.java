@@ -33,10 +33,10 @@ public class UserController {
     }
 
     /**
-     * 회원을 생성하고 반환.
+     * 회원을 생성하고 반환합니다.
      *
-     * @param registrationData 회원 정보.
-     * @return 생성된 회원.
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,13 +46,13 @@ public class UserController {
     }
 
     /**
-     * 회원을 수정하고 반환.
+     * 올바른 회원 정보라면 수정하고 반환하고, 잘못된 정보라면 예외를 던집니다.
      *
-     * @param id 수정 회원 id.
-     * @param modificationData 회원 정보.
-     * @param authentication 인증된 회원.
-     * @return 수정된 회원.
-     * @throws AccessDeniedException 수정하고자 하는 회원이 아닌경우.
+     * @param id 수정 회원 id
+     * @param modificationData 회원 정보
+     * @param authentication 인증된 회원
+     * @return 수정된 회원
+     * @throws AccessDeniedException 수정 권한이 없을 경우
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -69,7 +69,7 @@ public class UserController {
     /**
      * 회원을 삭제합니다.
      *
-     * @param id 삭제 회원 id.
+     * @param id 삭제 회원 id
      */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")

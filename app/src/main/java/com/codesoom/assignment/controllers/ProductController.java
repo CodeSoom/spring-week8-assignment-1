@@ -36,9 +36,9 @@ public class ProductController {
     }
 
     /**
-     * 상품 목록 반환.
+     * 모든 상품 목록을 반환합니다.
      *
-     * @return 상품 목록.
+     * @return 상품 목록
      */
     @GetMapping
     public List<Product> list() {
@@ -46,10 +46,10 @@ public class ProductController {
     }
 
     /**
-     * 상품을 찾아 반환.
+     * 상품을 찾아 반환합니다.
      *
-     * @param id 검색 상품 id.
-     * @return 검색된 상품.
+     * @param id 검색 상품 id
+     * @return 검색된 상품
      */
     @GetMapping("{id}")
     public Product detail(@PathVariable Long id) {
@@ -57,10 +57,10 @@ public class ProductController {
     }
 
     /**
-     * 상품을 생성하고 반환.
+     * 상품을 생성하고 반환합니다.
      *
-     * @param productData 생성될 상품.
-     * @return 생성된 상품.
+     * @param productData 생성될 상품
+     * @return 생성된 상품
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -70,11 +70,11 @@ public class ProductController {
     }
 
     /**
-     * 상품을 수정하고 반환.
+     * 상품을 수정하고 반환합니다.
      *
-     * @param id 수정 상품 id.
-     * @param productData 수정될 상품.
-     * @return 수정된 상품.
+     * @param id 수정 상품 id
+     * @param productData 수정될 상품
+     * @return 수정된 상품
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated()")
@@ -86,9 +86,9 @@ public class ProductController {
     }
 
     /**
-     * 상품을 삭제.
+     * 상품을 삭제합니다.
      *
-     * @param id 삭제 상품 id.
+     * @param id 삭제 상품 id
      */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")

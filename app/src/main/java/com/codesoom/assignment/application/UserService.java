@@ -37,11 +37,11 @@ public class UserService {
     }
 
     /**
-     * 회원을 생성하고 반환.
+     * 올바른 회원 정보라면 생성하여 반환하고, 잘못된 정보라면 예외를 던집니다.
      *
-     * @param registrationData 회원 정보.
-     * @return 생성된 회원.
-     * @throws UserEmailDuplicationException 회원 이메일이 중복될 경우.
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
+     * @throws UserEmailDuplicationException 회원 이메일이 중복될 경우
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -60,13 +60,13 @@ public class UserService {
     }
 
     /**
-     * 회원을 수정하고 반환.
+     * 올바른 회원 정보라면 수정하고 반환하지만, 잘못된 정보라면 예외를 던집니다.
      *
-     * @param id 수정 회원 id.
-     * @param modificationData 회원 정보.
-     * @param userId 인증된 회원 id.
-     * @return 수정된 회원.
-     * @throws AccessDeniedException 수정하고자 하는 회원이 아닌경우.
+     * @param id 수정 회원 id
+     * @param modificationData 회원 정보
+     * @param userId 인증된 회원 id
+     * @return 수정된 회원
+     * @throws AccessDeniedException 수정 권한이 없을 경우
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
@@ -83,11 +83,11 @@ public class UserService {
     }
 
     /**
-     * 회원을 삭제하고 반환.
+     * 회원을 삭제하고 반환합니다.
      *
-     * @param id 삭제 회원 id.
-     * @return 삭제된 회원.
-     * @throws UserNotFoundException 회원을 찾을 수 없는 경우.
+     * @param id 삭제 회원 id
+     * @return 삭제된 회원
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
      */
     public User deleteUser(Long id) {
         User user = findUser(id);

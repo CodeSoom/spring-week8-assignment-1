@@ -33,12 +33,12 @@ public class AuthenticationService {
     }
 
     /**
-     * 로그인정보를 확인하고 Access token 을 반환.
+     * 올바른 회원 정보라면 인증 토큰을 반환하고, 그렇지 않으면 예외를 던집니다.
      *
-     * @param email 이메일.
-     * @param password 비밀번호.
-     * @return Access token.
-     * @throws LoginFailException 로그인 정보가 다를 경우.
+     * @param email 이메일
+     * @param password 비밀번호
+     * @return Access token
+     * @throws LoginFailException 로그인에 실패했을 경우
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -52,10 +52,10 @@ public class AuthenticationService {
     }
 
     /**
-     * 회원 id를 찾아 반환.
+     * 인증 토큰 으로 회원 id를 찾아 반환합니다.
      *
-     * @param accessToken 토큰.
-     * @return 회원 id.
+     * @param accessToken 인증 토큰
+     * @return 회원 id
      */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
@@ -63,10 +63,10 @@ public class AuthenticationService {
     }
 
     /**
-     * 회원이 가진 권한을 반환.
+     * 회원이 가진 권한을 반환합니다.
      *
-     * @param userId 회원 id.
-     * @return 권한.
+     * @param userId 회원 id
+     * @return 권한
      */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
