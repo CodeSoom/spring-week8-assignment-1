@@ -62,9 +62,9 @@ public class UserService {
     /**
      * id에 해당하는 회원의 정보를 수정하고 수정된 회원을 반환합니다.
      *
-     * @param id               수정할 회원의 id
+     * @param id               수정할 회원의 식별자
      * @param modificationData 수정할 회원 정보
-     * @param userId           현재 로그인한 회원의 id
+     * @param userId           현재 로그인한 회원의 식별자
      * @return 수정된 회원
      * @throws AccessDeniedException 현재 로그인한 회원이 아닌 회원의 정보를 수정하는 경우
      */
@@ -85,7 +85,7 @@ public class UserService {
     /**
      * id에 해당하는 회원을 삭제하고 삭제된 회원을 반환합니다.
      *
-     * @param id 삭제할 회원의 id
+     * @param id 삭제할 회원의 식별자
      * @return 삭제된 회원
      */
     public User deleteUser(Long id) {
@@ -97,7 +97,7 @@ public class UserService {
     /**
      * id에 해당하는 삭제되지 않은 회원을 반환합니다.
      *
-     * @param id 조회할 회원의 id
+     * @param id 조회할 회원의 식별자
      * @return 조회한 회원
      * @throws UserNotFoundException 회원이 없거나 이미 삭제된 경우
      */

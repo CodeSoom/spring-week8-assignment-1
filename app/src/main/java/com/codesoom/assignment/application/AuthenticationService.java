@@ -65,7 +65,7 @@ public class AuthenticationService {
     /**
      * 회원 role의 리스트를 반환합니다.
      *
-     * @param userId 조회할 회원의 id
+     * @param userId 조회할 회원의 식별자
      * @return 회원 role의 리스트
      */
     public List<Role> roles(Long userId) {

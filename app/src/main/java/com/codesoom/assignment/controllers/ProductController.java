@@ -48,7 +48,7 @@ public class ProductController {
     /**
      * id에 해당하는 상품을 반환합니다.
      *
-     * @param id 조회할 상품의 id
+     * @param id 조회할 상품의 식별자
      * @return 조회한 상품
      */
     @GetMapping("{id}")
@@ -74,7 +74,7 @@ public class ProductController {
      * id에 해당하는 상품을 수정하고 수정된 상품을 반환합니다.
      * 인증된 사용자만 수정할 수 있습니다.
      *
-     * @param id          수정할 상품의 id
+     * @param id          수정할 상품의 식별자
      * @param productData 수정할 상품의 정보
      * @return 수정된 상품
      */
