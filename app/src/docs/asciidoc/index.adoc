@@ -23,3 +23,11 @@ include::{snippets}/get-product/http-response.adoc[]
 include::{snippets}/create-product/http-request.adoc[]
 
 include::{snippets}/create-product/http-response.adoc[]
+
+== PATCH /product
+
+주어진 식별자에 해당하는 상품을 수정하고 해당 상품을 리턴한다.
+
+include::{snippets}/update-product/http-request.adoc[]
+
+include::{snippets}/update-product/http-response.adoc[]
