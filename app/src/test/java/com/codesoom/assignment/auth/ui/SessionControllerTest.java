@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -63,13 +64,13 @@ class SessionControllerTest {
                 .andDo(print())
                 .andDo(document("create-session",
                         requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일").optional()
+                                fieldWithPath("email").type(STRING).description("이메일").optional()
                                         .attributes(key("constraints").value("")),
-                                fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호").optional()
+                                fieldWithPath("password").type(STRING).description("비밀번호").optional()
                                         .attributes(key("constraints").value(""))
                         ),
                         responseFields(
-                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("응답 토큰")
+                                fieldWithPath("accessToken").type(STRING).description("응답 토큰")
                         ))
                 );
     }
