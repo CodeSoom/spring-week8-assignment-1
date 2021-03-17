@@ -35,7 +35,7 @@ public class AuthenticationService {
      * 올바른 사용자 정보라면 인증 토큰을 리턴하고, 그렇지 않으면 예외를 던집니다.
      * @param email 사용자 이메일
      * @param password 사용자 비밀번호
-     * @throws LoginFailException 유효하지 않은 인자가 들어왔을 경우
+     * @throws LoginFailException 로그인에 실패했을 경우
      * @return 인증 토큰
      */
     public String login(String email, String password) throws LoginFailException {
