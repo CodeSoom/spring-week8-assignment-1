@@ -16,26 +16,26 @@ include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
 
-== DELETE /product/{id}
-
-id에 해당하는 상품을 삭제한다.
-
-include::{snippets}/delete-product/http-request.adoc[]
-
-include::{snippets}/delete-product/http-response.adoc[]
-
-== GET /users
-
-사용자 목록을 JSON 형태로 돌려준다.
-
-include::{snippets}/get-users/http-request.adoc[]
-
-include::{snippets}/get-users/http-response.adoc[]
-
-== GET /user/{id}
-
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
-
-include::{snippets}/get-user/http-request.adoc[]
-
-include::{snippets}/get-user/http-response.adoc[]
+//== DELETE /product/{id}
+//
+//id에 해당하는 상품을 삭제한다.
+//
+//include::{snippets}/delete-product/http-request.adoc[]
+//
+//include::{snippets}/delete-product/http-response.adoc[]
+//
+//== GET /users
+//
+//사용자 목록을 JSON 형태로 돌려준다.
+//
+//include::{snippets}/get-users/http-request.adoc[]
+//
+//include::{snippets}/get-users/http-response.adoc[]
+//
+//== GET /user/{id}
+//
+//상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+//
+//include::{snippets}/get-user/http-request.adoc[]
+//
+//include::{snippets}/get-user/http-response.adoc[]

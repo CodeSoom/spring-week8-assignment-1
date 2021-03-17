@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -36,6 +37,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -48,8 +54,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
-@Import(RestDocsConfiguration.class)
 @AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 @DisplayName("ProductController 테스트")
 class ProductControllerTest {
     private static final String EXISTED_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -117,77 +123,107 @@ class ProductControllerTest {
         resultProductOne = ProductResultData.of(setupProductOne);
         resultProductTwo = ProductResultData.of(setupProductTwo);
         resultProducts = Arrays.asList(resultProductOne, resultProductTwo);
+
+        given(productService.getProducts()).willReturn(resultProducts);
+
+        given(productService.getProduct(EXISTED_ID)).willReturn(setupProductOne);
+
+        given(productService.getProduct(NOT_EXISTED_ID))
+                .willThrow(new ProductNotFoundException(NOT_EXISTED_ID));
+
+        given(authenticationService.parseToken(EXISTED_TOKEN)).willReturn(EXISTED_EMAIL);
+        given(authenticationService.roles(EXISTED_EMAIL)).willReturn(Arrays.asList(new Role("USER")));
+        given(productService.createProduct(any(ProductCreateData.class)))
+                .will(invocation -> {
+                    ProductCreateData productCreateData = invocation.getArgument(0);
+                    return ProductResultData.builder()
+                            .id(CREATED_ID)
+                            .name(productCreateData.getName())
+                            .maker(productCreateData.getMaker())
+                            .price(productCreateData.getPrice())
+                            .imageUrl(productCreateData.getImageUrl())
+                            .build();
+                });
+
+        given(authenticationService.parseToken(eq(NOT_EXISTED_TOKEN)))
+                .willThrow(new InvalidTokenException(NOT_EXISTED_TOKEN));
+
+        given(productService.updateProduct(eq(EXISTED_ID), any(ProductUpdateData.class)))
+                .will(invocation -> {
+                    Long givenExistedId = invocation.getArgument(0);
+                    ProductUpdateData productUpdateData = invocation.getArgument(1);
+                    return ProductResultData.builder()
+                            .id(givenExistedId)
+                            .name(productUpdateData.getName())
+                            .maker(productUpdateData.getMaker())
+                            .price(productUpdateData.getPrice())
+                            .imageUrl(resultProductOne.getImageUrl())
+                            .build();
+                });
+
+        given(productService.updateProduct(eq(NOT_EXISTED_ID), any(ProductUpdateData.class)))
+                .willThrow(new ProductNotFoundException(NOT_EXISTED_ID));
+
+        given(authenticationService.parseToken(eq(NOT_EXISTED_TOKEN)))
+                .willThrow(new InvalidTokenException(NOT_EXISTED_TOKEN));
+
+        given(productService.deleteProduct(NOT_EXISTED_ID))
+                .willThrow(new ProductNotFoundException(NOT_EXISTED_ID));
     }
 
-    @Nested
-    @DisplayName("list 메서드는")
-    class Describe_list {
-        @Test
-        @DisplayName("전체 상품 목록과 OK를 리턴한다")
-        void itReturnsProductsAndOKHttpStatus() throws Exception {
-            given(productService.getProducts()).willReturn(resultProducts);
 
-            mockMvc.perform(
-                    get("/products")
-            )
-                    .andExpect(content().string(StringContains.containsString("\"id\":" + EXISTED_ID)))
-                    .andExpect(content().string(StringContains.containsString("\"id\":" + CREATED_ID)))
-                    .andExpect(status().isOk());
-                    //.andDo(document("get-products"));
+    @Test
+    void lists() throws Exception {
+        mockMvc.perform(
+                get("/products")
+        )
+                .andExpect(content().string(StringContains.containsString("\"id\":" + EXISTED_ID)))
+                .andExpect(content().string(StringContains.containsString("\"id\":" + CREATED_ID)))
+                .andExpect(status().isOk());
 
-            verify(productService).getProducts();
-        }
+        verify(productService).getProducts();
     }
 
-    @Nested
-    @DisplayName("detail 메서드는")
-    class Describe_detail {
-        @Nested
-        @DisplayName("만약 저장되어 있는 상품의 아이디가 주어진다면")
-        class Context_WithExistedId {
-            private final Long givenExistedId = EXISTED_ID;
+    @Test
+    void detailWithExistedId() throws Exception {
+        final Long givenExistedId = EXISTED_ID;
 
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 상품과 OK를 리턴한다")
-            void itReturnsProductAndOKHttpStatus() throws Exception {
-                given(productService.getProduct(givenExistedId)).willReturn(setupProductOne);
-
-                mockMvc.perform(
-                        get("/products/"+ givenExistedId)
-                )
-                        .andDo(print())
-                        .andExpect(jsonPath("id").value(givenExistedId))
-                        .andExpect(status().isOk())
-                        .andDo(document("get-product", pathParameters(
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/products/{id}", givenExistedId)
+        )
+                .andDo(print())
+                .andExpect(jsonPath("id").value(givenExistedId))
+                .andExpect(status().isOk())
+                .andDo(document("get-product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
                                 parameterWithName("id").description("조회하고자 하는 상품의 식별자")
-                        )));
-//                        .andDo(document("get-product"));
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 식별자"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지").optional()
+                        )
+                ));
 
-                verify(productService).getProduct(givenExistedId);
-            }
-        }
+        verify(productService).getProduct(givenExistedId);
+    }
 
-        @Nested
-        @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
-        class Context_WithNotExistedId {
-            private final Long givenNotExistedId = NOT_EXISTED_ID;
+    @Test
+    void detailWithNotExistedId() throws Exception {
+        final Long givenNotExistedId = NOT_EXISTED_ID;
 
-            @Test
-            @DisplayName("상품을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsProductNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                given(productService.getProduct(givenNotExistedId))
-                        .willThrow(new ProductNotFoundException(givenNotExistedId));
+        mockMvc.perform(
+                get("/products/"+ givenNotExistedId)
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("Product not found")))
+                .andExpect(status().isNotFound());
 
-                mockMvc.perform(
-                        get("/products/"+ givenNotExistedId)
-                )
-                        .andDo(print())
-                        .andExpect(content().string(containsString("Product not found")))
-                        .andExpect(status().isNotFound());
-
-                verify(productService).getProduct(givenNotExistedId);
-            }
-        }
+        verify(productService).getProduct(givenNotExistedId);
     }
 
     @Nested
@@ -199,19 +235,6 @@ class ProductControllerTest {
             @Test
             @DisplayName("상품을 저장하고 저장된 상품과 CREATED를 리턴한다")
             void itSaveProductAndReturnsSavedProductAndCreatedHttpStatus() throws Exception {
-                given(authenticationService.parseToken(EXISTED_TOKEN)).willReturn(EXISTED_EMAIL);
-                given(authenticationService.roles(EXISTED_EMAIL)).willReturn(Arrays.asList(new Role("USER")));
-                given(productService.createProduct(any(ProductCreateData.class)))
-                        .will(invocation -> {
-                            ProductCreateData productCreateData = invocation.getArgument(0);
-                            return ProductResultData.builder()
-                                    .id(CREATED_ID)
-                                    .name(productCreateData.getName())
-                                    .maker(productCreateData.getMaker())
-                                    .price(productCreateData.getPrice())
-                                    .imageUrl(productCreateData.getImageUrl())
-                                    .build();
-                        });
 
                 mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -290,8 +313,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
             void itThrowsInvalidTokenExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
-                given(authenticationService.parseToken(eq(givenNotExistedToken)))
-                        .willThrow(new InvalidTokenException(givenNotExistedToken));
+
 
                 mockMvc.perform(
                         post("/products")
@@ -327,18 +349,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("주어진 아이디에 해당하는 상품을 수정하고 수정된 상품과 OK를 리턴한다")
             void itUpdatesProductAndReturnsUpdatedProductAndOKHttpStatus() throws Exception {
-                given(productService.updateProduct(eq(givenExistedId), any(ProductUpdateData.class)))
-                        .will(invocation -> {
-                            Long givenExistedId = invocation.getArgument(0);
-                            ProductUpdateData productUpdateData = invocation.getArgument(1);
-                            return ProductResultData.builder()
-                                    .id(givenExistedId)
-                                    .name(productUpdateData.getName())
-                                    .maker(productUpdateData.getMaker())
-                                    .price(productUpdateData.getPrice())
-                                    .imageUrl(resultProductOne.getImageUrl())
-                                    .build();
-                        });
+
 
                 mockMvc.perform(
                         patch("/products/" + givenExistedId)
@@ -366,8 +377,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 응답한다")
             void itThrowsProductNotFoundExceptionAndThrowsNOT_FOUNDHttpStatus() throws Exception {
-                given(productService.updateProduct(eq(givenNotExisted), any(ProductUpdateData.class)))
-                        .willThrow(new ProductNotFoundException(givenNotExisted));
+
 
                 mockMvc.perform(
                         patch("/products/" + givenNotExisted)
@@ -449,8 +459,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAHTORHIZED를 리턴한다")
             void itThrowsInvalidTokenExceptionAndUNAUTHORIZEDHttpStatus() throws Exception {
-                given(authenticationService.parseToken(eq(givenNotExistedToken)))
-                        .willThrow(new InvalidTokenException(givenNotExistedToken));
+
 
                 mockMvc.perform(
                         patch("/products/" + givenExistedId)
@@ -498,8 +507,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
             void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                given(productService.deleteProduct(givenNotExistedId))
-                        .willThrow(new ProductNotFoundException(givenNotExistedId));
+
 
                 mockMvc.perform(
                         delete("/products/" + givenNotExistedId)
@@ -521,8 +529,7 @@ class ProductControllerTest {
             @Test
             @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
             void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
-                given(authenticationService.parseToken(eq(givenNotExistedToken)))
-                        .willThrow(new InvalidTokenException(givenNotExistedToken));
+
 
                 mockMvc.perform(
                         delete("/products/" + givenExistedId)

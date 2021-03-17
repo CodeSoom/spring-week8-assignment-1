@@ -34,7 +34,7 @@ public class Product {
     /** 상품 가격 */
     private Integer price;
 
-    /** 상품 제조사 */
+    /** 상품 이미지 */
     private String imageUrl;
 
     @Builder
