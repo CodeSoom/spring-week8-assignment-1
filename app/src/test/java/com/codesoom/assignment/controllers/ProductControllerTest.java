@@ -333,7 +333,7 @@ class ProductControllerTest {
         Long givenExistedId = EXISTED_ID;
 
         mockMvc.perform(
-                patch("/products/" + givenExistedId)
+                RestDocumentationRequestBuilders.patch("/products/{id}", givenExistedId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + EXISTED_TOKEN)
                     .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
@@ -347,6 +347,9 @@ class ProductControllerTest {
                 .andDo(document("update-product",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                            parameterWithName("id").description("수정하고자 하는 상품의 식별자")
+                    ),
                     requestFields(
                             fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
                             fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
@@ -388,9 +391,10 @@ class ProductControllerTest {
 
         mockMvc.perform(
                 patch("/products/" + givenExistedId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                .content("{\"name\":\"\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
+        )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
