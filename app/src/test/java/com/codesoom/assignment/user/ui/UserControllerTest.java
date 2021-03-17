@@ -198,7 +198,7 @@ class UserControllerTest {
                 ))
                 .andDo(print())
                 .andDo(document("update-user",
-                        requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
                         pathParameters(
                                 parameterWithName("id").description("사용자 식별자")
                         ),
@@ -281,7 +281,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("delete-user",
-                        requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
                         pathParameters(
                                 parameterWithName("id").description("사용자 식별자")
                         )

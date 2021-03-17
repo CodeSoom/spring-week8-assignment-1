@@ -174,7 +174,7 @@ class ProductControllerTest {
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(print())
                 .andDo(document("create-product",
-                        requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
                         requestFields(
                                 fieldWithPath("name").type(STRING).description("상품 이름")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
@@ -246,7 +246,7 @@ class ProductControllerTest {
                 .andExpect(content().string(containsString("쥐순이")))
                 .andDo(print())
                 .andDo(document("update-product",
-                        requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
                         pathParameters(
                                 parameterWithName("id").description("상품 아이디")
                         ),
@@ -330,7 +330,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("delete-product",
-                        requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
                         pathParameters(
                                 parameterWithName("id").description("상품 아이디")
                         )
