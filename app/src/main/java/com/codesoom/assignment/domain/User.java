@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 회원
+ * 회원.
  */
 @Entity
 @Getter
