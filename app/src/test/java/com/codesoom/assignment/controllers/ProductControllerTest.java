@@ -442,7 +442,7 @@ class ProductControllerTest {
         Long givenExistedId = EXISTED_ID;
 
         mockMvc.perform(
-                delete("/products/" + givenExistedId)
+                RestDocumentationRequestBuilders.delete("/products/{id}", givenExistedId)
                     .header("Authorization", "Bearer " + EXISTED_TOKEN)
         )
                 .andDo(print())
