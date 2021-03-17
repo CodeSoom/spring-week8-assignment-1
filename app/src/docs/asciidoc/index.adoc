@@ -15,3 +15,11 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+== POST /product
+
+주어진 상품을 저장하고 해당 상품을 리턴한다.
+
+include::{snippets}/create-product/http-request.adoc[]
+
+include::{snippets}/create-product/http-response.adoc[]
