@@ -57,7 +57,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 주어진 상품 정보로 수정한 뒤, 수정된 상품을 리턴합니다.
+     * 주어진 id에 해당하는 상품을 전달받은 상품 정보로 수정한 뒤, 수정된 상품을 리턴합니다.
      *
      * @param id 상품의 식별자
      * @param productData 상품 정보
