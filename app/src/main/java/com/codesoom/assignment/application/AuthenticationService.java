@@ -38,7 +38,7 @@ public class AuthenticationService {
      * @param email    로그인 할 이메일
      * @param password 로그인 할 패스워드
      * @return JWT Access Token
-     * @throws LoginFailException 이메일이 없거나 패스워드가 일치하지 않는 경우
+     * @throws LoginFailException 로그인에 실패한 경우
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)

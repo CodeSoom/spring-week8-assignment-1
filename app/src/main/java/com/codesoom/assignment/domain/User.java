@@ -30,7 +30,7 @@ public class User {
     private String password = "";
 
     /**
-     * 삭제(탈퇴) 여부
+     * 삭제된 회원이면 true, 그렇지 않다면 false.
      */
     @Builder.Default
     private boolean deleted = false;

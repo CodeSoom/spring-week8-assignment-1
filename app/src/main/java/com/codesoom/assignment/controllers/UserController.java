@@ -48,13 +48,13 @@ public class UserController {
 
     /**
      * id에 해당하는 회원을 수정하고 수정된 회원 정보를 반환합니다.
-     * 인증되고 USER권한을 가진 사용자만 수정할 수 있습니다.
+     * <p>인증되고 USER권한을 가진 사용자만 수정할 수 있습니다.</p>
      *
      * @param id               수정할 회원의 식별자
      * @param modificationData 수정할 회원 정보
      * @param authentication   현재 유저의 인증
      * @return 수정된 회원의 정보
-     * @throws AccessDeniedException 현재 유저가 아닌 회원의 정보를 수정하는 경우
+     * @throws AccessDeniedException  수정 권한이 없는 경우
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -70,10 +70,10 @@ public class UserController {
 
     /**
      * id에 해당하는 회원을 삭제합니다.
-     * 인증되고 ADMIN권한을 가진 사용자만 삭제할 수 있습니다.
+     * <p>인증되고 ADMIN권한을 가진 사용자만 삭제할 수 있습니다.</p>
      *
      * @param id 삭제할 회원의 식별자
-     * @throws UserNotFoundException 삭제할 회원이 없거나 이미 삭제된 경우
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
      */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")

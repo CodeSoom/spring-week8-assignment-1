@@ -41,7 +41,7 @@ public class UserService {
      *
      * @param registrationData 저장할 회원의 정보
      * @return 저장된 회원
-     * @throws UserEmailDuplicationException 이미 저장된 회원이 있는 경우
+     * @throws UserEmailDuplicationException 이미 저장된 이메일이 있는 경우
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -66,7 +66,7 @@ public class UserService {
      * @param modificationData 수정할 회원 정보
      * @param userId           현재 로그인한 회원의 식별자
      * @return 수정된 회원
-     * @throws AccessDeniedException 현재 로그인한 회원이 아닌 회원의 정보를 수정하는 경우
+     * @throws AccessDeniedException 권한 없는 사용자가 회원 정보를 수정하는 경우
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {

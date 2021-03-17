@@ -58,7 +58,7 @@ public class ProductController {
 
     /**
      * 상품 정보로 상품을 등록하고 저장한 상품을 반환합니다.
-     * 인증되고 USER권한을 가진 사용자만 생성할 수 있습니다.
+     * <p>인증되고 USER권한을 가진 사용자만 생성할 수 있습니다.</p>
      *
      * @param productData 저장할 상품의 정보
      * @return 저장된 상품
@@ -72,7 +72,7 @@ public class ProductController {
 
     /**
      * id에 해당하는 상품을 수정하고 수정된 상품을 반환합니다.
-     * 인증된 사용자만 수정할 수 있습니다.
+     * <p>인증된 사용자만 수정할 수 있습니다.</p>d
      *
      * @param id          수정할 상품의 식별자
      * @param productData 수정할 상품의 정보
@@ -89,7 +89,7 @@ public class ProductController {
 
     /**
      * id에 해당하는 상품을 삭제합니다.
-     * 인증된 사용자만 삭제할 수 있습니다.
+     * <p>인증된 사용자만 삭제할 수 있습니다.</p>
      *
      * @param id 삭제할 상품의 id
      */
