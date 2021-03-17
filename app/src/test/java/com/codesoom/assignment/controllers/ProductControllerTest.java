@@ -268,78 +268,55 @@ class ProductControllerTest {
         verify(productService).createProduct(any(ProductCreateData.class));
     }
 
-        @Nested
-        @DisplayName("만약 이름값이 비어있는 상품이 주어진다면")
-        class Context_WithProductWithoutName {
-            @Test
-            @DisplayName("요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        post("/products")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
-
-    @Nested
-    @DisplayName("만약 메이커값이 비어있는 상품이 주어진다면")
-    class Context_WithProductWithoutMaker {
-        @Test
-        @DisplayName("요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-        void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-            mockMvc.perform(
-                    post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                        .content("{\"name\":\"createdName\" , \"maker\":\"\", \"price\":200, \"imageUrl\":\"createdImage\"}")
-            )
-                    .andDo(print())
-                    .andExpect(status().isBadRequest());
-        }
+    @Test
+    void createWithoutName() throws Exception {
+        mockMvc.perform(
+                post("/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
-        @Nested
-        @DisplayName("만약 가격값이 비어있는 상품이 주어진다면")
-        class Context_WithProductWithoutPrice {
-            @Test
-            @DisplayName("요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        post("/products")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\": null, \"imageUrl\":\"createdImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
+    @Test
+    void createWithoutMaker() throws Exception {
+        mockMvc.perform(
+                post("/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"createdName\" , \"maker\":\"\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-        @Nested
-        @DisplayName("만약에 유효하지 않은 토큰이 주어진다면")
-        class Context_WithInvalidToken {
-            private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
+    @Test
+    void createWithoutPrice() throws Exception {
+        mockMvc.perform(
+                post("/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\": null, \"imageUrl\":\"createdImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-            @Test
-            @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-            void itThrowsInvalidTokenExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
+    @Test
+    void createWithInvalidToken() throws Exception {
+        final String givenNotExistedToken = NOT_EXISTED_TOKEN;
 
-
-                mockMvc.perform(
-                        post("/products")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + givenNotExistedToken)
-                                .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-
+        mockMvc.perform(
+                post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + givenNotExistedToken)
+                        .content("{\"name\":\"createdName\" , \"maker\":\"createdMaker\", \"price\":200, \"imageUrl\":\"createdImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 
     @Nested
     @DisplayName("update 메서드는")
