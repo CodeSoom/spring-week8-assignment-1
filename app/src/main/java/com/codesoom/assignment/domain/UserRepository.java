@@ -18,7 +18,7 @@ public interface UserRepository {
      * 전달받은 email과 일치하는 유저의 존재 여부를 반환합니다.
      *
      * @param email 유저 email
-     * @return 유저 존재 유무
+     * @return 유저 존재 여부
      */
     boolean existsByEmail(String email);
 

@@ -22,7 +22,7 @@ public class JwtUtil {
     }
 
     /**
-     * 주어진 유저 식별자로 부호화한 JWT Token을 반환한다.
+     * 주어진 유저 식별자로 부호화한 JWT Token 문자열을 반환합니다.
      *
      * @param userId 유저 식별자
      * @return Token 값
@@ -35,7 +35,7 @@ public class JwtUtil {
     }
 
     /**
-     * 주어진 Token 으로 복호화한 정보 조각을 반환한다.
+     * 주어진 Token 으로 복호화한 정보 조각을 반환합니다.
      *
      * @param token Token 값
      * @return 정보 조각

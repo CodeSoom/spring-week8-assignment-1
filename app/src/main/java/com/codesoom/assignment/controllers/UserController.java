@@ -46,7 +46,7 @@ public class UserController {
      * @param modificationData 유저 수정 정보
      * @param authentication   수정 요청 유저 정보
      * @return 수정된 유저
-     * @throws AccessDeniedException 수정 대상 유저와 요청 유저가 일치하지 않는 경우
+     * @throws AccessDeniedException 수정 권한이 없는 경우
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")

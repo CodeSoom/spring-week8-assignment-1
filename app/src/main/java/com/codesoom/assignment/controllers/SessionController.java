@@ -19,7 +19,7 @@ public class SessionController {
     }
 
     /**
-     * 지급된 로그인 정보로부터 인증된 세션 정보를 응답한다.
+     * 지급된 로그인 정보로부터 인증된 세션 정보를 응답합니다.
      *
      * @param sessionRequestData 유저 로그인 정보
      * @return 유저 세션 정보

@@ -24,7 +24,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationService authenticationService;
 
     /**
-     * HTTP 요청에 대한 보안 규칙을 정의한다.
+     * HTTP 요청에 대한 보안 규칙을 정의합니다.
      *
      * @param http HTTP 보안 규칙 정보
      * @throws Exception
