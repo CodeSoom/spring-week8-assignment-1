@@ -12,6 +12,7 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -39,6 +40,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -169,6 +171,8 @@ class ProductControllerTest {
 
         given(authenticationService.parseToken(eq(NOT_EXISTED_TOKEN)))
                 .willThrow(new InvalidTokenException(NOT_EXISTED_TOKEN));
+
+        given(productService.deleteProduct(EXISTED_ID)).willReturn(resultProductOne);
 
         given(productService.deleteProduct(NOT_EXISTED_ID))
                 .willThrow(new ProductNotFoundException(NOT_EXISTED_ID));
@@ -422,7 +426,7 @@ class ProductControllerTest {
 
     @Test
     void updateWithInvalidToken() throws Exception {
-        Long givenExistedId = NOT_EXISTED_ID;
+        Long givenExistedId = EXISTED_ID;
 
         mockMvc.perform(
                 patch("/products/" + givenExistedId)
@@ -433,71 +437,72 @@ class ProductControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
-//    @Nested
-//    @DisplayName("delete 메서드는")
-//    class Describe_delete {
-//        @Nested
-//        @DisplayName("만약 저장되어 있는 상품의 아이디가 주어진다면")
-//        class Context_WithExistedId {
-//            private final Long givenExistedId = EXISTED_ID;
-//
-//            @Test
-//            @DisplayName("주어진 아이디에 해당하는 상품을 삭제하고 삭제된 상품과 NO_CONTENT를 리턴한다")
-//            void itDeleteProductAndReturnsNO_CONTENTHttpStatus() throws Exception {
-//                given(productService.deleteProduct(givenExistedId)).willReturn(resultProductOne);
-//
-//                mockMvc.perform(
-//                        delete("/products/" + givenExistedId)
-//                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-//                )
-//                        .andDo(print())
-//                        .andExpect(jsonPath("id").value(givenExistedId))
-//                        .andExpect(status().isNoContent());
-//                        //.andDo(document("delete-product"));
-//
-//                verify(productService).deleteProduct(givenExistedId);
-//            }
-//        }
-//
-//        @Nested
-//        @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
-//        class Context_WithNotExistedId {
-//            private final Long givenNotExistedId = NOT_EXISTED_ID;
-//
-//            @Test
-//            @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-//            void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-//
-//
-//                mockMvc.perform(
-//                        delete("/products/" + givenNotExistedId)
-//                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-//                )
-//                        .andDo(print())
-//                        .andExpect(status().isNotFound());
-//
-//                verify(productService).deleteProduct(givenNotExistedId);
-//            }
-//        }
-//
-//        @Nested
-//        @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
-//        class ContextWith_NotValidToken {
-//            private final Long givenExistedId = EXISTED_ID;
-//            private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
-//
-//            @Test
-//            @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-//            void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
-//
-//
-//                mockMvc.perform(
-//                        delete("/products/" + givenExistedId)
-//                            .header("Authorization", "Bearer " + givenNotExistedToken)
-//                )
-//                        .andDo(print())
-//                        .andExpect(status().isUnauthorized());
-//            }
-//        }
-//    }
+
+    @Test
+    void DeleteWithExistedId() throws Exception {
+        Long givenExistedId = EXISTED_ID;
+
+        mockMvc.perform(
+                delete("/products/" + givenExistedId)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+        )
+                .andDo(print())
+                .andExpect(jsonPath("id").value(givenExistedId))
+                .andExpect(status().isNoContent())
+                .andDo(document("delete-product",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("삭제하고자 하는 상품의 식별자")
+                        ),
+                    responseFields(
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                            fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                            fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                            fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                    )
+        ));
+
+        verify(productService).deleteProduct(givenExistedId);
+    }
+
+    @Nested
+    @DisplayName("만약 저장되어 있지 않은 상품의 아이디가 주어진다면")
+    class Context_WithNotExistedId {
+        private final Long givenNotExistedId = NOT_EXISTED_ID;
+
+        @Test
+        @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
+        void itThrowsProductNotFoundMessageAndReturnsNOT_FOUNDHttpStatus() throws Exception {
+
+
+            mockMvc.perform(
+                    delete("/products/" + givenNotExistedId)
+                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
+            )
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+
+            verify(productService).deleteProduct(givenNotExistedId);
+        }
+    }
+
+    @Nested
+    @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
+    class ContextWith_NotValidToken {
+        private final Long givenExistedId = EXISTED_ID;
+        private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
+
+        @Test
+        @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
+        void itThrowsInvalidTokenExceptionAndReturnsUNAUTHROIZEDHttpStatus() throws Exception {
+            mockMvc.perform(
+                    delete("/products/" + givenExistedId)
+                        .header("Authorization", "Bearer " + givenNotExistedToken)
+            )
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized());
+        }
+    }
 }
