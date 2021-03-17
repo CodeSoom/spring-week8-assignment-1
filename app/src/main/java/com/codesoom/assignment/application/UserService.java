@@ -26,7 +26,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public UserService(Mapper mapper, UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserService(Mapper mapper,
+                       UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       RoleRepository roleRepository) {
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -60,7 +63,7 @@ public class UserService {
         User user = userRepository.save(
                 mapper.map(createRequest, User.class));
 
-        user.changePassword(createRequest.getPassword());
+        user.changePassword(createRequest.getPassword(), passwordEncoder);
 
         Role role = roleRepository.save(new Role(user.getId(), "USER"));
 
@@ -89,7 +92,7 @@ public class UserService {
         User user = findUser(id);
 
         user.updateWith(mapper.map(updateRequest, User.class));
-        user.changePassword(updateRequest.getPassword());
+        user.changePassword(updateRequest.getPassword(), passwordEncoder);
 
         return user;
     }
