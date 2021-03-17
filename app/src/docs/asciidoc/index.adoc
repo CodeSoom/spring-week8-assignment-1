@@ -68,7 +68,7 @@ HTTP 상태 코드는 표준 HTTP와 REST 규약을 따릅니다.
 
 === GET /products
 
-상품 목록을 JSON 형태로 돌려준다.
+상품 목록을 돌려준다.
 
 ==== Request
 :path: {snippets}/get-products
@@ -91,7 +91,7 @@ include::{path}/http-response.adoc[]
 
 === GET /products/{id}
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+상품에 대한 자세한 정보를 돌려준다.
 
 ==== Request
 :path: {snippets}/get-product
@@ -118,7 +118,7 @@ include::{path}/http-response.adoc[]
 
 === Create /products
 
-상품을 생성하고 생성 정보를 JSON 형태로 돌려준다.
+상품을 생성하고 생성 정보를 돌려준다.
 
 ==== Request
 :path: {snippets}/create-product
@@ -148,7 +148,7 @@ include::{path}/http-response.adoc[]
 
 === Update /products/{id}
 
-상품을 갱신하고 갱신 정보를 JSON 형태로 돌려준다.
+상품을 갱신하고 갱신 정보를 돌려준다.
 
 ==== Request
 :path: {snippets}/update-product
@@ -212,7 +212,7 @@ include::{path}/http-response.adoc[]
 
 === Create /users
 
-사용자를 생성하고 생성 정보를 JSON 형태로 돌려준다.
+사용자를 생성하고 생성 정보를 돌려준다.
 
 ==== Request
 :path: {snippets}/create-user
@@ -241,7 +241,7 @@ include::{path}/http-response.adoc[]
 
 === Update /users/{id}
 
-사용자 정보 갱신하고 갱신 정보를 JSON 형태로 돌려준다.
+사용자 정보 갱신하고 갱신 정보를 돌려준다.
 
 ==== Request
 :path: {snippets}/update-user
