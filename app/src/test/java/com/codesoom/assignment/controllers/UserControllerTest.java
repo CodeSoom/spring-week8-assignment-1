@@ -15,8 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -63,7 +61,7 @@ class UserControllerTest {
 
     private static final Long EXISTED_ID = 1L;
     private static final Long CREATED_ID = 2L;
-    private static final Long DELETE_ID = 1L;
+    private static final Long DELETE_ID = 3L;
     private static final Long NOT_EXISTED_ID = 100L;
 
     private static final String MY_EMAIL = SETUP_USER_EMAIL;
@@ -82,10 +80,14 @@ class UserControllerTest {
     private List<User> users;
     private User setUpUser;
     private User createUser;
+    private User deletedUser;
 
     private List<UserResultData> resultUsers;
-    private UserResultData setupUserResult;
-    private UserResultData createUserResult;
+    private UserResultData setupUserData;
+    private UserResultData createdUserData;
+    private UserResultData deletedUserData;
+    private UserAuthentication invalidAuthentication;
+    private UserAuthentication validAuthentication;
 
     @BeforeEach
     void setUp() {
@@ -103,11 +105,85 @@ class UserControllerTest {
                 .password(CREATE_USER_PASSWORD)
                 .build();
 
+        deletedUser = User.builder()
+                .id(DELETE_ID)
+                .name(SETUP_USER_NAME)
+                .email(SETUP_USER_EMAIL)
+                .password(SETUP_USER_PASSWORD)
+                .deleted(true)
+                .build();
+
+        validAuthentication = UserAuthentication.builder()
+                .email(MY_EMAIL)
+                .roles(List.of(new Role("USER")))
+                .build();
+
+        invalidAuthentication = UserAuthentication.builder()
+                .email(OTHER_EMAIL)
+                .roles(List.of(new Role("USER")))
+                .build();
+
         users = List.of(setUpUser, createUser);
 
-        setupUserResult = UserResultData.of(setUpUser);
-        createUserResult = UserResultData.of(createUser);
-        resultUsers = List.of(setupUserResult, createUserResult);
+        setupUserData = UserResultData.of(setUpUser);
+        createdUserData = UserResultData.of(createUser);
+        deletedUserData = UserResultData.of(deletedUser);
+        resultUsers = List.of(setupUserData, createdUserData);
+
+        given(userService.getUsers()).willReturn(resultUsers);
+
+        given(userService.getUser(EXISTED_ID)).willReturn(setUpUser);
+
+        given(userService.getUser(NOT_EXISTED_ID))
+                .willThrow(new UserNotFoundException(NOT_EXISTED_ID));
+
+        given(userService.createUser(any(UserCreateData.class)))
+                .will(invocation -> {
+                    UserCreateData userCreateData = invocation.getArgument(0);
+                    return UserResultData.builder()
+                            .id(CREATED_ID)
+                            .name(userCreateData.getName())
+                            .email(userCreateData.getEmail())
+                            .password(userCreateData.getPassword())
+                            .build();
+                });
+
+        given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
+                .will(invocation -> {
+                    Long id = invocation.getArgument(0);
+                    UserUpdateData userUpdateData = invocation.getArgument(1);
+                    return UserResultData.builder()
+                            .id(id)
+                            .name(userUpdateData.getName())
+                            .password(userUpdateData.getPassword())
+                            .build();
+                });
+
+        given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
+                .willThrow(new UserBadRequestException());
+
+        given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(invalidAuthentication)))
+                .willThrow(new AccessDeniedException("Access denied"));
+
+        given(userService.updateUser(eq(NOT_EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
+                .willThrow(new UserNotFoundException(NOT_EXISTED_ID));
+
+        given(userService.deleteUser(eq(EXISTED_ID))).willReturn(deletedUserData);
+
+        given(userService.deleteUser(NOT_EXISTED_ID))
+                .willThrow(new UserNotFoundException(NOT_EXISTED_ID));
+
+        given(userService.deleteUser(DELETE_ID))
+                .willThrow(new UserNotFoundException(DELETE_ID));
+
+        given(authenticationService.parseToken(MY_TOKEN)).willReturn(MY_EMAIL);
+        given(authenticationService.parseToken(OTHER_TOKEN)).willReturn(OTHER_EMAIL);
+        given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(ADMIN_EMAIL);
+
+        given(authenticationService.roles(MY_EMAIL)).willReturn(List.of(new Role("USER")));
+        given(authenticationService.roles(OTHER_EMAIL)).willReturn(List.of(new Role("USER")));
+        given(authenticationService.roles(ADMIN_EMAIL))
+                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
     }
 
     @Nested
@@ -116,8 +192,6 @@ class UserControllerTest {
         @Test
         @DisplayName("전체 사용자 목록과 OK를 리턴한다")
         void itReturnsListOfUsersAndOKHttpStatus() throws Exception {
-            given(userService.getUsers()).willReturn(resultUsers);
-
             mockMvc.perform(
                     get("/users")
             )
@@ -142,8 +216,6 @@ class UserControllerTest {
             @Test
             @DisplayName("주어진 아이디에 해당하는 사용자와 OK를 리턴한다")
             void itReturnsUserAndOkHttpStatus() throws Exception {
-                given(userService.getUser(givenExistedId)).willReturn(setUpUser);
-
                 mockMvc.perform(
                         get("/users/"+givenExistedId)
                 )
@@ -164,9 +236,6 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
             void itThrowsNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                given(userService.getUser(givenNotExistedId))
-                        .willThrow(new UserNotFoundException(givenNotExistedId));
-
                 mockMvc.perform(
                         get("/users/"+givenNotExistedId)
                 )
@@ -187,26 +256,15 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자를 저장하고 저장된 사용자와 CREATED를 리턴한다")
             void itSavesUserAndReturnsUser() throws Exception {
-                given(userService.createUser(any(UserCreateData.class)))
-                        .will(invocation -> {
-                            UserCreateData userCreateData = invocation.getArgument(0);
-                            return UserResultData.builder()
-                                    .id(CREATED_ID)
-                                    .name(userCreateData.getName())
-                                    .email(userCreateData.getEmail())
-                                    .password(userCreateData.getPassword())
-                                    .build();
-                        });
-
                 mockMvc.perform(
                         post("/users")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"name\":\"createdName\",\"email\":\"createdEmail\",\"password\":\"createdPassword\"}")
                 )
-                        .andExpect(jsonPath("id").value(createUserResult.getId()))
-                        .andExpect(jsonPath("name").value(createUserResult.getName()))
-                        .andExpect(jsonPath("email").value(createUserResult.getEmail()))
-                        .andExpect(jsonPath("password").value(createUserResult.getPassword()))
+                        .andExpect(jsonPath("id").value(createdUserData.getId()))
+                        .andExpect(jsonPath("name").value(createdUserData.getName()))
+                        .andExpect(jsonPath("email").value(createdUserData.getEmail()))
+                        .andExpect(jsonPath("password").value(createdUserData.getPassword()))
                         .andExpect(status().isCreated());
 
                 verify(userService).createUser(any(UserCreateData.class));
@@ -257,19 +315,6 @@ class UserControllerTest {
             @Test
             @DisplayName("주어진 아이디에 해당하는 사용자를 수정하고 수정된 사용자와 OK를 리턴한다")
             void itUpdatesUserAndReturnUpdatedUserAndOKHttpStatus() throws Exception {
-                given(authenticationService.parseToken(MY_TOKEN)).willReturn(MY_EMAIL);
-                given(authenticationService.roles(givenExistedEmail)).willReturn(Arrays.asList(new Role("USER")));
-                given(userService.updateUser(eq(givenExistedId), any(UserUpdateData.class), eq(authentication)))
-                        .will(invocation -> {
-                            Long id = invocation.getArgument(0);
-                            UserUpdateData userUpdateData = invocation.getArgument(1);
-                            return UserResultData.builder()
-                                    .id(id)
-                                    .name(userUpdateData.getName())
-                                    .password(userUpdateData.getPassword())
-                                    .build();
-                        });
-
                 mockMvc.perform(
                         patch("/users/" + givenExistedId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -301,11 +346,6 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
             void itThrowsUserNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                given(authenticationService.parseToken(MY_TOKEN)).willReturn(MY_EMAIL);
-                given(authenticationService.roles(givenExistedEmail)).willReturn(List.of(new Role("USER")));
-                given(userService.updateUser(eq(givenNotExistedId), any(UserUpdateData.class), eq(authentication)))
-                        .willThrow(new UserNotFoundException(givenNotExistedId));
-
                 mockMvc.perform(
                         patch("/users/"+givenNotExistedId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -337,9 +377,6 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자 요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
             void itThrowsUserBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                given(userService.updateUser(eq(givenExistedId), any(UserUpdateData.class), eq(authentication)))
-                        .willThrow(new UserBadRequestException());
-
                 mockMvc.perform(
                         patch("/users/" + givenExistedId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -387,11 +424,6 @@ class UserControllerTest {
             @Test
             @DisplayName("접근이 거부되었다는 예외를 던지고 FORBIDDEN를 리턴한다")
             void itThrowsAccessDeniedExceptionAndReturnsFORBIDDENHttpStatus() throws Exception {
-                given(authenticationService.parseToken(OTHER_TOKEN)).willReturn(OTHER_EMAIL);
-                given(authenticationService.roles(givenNotExistedEmail)).willReturn(Arrays.asList(new Role("USER")));
-                given(userService.updateUser(eq(givenExistedId), any(UserUpdateData.class), eq(authentication)))
-                        .willThrow(new AccessDeniedException("Access denied"));
-
                 mockMvc.perform(
                         patch("/users/" + givenExistedId)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -424,11 +456,6 @@ class UserControllerTest {
             @Test
             @DisplayName("주어진 아이디에 해당하는 사용자를 삭제하고 삭제된 사용자와 NO_CONTENT를 리턴한다")
             void itDeletesUserAndReturnsDeletedUserAndNO_CONTENTHttpStatus() throws Exception {
-                given(authenticationService.roles(ADMIN_EMAIL))
-                        .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
-                given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(ADMIN_EMAIL);
-                given(userService.deleteUser(eq(givenExistedId))).willReturn(userResultData);
-
                 mockMvc.perform(
                         delete("/users/" + givenExistedId)
                                 .header("Authorization", "Bearer " + ADMIN_TOKEN)
@@ -447,12 +474,6 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
             void itThrowsNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                given(authenticationService.roles(ADMIN_EMAIL))
-                        .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
-                given(authenticationService.parseToken(ADMIN_EMAIL)).willReturn(ADMIN_EMAIL);
-                given(userService.deleteUser(givenNotExistedId))
-                        .willThrow(new UserNotFoundException(givenNotExistedId));
-
                 mockMvc.perform(
                         delete("/users/"+givenNotExistedId)
                                 .header("Authorization", "Bearer " + ADMIN_TOKEN)
@@ -476,12 +497,6 @@ class UserControllerTest {
             @Test
             @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
             void itThrowsNotFoundExceptionAndNOT_FOUNDHttpStatus() throws Exception {
-                given(authenticationService.roles(ADMIN_EMAIL))
-                        .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
-                given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(ADMIN_EMAIL);
-                given(userService.deleteUser(givenDeletedId))
-                        .willThrow(new UserNotFoundException(givenDeletedId));
-
                 mockMvc.perform(
                         delete("/users/"+DELETE_ID)
                                 .header("Authorization", "Bearer " + ADMIN_TOKEN)
@@ -516,8 +531,6 @@ class UserControllerTest {
             @Test
             @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
             void itThrowsUnauthorizedExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
-                given(authenticationService.parseToken(MY_TOKEN)).willReturn(MY_EMAIL);
-
                 mockMvc.perform(
                         delete("/users/" + givenExistedId)
                                 .header("Authorization", "Bearer " + MY_TOKEN)
