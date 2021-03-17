@@ -6,3 +6,4 @@ build
 
 # IDE
 .idea
+app/out
