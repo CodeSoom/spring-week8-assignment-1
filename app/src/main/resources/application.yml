@@ -7,3 +7,9 @@ spring:
 
 jwt:
   secret: "12345678901234567890123456789010"
+
+server:
+  servlet:
+     encoding:
+       charset: UTF-8
+       force: true
