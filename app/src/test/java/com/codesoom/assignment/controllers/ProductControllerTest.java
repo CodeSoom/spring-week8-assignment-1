@@ -1,6 +1,5 @@
 package com.codesoom.assignment.controllers;
 
-import com.codesoom.RestDocsConfiguration;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.domain.Product;
@@ -17,16 +16,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +50,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductController.class)
 @AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
 @DisplayName("ProductController 테스트")
 class ProductControllerTest {
     private static final String EXISTED_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -171,7 +165,6 @@ class ProductControllerTest {
                 .willThrow(new ProductNotFoundException(NOT_EXISTED_ID));
     }
 
-
     @Test
     void lists() throws Exception {
         mockMvc.perform(
@@ -179,7 +172,18 @@ class ProductControllerTest {
         )
                 .andExpect(content().string(StringContains.containsString("\"id\":" + EXISTED_ID)))
                 .andExpect(content().string(StringContains.containsString("\"id\":" + CREATED_ID)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("get-products",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("[].maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                        )
+                ));
 
         verify(productService).getProducts();
     }
