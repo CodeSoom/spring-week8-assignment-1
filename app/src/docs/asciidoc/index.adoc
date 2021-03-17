@@ -31,3 +31,11 @@ include::{snippets}/create-product/http-response.adoc[]
 include::{snippets}/update-product/http-request.adoc[]
 
 include::{snippets}/update-product/http-response.adoc[]
+
+== DELETE /product/{id}
+
+주어진 식별자에 해당하는 상품을 삭제하고 삭제된 상품을 리턴한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
