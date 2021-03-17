@@ -12,7 +12,6 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -200,7 +199,7 @@ class ProductControllerTest {
 
     @Test
     void detailWithExistedId() throws Exception {
-        final Long givenExistedId = EXISTED_ID;
+        Long givenExistedId = EXISTED_ID;
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/products/{id}", givenExistedId)
@@ -228,7 +227,7 @@ class ProductControllerTest {
 
     @Test
     void detailWithNotExistedId() throws Exception {
-        final Long givenNotExistedId = NOT_EXISTED_ID;
+        Long givenNotExistedId = NOT_EXISTED_ID;
 
         mockMvc.perform(
                 get("/products/"+ givenNotExistedId)
@@ -328,7 +327,7 @@ class ProductControllerTest {
 
     @Test
     void updateWithExistedIdAndProduct() throws Exception {
-        final Long givenExistedId = EXISTED_ID;
+        Long givenExistedId = EXISTED_ID;
 
         mockMvc.perform(
                 patch("/products/" + givenExistedId)
@@ -363,112 +362,77 @@ class ProductControllerTest {
         verify(productService).updateProduct(eq(givenExistedId), any(ProductUpdateData.class));
     }
 
+    @Test
+    void updateWithNotExistedId() throws Exception {
+        Long givenNotExistedId = NOT_EXISTED_ID;
 
-        @Nested
-        @DisplayName("만약 저장되어 있지 않는 상품의 아이디가 주어진다면")
-        class Context_WithOutExistedId {
-            private final Long givenNotExisted = NOT_EXISTED_ID;
+        mockMvc.perform(
+                patch("/products/" + givenNotExistedId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("Product not found")))
+                .andExpect(status().isNotFound());
 
-            @Test
-            @DisplayName("상품을 찾을 수 없다는 예외를 던지고 NOT_FOUND를 응답한다")
-            void itThrowsProductNotFoundExceptionAndThrowsNOT_FOUNDHttpStatus() throws Exception {
+        verify(productService).updateProduct(eq(givenNotExistedId), any(ProductUpdateData.class));
+    }
 
+    @Test
+    void updateWithoutName() throws Exception {
+        Long givenExistedId = EXISTED_ID;
 
-                mockMvc.perform(
-                        patch("/products/" + givenNotExisted)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(content().string(containsString("Product not found")))
-                        .andExpect(status().isNotFound());
+        mockMvc.perform(
+                patch("/products/" + givenExistedId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                .content("{\"name\":\"\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-                verify(productService).updateProduct(eq(givenNotExisted), any(ProductUpdateData.class));
-            }
-        }
+    @Test
+    void updateWithoutMaker() throws Exception {
+        Long givenExistedId = EXISTED_ID;
 
-        @Nested
-        @DisplayName("만약 이름값이 비어있는 상품이 주어진다면")
-        class Context_WithOutName {
-            private final Long givenExistedId = EXISTED_ID;
+        mockMvc.perform(
+                patch("/products/" + givenExistedId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"updatedName\" , \"maker\":\"\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-            @Test
-            @DisplayName("요청이 잘못 되었다는 메세지와 BAD_REQUEST를 응답한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/products/" + givenExistedId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                        .content("{\"name\":\"\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}"))
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
+    @Test
+    void updateWithoutPrice() throws Exception {
+        Long givenExistedId = EXISTED_ID;
 
-            }
-        }
+        mockMvc.perform(
+                patch("/products/" + givenExistedId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + EXISTED_TOKEN)
+                    .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\": null, \"imageUrl\":\"updatedImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-        @Nested
-        @DisplayName("만약 메이커값이 비어있는 고양이 장난감 객체가 주어진다면")
-        class Context_WithOutMaker {
-            private final Long givenExistedId = EXISTED_ID;
+    @Test
+    void updateWithInvalidToken() throws Exception {
+        Long givenExistedId = NOT_EXISTED_ID;
 
-            @Test
-            @DisplayName("요청이 잘못 되었다는 메세지와 BAD_REQUEST를 응답한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/products/" + givenExistedId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"updatedName\" , \"maker\":\"\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 가격값이 비어있는 고양이 장난감 객체가 주어진다면")
-        class Context_WithOutPrice {
-            private final Long givenExistedId = EXISTED_ID;
-
-            @Test
-            @DisplayName("요청이 잘못 되었다는 메세지와 BAD_REQUEST를 응답한다")
-            void itThrowsProductBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/products/" + givenExistedId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + EXISTED_TOKEN)
-                            .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\": null, \"imageUrl\":\"updatedImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 유효하지 않은 토큰이 주어진다면")
-        class Context_WithNotValidToken {
-            private final Long givenExistedId = EXISTED_ID;
-            private final String givenNotExistedToken = NOT_EXISTED_TOKEN;
-
-            @Test
-            @DisplayName("토큰이 유효하지 않다는 예외를 던지고 UNAHTORHIZED를 리턴한다")
-            void itThrowsInvalidTokenExceptionAndUNAUTHORIZEDHttpStatus() throws Exception {
-
-
-                mockMvc.perform(
-                        patch("/products/" + givenExistedId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + givenNotExistedToken)
-                            .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-
-
-
+        mockMvc.perform(
+                patch("/products/" + givenExistedId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + NOT_EXISTED_TOKEN)
+                    .content("{\"name\":\"updatedName\" , \"maker\":\"updatedMaker\", \"price\":300, \"imageUrl\":\"updatedImage\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 //    @Nested
 //    @DisplayName("delete 메서드는")
 //    class Describe_delete {
