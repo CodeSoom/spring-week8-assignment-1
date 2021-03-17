@@ -71,136 +71,141 @@ HTTP 상태 코드는 표준 HTTP와 REST 규약을 따릅니다.
 상품 목록을 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/get-products
 
 CURL:
 
-include::{snippets}/get-products/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request HTTP Example:
-include::{snippets}/get-products/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/get-products/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/get-product
 
 CURL:
 
-include::{snippets}/get-product/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Path Parameters:
 
-include::{snippets}/get-product/path-parameters.adoc[]
+include::{path}/path-parameters.adoc[]
 
 Request HTTP Example:
-include::{snippets}/get-product/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/get-product/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === Create /products
 
 상품을 생성하고 생성 정보를 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/create-product
 
 CURL:
 
-include::{snippets}/create-product/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Header:
-include::{snippets}/create-product/request-headers.adoc[]
+include::{path}/request-headers.adoc[]
 
 Request Fields:
 
-include::{snippets}/create-product/request-fields.adoc[]
+include::{path}/request-fields.adoc[]
 
 Request HTTP Example:
-include::{snippets}/create-product/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/create-product/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/create-product/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === Update /products/{id}
 
 상품을 갱신하고 갱신 정보를 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/update-product
 
 CURL:
 
-include::{snippets}/update-product/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Header:
-include::{snippets}/update-product/request-headers.adoc[]
+include::{path}/request-headers.adoc[]
 
 Request Path Parameters:
 
-include::{snippets}/update-product/path-parameters.adoc[]
+include::{path}/path-parameters.adoc[]
 
 Request Fields:
 
-include::{snippets}/update-product/request-fields.adoc[]
+include::{path}/request-fields.adoc[]
 
 Request HTTP Example:
-include::{snippets}/update-product/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/update-product/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/update-product/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === Delete /products/{id}
 
 상품을 삭제한다.
 
 ==== Request
+:path: {snippets}/delete-product
 
 CURL:
 
-include::{snippets}/delete-product/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Header:
-include::{snippets}/delete-product/request-headers.adoc[]
+include::{path}/request-headers.adoc[]
 
 Request Path Parameters:
 
-include::{snippets}/delete-product/path-parameters.adoc[]
+include::{path}/path-parameters.adoc[]
 
 Request HTTP Example:
-include::{snippets}/delete-product/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response HTTP Example:
 
-include::{snippets}/delete-product/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 [[USER]]
 == USER
@@ -210,87 +215,90 @@ include::{snippets}/delete-product/http-response.adoc[]
 사용자를 생성하고 생성 정보를 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/create-user
 
 CURL:
 
-include::{snippets}/create-user/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 
 Request Fields:
 
-include::{snippets}/create-user/request-fields.adoc[]
+include::{path}/request-fields.adoc[]
 
 
 Request HTTP Example:
-include::{snippets}/create-user/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/create-user/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/create-user/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === Update /users/{id}
 
 사용자 정보 갱신하고 갱신 정보를 JSON 형태로 돌려준다.
 
 ==== Request
+:path: {snippets}/update-user
 
 CURL:
 
-include::{snippets}/update-user/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Header:
-include::{snippets}/update-user/request-headers.adoc[]
+include::{path}/request-headers.adoc[]
 
 Request Path Parameters:
 
-include::{snippets}/update-user/path-parameters.adoc[]
+include::{path}/path-parameters.adoc[]
 
 Request Fields:
 
-include::{snippets}/update-user/request-fields.adoc[]
+include::{path}/request-fields.adoc[]
 
 Request HTTP Example:
-include::{snippets}/update-user/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/update-user/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/update-user/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 === Delete /users/{id}
 
 상품을 삭제한다.
 
 ==== Request
+:path: {snippets}/delete-user
 
 CURL:
 
-include::{snippets}/delete-user/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 Request Header:
-include::{snippets}/delete-user/request-headers.adoc[]
+include::{path}/request-headers.adoc[]
 
 Request Path Parameters:
 
-include::{snippets}/delete-user/path-parameters.adoc[]
+include::{path}/path-parameters.adoc[]
 
 Request HTTP Example:
-include::{snippets}/delete-user/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response HTTP Example:
 
-include::{snippets}/delete-user/http-response.adoc[]
+include::{path}/http-response.adoc[]
 
 [[SESSION]]
 == SESSION
@@ -300,25 +308,26 @@ include::{snippets}/delete-user/http-response.adoc[]
 사용자 인증 요청을 처리하고 인증 정보를 리턴한다.
 
 ==== Request
+:path: {snippets}/create-session
 
 CURL:
 
-include::{snippets}/create-session/curl-request.adoc[]
+include::{path}/curl-request.adoc[]
 
 
 Request Fields:
 
-include::{snippets}/create-session/request-fields.adoc[]
+include::{path}/request-fields.adoc[]
 
 
 Request HTTP Example:
-include::{snippets}/create-session/http-request.adoc[]
+include::{path}/http-request.adoc[]
 
 ==== Response
 
 Response Fields:
-include::{snippets}/create-session/response-fields.adoc[]
+include::{path}/response-fields.adoc[]
 
 Response HTTP Example:
 
-include::{snippets}/create-session/http-response.adoc[]
+include::{path}/http-response.adoc[]
