@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -120,11 +121,11 @@ class ProductControllerTest {
                 .andDo(print())
                 .andDo(document("get-products",
                         responseFields(
-                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("[].maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                                fieldWithPath("[].id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("[].name").type(STRING).description("상품 이름"),
+                                fieldWithPath("[].maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("[].price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("[].imageUrl").type(STRING).optional().description("상품 이미지")
                         ))
                 )
 
@@ -144,11 +145,11 @@ class ProductControllerTest {
                                 parameterWithName("id").description("상품 아이디")
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
                         ))
                 );
     }
@@ -175,21 +176,21 @@ class ProductControllerTest {
                 .andDo(document("create-product",
                         requestHeaders(headerWithName("Authorization").description("JWT 토큰 인증")),
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름")
+                                fieldWithPath("name").type(STRING).description("상품 이름")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사")
+                                fieldWithPath("maker").type(STRING).description("상품 제조사")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격")
+                                fieldWithPath("price").type(NUMBER).description("상품 가격")
                                         .attributes(key("constraints").value("빈 값을 입력할 수 없습니다.")),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지").optional()
                                         .attributes(key("constraints").value(""))
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
                         ))
                 );
 
@@ -250,21 +251,21 @@ class ProductControllerTest {
                                 parameterWithName("id").description("상품 아이디")
                         ),
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름")
+                                fieldWithPath("name").type(STRING).description("상품 이름")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사")
+                                fieldWithPath("maker").type(STRING).description("상품 제조사")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격")
+                                fieldWithPath("price").type(NUMBER).description("상품 가격")
                                         .attributes(key("constraints").value("빈 값을 입력할 수 없습니다.")),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지").optional()
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지").optional()
                                         .attributes(key("constraints").value(""))
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
                         ))
                 );
 

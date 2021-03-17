@@ -31,6 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -152,17 +153,17 @@ class UserControllerTest {
                 .andDo(document("create-user",
                         requestFields(
                                 attributes(key("user").value("Fields for user creation")),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
+                                fieldWithPath("email").type(STRING).description("사용자 이메일")
                                         .attributes(key("constraints").value("최소 세 글자 이상 입력해야합니다.")),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("사용자 이름")
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("password").type(JsonFieldType.STRING).description("사용자 비밀번호")
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호")
                                         .attributes(key("constraints").value("비밀번호는 4 ~ 1024 글자 이내 입력해야합니다."))
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("사용자 식별자"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("사용자 이름")
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
                         ))
                 );
 
@@ -203,15 +204,15 @@ class UserControllerTest {
                         ),
                         requestFields(
                                 attributes(key("user").value("Fields for user creation")),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("사용자 이름")
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
                                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
-                                fieldWithPath("password").type(JsonFieldType.STRING).description("사용자 비밀번호")
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호")
                                         .attributes(key("constraints").value("비밀번호는 4 ~ 1024 글자 이내 입력해야합니다."))
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("사용자 식별자"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("사용자 이름")
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
                         ))
                 );
 
