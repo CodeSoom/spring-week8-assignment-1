@@ -171,7 +171,7 @@ class AuthenticationServiceTest {
             void setUp() {
                 given(roleRepository.findAllByUserId(GIVEN_USER_ID))
                         .willReturn(
-                                Arrays.asList(new Role("USER"), new Role("ADMIN"))
+                                List.of(new Role("USER"), new Role("ADMIN"))
                         );
             }
 
