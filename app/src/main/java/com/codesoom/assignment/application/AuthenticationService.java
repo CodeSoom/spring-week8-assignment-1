@@ -33,7 +33,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 회원의 로그인을 처리하고, 엑세스 토큰 문자열을 리턴합니다.
+     * 사용자를 인증하고, 인증이 완료된 사용자의 경우 인증 토큰을 발행한다.
      *
      * @param email
      * @param password

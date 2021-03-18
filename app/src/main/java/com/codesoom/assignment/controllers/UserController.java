@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * 사용자의 CRUD 와 관련한 HTTP 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
