@@ -78,6 +78,18 @@ include::{snippets}/get-user/http-request.adoc[]
 
 include::{snippets}/get-user/http-response.adoc[]
 
+== POST /users
+
+주어진 사용자를 저장하고 해당 사용자를 리턴한다.
+
+include::{snippets}/create-user/request-fields.adoc[]
+
+include::{snippets}/create-user/response-fields.adoc[]
+
+include::{snippets}/create-user/http-request.adoc[]
+
+include::{snippets}/create-user/http-response.adoc[]
+
 == PATCH /users/{id}
 
 주어진 식별자에 해당하는 사용자를 수정하고 해당 사용자를 리턴한다.
