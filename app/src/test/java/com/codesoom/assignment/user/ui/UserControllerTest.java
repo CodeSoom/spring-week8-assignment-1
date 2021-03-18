@@ -16,6 +16,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -112,11 +114,11 @@ class UserControllerTest extends BaseControllerTest {
         given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(1004L);
 
         given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Collections.singletonList(new Role("USER")));
         given(authenticationService.roles(2L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Collections.singletonList(new Role("USER")));
         given(authenticationService.roles(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+                .willReturn(List.of(new Role("USER"), new Role("ADMIN")));
     }
 
     @Test
