@@ -22,10 +22,10 @@ public class JwtUtil {
     }
 
     /**
-     * 주어진 회원 id를 이용해 JWT 토큰을 부호화하고 리턴합니다.
+     * 주어진 회원 id를 이용해 부호화한 JWT 토큰 문자열을 리턴합니다.
      *
      * @param userId 회원 식별자
-     * @return JWT 토큰값
+     * @return JWT 토큰
      */
     public String encode(Long userId) {
         return Jwts.builder()
