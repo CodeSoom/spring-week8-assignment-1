@@ -28,6 +28,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -196,7 +205,17 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(content().string(containsString("\"id\":" + EXISTED_ID)))
                 .andExpect(content().string(containsString("\"id\":" + CREATED_ID)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andDo(document("get-users",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                        fieldWithPath("[].id").type(NUMBER).description("사용자 식별자"),
+                        fieldWithPath("[].name").type(STRING).description("사용자 이름"),
+                        fieldWithPath("[].email").type(STRING).description("사용자 이메일"),
+                        fieldWithPath("[].password").type(STRING).description("사용자 비밀번호"),
+                        fieldWithPath("[].deleted").type(BOOLEAN).description("사용자 삭제 여부")
+                )
+        ));
 
         verify(userService).getUsers();
     }
