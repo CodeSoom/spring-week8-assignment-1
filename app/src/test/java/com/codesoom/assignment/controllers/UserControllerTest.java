@@ -37,6 +37,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -119,7 +120,9 @@ class UserControllerTest {
                 .build();
 
         updatedUser = User.builder()
+                .id(EXISTED_ID)
                 .name(UPDATE_USER_NAME)
+                .email(SETUP_USER_EMAIL)
                 .password(UPDATE_USER_PASSWORD)
                 .build();
 
@@ -169,10 +172,15 @@ class UserControllerTest {
 
         given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
                 .will(invocation -> {
+                    Long id = invocation.getArgument(0);
                     UserUpdateData userUpdateData = invocation.getArgument(1);
+                    UserAuthentication authentication = invocation.getArgument(2);
                     return UserResultData.builder()
+                            .id(id)
                             .name(userUpdateData.getName())
+                            .email(authentication.getEmail())
                             .password(userUpdateData.getPassword())
+                            .deleted(false)
                             .build();
                 });
 
@@ -298,7 +306,22 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("name").value(updatedUserData.getName()))
                 .andExpect(jsonPath("password").value(updatedUserData.getPassword()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("update-user",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호"),
+                                fieldWithPath("deleted").type(BOOLEAN).description("사용자 삭제 여부")
+                        )
+                ));
 
         verify(userService).updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication));
     }
