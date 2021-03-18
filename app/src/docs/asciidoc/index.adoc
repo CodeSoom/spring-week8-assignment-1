@@ -65,3 +65,15 @@ include::{snippets}/get-users/response-fields.adoc[]
 include::{snippets}/get-users/http-request.adoc[]
 
 include::{snippets}/get-users/http-response.adoc[]
+
+== GET /users/{id}
+
+주어진 아이디에 해당하는 사용자를 리턴한다.
+
+include::{snippets}/get-user/path-parameters.adoc[]
+
+include::{snippets}/get-user/response-fields.adoc[]
+
+include::{snippets}/get-user/http-request.adoc[]
+
+include::{snippets}/get-user/http-response.adoc[]
