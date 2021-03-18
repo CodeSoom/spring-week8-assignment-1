@@ -2,17 +2,12 @@ package com.codesoom.assignment.auth.ui;
 
 import com.codesoom.assignment.auth.application.AuthenticationService;
 import com.codesoom.assignment.auth.application.LoginFailException;
-import com.codesoom.assignment.common.RestDocConfiguration;
+import com.codesoom.assignment.common.BaseControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
@@ -27,12 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SessionController.class)
-@Import(RestDocConfiguration.class)
-@AutoConfigureRestDocs
-class SessionControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+class SessionControllerTest extends BaseControllerTest {
 
     @MockBean
     private AuthenticationService authenticationService;
