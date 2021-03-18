@@ -36,7 +36,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
     }
 
     /**
-     * 회원 인증 여부를 반환합니다.
+     * 인증된 회원이라면 true를 리턴합니다.
      */
     @Override
     public boolean isAuthenticated() {
