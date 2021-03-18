@@ -86,7 +86,7 @@ class AuthenticationServiceTest {
             final String email = WRONG_EMAIL;
             final String password = GIVEN_USER_PASSWORD;
 
-            @DisplayName("예외를 던진다.")
+            @DisplayName("로그인 실패 예외를 던진다.")
             @Test
             void It_throws_exception() {
                 assertThrows(LoginFailException.class,
@@ -109,7 +109,7 @@ class AuthenticationServiceTest {
                         .willReturn(Optional.of(user));
             }
 
-            @DisplayName("예외를 던진다.")
+            @DisplayName("로그인 실패 예외를 던진다.")
             @Test
             void It_throws_exception() {
                 assertThrows(LoginFailException.class,
@@ -151,7 +151,7 @@ class AuthenticationServiceTest {
         class Context_with_invalid_token {
             final String token = INVALID_TOKEN;
 
-            @DisplayName("예외를 던진다.")
+            @DisplayName("로그인 실패 예외를 던진다.")
             @Test
             void it_returns_user_id() {
                 assertThrows(InvalidTokenException.class,
