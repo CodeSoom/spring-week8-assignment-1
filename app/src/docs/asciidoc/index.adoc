@@ -107,3 +107,15 @@ include::{snippets}/update-user/response-fields.adoc[]
 include::{snippets}/update-user/http-request.adoc[]
 
 include::{snippets}/update-user/http-response.adoc[]
+
+== DELETE /users/{id}
+
+주어진 식별자에 해당하는 사용자를 삭제하고 삭제된 사용자를 리턴한다.
+
+include::{snippets}/delete-user/path-parameters.adoc[]
+
+include::{snippets}/delete-user/response-fields.adoc[]
+
+include::{snippets}/delete-user/http-request.adoc[]
+
+include::{snippets}/delete-user/http-response.adoc[]
