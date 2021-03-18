@@ -34,6 +34,7 @@ public class UserController {
 
     /**
      * 주어진 사용자를 저장하고, 해당 사용자를 리턴한다.
+     *
      * @param registrationData 사용자 등록 명세서
      * @return 저장된 사용자
      */
@@ -46,6 +47,7 @@ public class UserController {
 
     /**
      * 주어진 식별자에 해당하는 사용자를 수정하고, 해당 사용자를 리턴한다.
+     *
      * @param id 사용자 식별자
      * @param modificationData 사용자 수정 명세서
      * @param authentication 사용자 인증 정보
@@ -59,13 +61,14 @@ public class UserController {
             @RequestBody @Valid UserModificationData modificationData,
             UserAuthentication authentication
     ) throws AccessDeniedException {
-        Long userId = authentication.getUserId();
+        Long userId = (Long) authentication.getPrincipal();
         User user = userService.updateUser(id, modificationData, userId);
         return getUserResultData(user);
     }
 
     /**
      * 주어진 식별자에 해당하는 사용자를 삭제하고, 삭제된 사용자 정보를 리턴한다.
+     *
      * @param id 사용자 식별자
      */
     @DeleteMapping("{id}")

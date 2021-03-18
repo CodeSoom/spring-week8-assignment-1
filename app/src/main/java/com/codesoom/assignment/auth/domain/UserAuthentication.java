@@ -34,10 +34,6 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         return true;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
     @Override
     public String toString() {
         return "Authentication(" + userId + ")";
