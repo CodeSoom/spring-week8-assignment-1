@@ -38,7 +38,7 @@ public class AuthenticationService {
      * @param email    회원 이메일
      * @param password 회원 비밀번호
      * @return 인증 토큰
-     * @throws LoginFailException 회원 정보가 유효하지 않아 로그인이 실패한 경우
+     * @throws LoginFailException 로그인에 실패한 경우
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)

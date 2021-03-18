@@ -41,7 +41,7 @@ public class UserService {
      *
      * @param registrationData 회원 정보
      * @return 생성된 회원
-     * @throws UserEmailDuplicationException 생성할 회원정보가 이미 회원 목록에 존재하는 경우
+     * @throws UserEmailDuplicationException 이메일이 중복된 경우
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -60,7 +60,7 @@ public class UserService {
     }
 
     /**
-     * 전달된 식별자에 해당하는 회원을 찾고, 함께 주어진 회원 정보로 수정한 후 리턴합니다.
+     * 전달된 식별자에 해당하는 회원을 주어진 정보로 수정한 후 리턴합니다.
      *
      * @param id               수정할 회원 식별자
      * @param modificationData 수정할 회원 정보

@@ -61,7 +61,7 @@ public class User {
     }
 
     /**
-     * 회원이 삭제되지 않았고, 평문 비밀번호와 인코딩 된 비밀번호가 일치하면 true를 반환합니다.
+     * 회원이 삭제되지 않았고, 비밀번호가 일치하면 true를 반환합니다.
      *
      * @param password 비밀번호
      * @param passwordEncoder 패스워드 인코더
