@@ -40,7 +40,7 @@ public class UserController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
+    public UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
         User user = userService.registerUser(registrationData);
         return getUserResultData(user);
     }
@@ -56,7 +56,7 @@ public class UserController {
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    UserResultData update(
+    public UserResultData update(
             @PathVariable Long id,
             @RequestBody @Valid UserModificationData modificationData,
             UserAuthentication authentication
@@ -73,7 +73,7 @@ public class UserController {
      */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
-    void destroy(@PathVariable Long id) {
+    public void destroy(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
