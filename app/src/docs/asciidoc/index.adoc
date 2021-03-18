@@ -55,3 +55,13 @@ include::{snippets}/delete-product/response-fields.adoc[]
 include::{snippets}/delete-product/http-request.adoc[]
 
 include::{snippets}/delete-product/http-response.adoc[]
+
+== GET /users
+
+전체 사용자 목록을 리턴한다.
+
+include::{snippets}/get-users/response-fields.adoc[]
+
+include::{snippets}/get-users/http-request.adoc[]
+
+include::{snippets}/get-users/http-response.adoc[]

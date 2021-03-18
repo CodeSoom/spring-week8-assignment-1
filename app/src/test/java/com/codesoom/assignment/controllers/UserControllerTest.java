@@ -29,7 +29,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
@@ -206,7 +205,6 @@ class UserControllerTest {
                 .andExpect(content().string(containsString("\"id\":" + EXISTED_ID)))
                 .andExpect(content().string(containsString("\"id\":" + CREATED_ID)))
                 .andExpect(status().isOk()).andDo(document("get-users",
-                preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
                         fieldWithPath("[].id").type(NUMBER).description("사용자 식별자"),
