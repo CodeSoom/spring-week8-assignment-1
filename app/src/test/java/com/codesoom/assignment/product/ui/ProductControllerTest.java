@@ -172,7 +172,6 @@ class ProductControllerTest extends BaseControllerTest {
                                 fieldWithPath("price").type(NUMBER).description("상품 가격")
                                         .attributes(key("constraints").value("빈 값을 입력할 수 없습니다.")),
                                 fieldWithPath("imageUrl").type(STRING).description("상품 이미지").optional()
-                                        .attributes(key("constraints").value(""))
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("상품 식별자"),
