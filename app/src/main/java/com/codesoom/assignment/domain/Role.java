@@ -18,14 +18,14 @@ public class Role {
     private Long userId;
 
     @Getter
-    private String role;
+    private String name;
 
-    public Role(Long userId, String role) {
+    public Role(Long userId, String name) {
         this.userId = userId;
-        this.role = role;
+        this.name = name;
     }
 
-    public Role(String role) {
-        this(null, role);
+    public Role(String name) {
+        this(null, name);
     }
 }
