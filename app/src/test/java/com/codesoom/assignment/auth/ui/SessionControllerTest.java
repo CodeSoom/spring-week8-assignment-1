@@ -53,10 +53,8 @@ class SessionControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andDo(document("create-session",
                         requestFields(
-                                fieldWithPath("email").type(STRING).description("이메일").optional()
-                                        .attributes(key("constraints").value("")),
+                                fieldWithPath("email").type(STRING).description("이메일").optional(),
                                 fieldWithPath("password").type(STRING).description("비밀번호").optional()
-                                        .attributes(key("constraints").value(""))
                         ),
                         responseFields(
                                 fieldWithPath("accessToken").type(STRING).description("응답 토큰")
