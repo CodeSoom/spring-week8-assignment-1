@@ -372,7 +372,6 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
     void updateWithoutToken() throws Exception {
         mockMvc.perform(
                 patch("/users/" + EXISTED_ID)
@@ -384,7 +383,6 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("접근이 거부되었다는 예외를 던지고 FORBIDDEN를 리턴한다")
     void updateWithOtherToken() throws Exception {
         mockMvc.perform(
                 patch("/users/" + EXISTED_ID)
@@ -401,12 +399,26 @@ class UserControllerTest {
     @Test
     void deleteWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/" + EXISTED_ID)
+                RestDocumentationRequestBuilders.delete("/users/{id}", EXISTED_ID)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
                 .andDo(print())
                 .andExpect(content().string(containsString("\"deleted\":true")))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(document("delete-user",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("삭제하고자 하는 사용자의 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호"),
+                                fieldWithPath("deleted").type(BOOLEAN).description("사용자 삭제 여부")
+                        )
+                ));
     }
 
     @Test
