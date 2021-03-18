@@ -58,8 +58,8 @@ public class ProductController {
     }
 
     /**
-     * 새로운 상품을 등록합니다.
-     * 'USER' 권한을 가진 인증된 사용자만 상품을 등록할 수 있습니다.
+     * 새로운 상품을 등록합니다.<br/>
+     * 'USER' 권한을 가진 인증된 사용자만 상품을 등록할 수 있습니다.<br/>
      *
      * @param productData 등록할 상품 정보
      * @param authentication 사용자 인증 정보
@@ -76,7 +76,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id에 해당하는 상품의 정보를 수정합니다.
+     * 주어진 id에 해당하는 상품의 정보를 수정합니다.<br/>
      * 인증된 사용자만 상품의 정보를 수정할 수 있습니다.
      *
      * @param id 수정할 상품의 식별자
@@ -95,7 +95,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 삭제합니다.
+     * 주어진 id에 해당하는 상품을 삭제합니다.<br/>
      * 인증된 사용자만 상품을 삭제할 수 있습니다.
      *
      * @param id 삭제할 상품의 식별자
