@@ -279,7 +279,23 @@ class UserControllerTest {
                 .andExpect(jsonPath("name").value(createdUserData.getName()))
                 .andExpect(jsonPath("email").value(createdUserData.getEmail()))
                 .andExpect(jsonPath("password").value(createdUserData.getPassword()))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("create-user",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("password").type(STRING).description("사용자 비밀번호"),
+                                fieldWithPath("deleted").type(BOOLEAN).description("사용자 삭제 여부")
+                        )
+                ));
 
         verify(userService).createUser(any(UserCreateData.class));
     }
