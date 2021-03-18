@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,9 +26,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -132,7 +132,12 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
                 ))
-                .andDo(document("post-user"));
+                .andDo(
+                        document("post-user",
+                                UserTestFixture.getUserRegisterDataRequestFields(),
+                                UserTestFixture.getUserDataResponseFieldsSnippet()
+                        )
+                );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -150,7 +155,7 @@ class UserControllerTest {
     @Test
     void updateUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
+                RestDocumentationRequestBuilders.patch("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
@@ -162,7 +167,14 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
                 ))
-                .andDo(document("update-user"));
+                .andDo(print())
+                .andDo(
+                        document("update-user",
+                                UserTestFixture.getUserPathParametersSnippet(),
+                                UserTestFixture.getUserRequestHeadersSnippet(),
+                                UserTestFixture.getUserModificationDataRequestFields(),
+                                UserTestFixture.getUserDataResponseFieldsSnippet())
+                );
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -222,11 +234,15 @@ class UserControllerTest {
     @Test
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
+                RestDocumentationRequestBuilders.delete("/users/{id}", 1)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-user"));
+                .andDo(
+                        document("delete-user",
+                                UserTestFixture.getUserPathParametersSnippet(),
+                                UserTestFixture.getUserRequestHeadersSnippet())
+                );
 
         verify(userService).deleteUser(1L);
     }
