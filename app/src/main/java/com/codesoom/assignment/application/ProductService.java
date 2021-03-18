@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Service for products.
+ *
+ * @author Lee Dong Wook (sh95119@gmail.com)
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -24,10 +29,23 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Returns all products in this application.
+     *
+     * @return return all products.
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * Returns the product with given ID.
+     *
+     * @param id is the identifier of the product.
+     * @return the product with given ID.
+     * @throws ProductNotFoundException in case any product doesn't exist
+     * with the given ID
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
