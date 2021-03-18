@@ -1,17 +1,59 @@
 = 고양이 장난감 가게 API
 
-== GET /products
+== 인증
+=== 인증토큰발급
+- 입력된 유저 계정 정보가 유효한지 검사하고 인증토큰을 가져옵니다.
 
-상품 목록을 JSON 형태로 돌려준다.
+include::{snippets}/post-session/http-request.adoc[]
+include::{snippets}/post-session/http-response.adoc[]
+
+
+== 상품
+=== 상품 리스트 조회
+- 상품 리스트를 가져옵니다.
 
 include::{snippets}/get-products/http-request.adoc[]
-
 include::{snippets}/get-products/http-response.adoc[]
 
-== GET /product/{id}
-
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+=== 상품 조회
+- 주어진 id와 일치하는 상품을 가져옵니다.
 
 include::{snippets}/get-product/http-request.adoc[]
-
 include::{snippets}/get-product/http-response.adoc[]
+
+=== 상품 생성
+- 상품을 생성합니다.
+
+include::{snippets}/post-product/http-request.adoc[]
+include::{snippets}/post-product/http-response.adoc[]
+
+=== 상품 수정
+- 상품 정보를 수정합니다.
+
+include::{snippets}/update-product/http-request.adoc[]
+include::{snippets}/update-product/http-response.adoc[]
+
+=== 상품 삭제
+- 주어진 id와 일치하는 상품을 삭제합니다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+include::{snippets}/delete-product/http-response.adoc[]
+
+== 유저
+=== 유저 생성
+- 유저를 생성합니다.
+
+include::{snippets}/post-user/http-request.adoc[]
+include::{snippets}/post-user/http-response.adoc[]
+
+=== 유저 수정
+- 유저 정보를 수정합니다.
+
+include::{snippets}/update-user/http-request.adoc[]
+include::{snippets}/update-user/http-response.adoc[]
+
+=== 유저 삭제
+- 주어진 id와 일치하는 유저를 삭제합니다.
+
+include::{snippets}/delete-user/http-request.adoc[]
+include::{snippets}/delete-user/http-response.adoc[]
