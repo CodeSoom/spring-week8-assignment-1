@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * 상품 관련 HTTP 요청을 처리합니다.
  */
-
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -38,7 +37,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 응답합니다.
+     * 주어진 id의 상품을 응답합니다.
      * @param id 상품 식별자
      * @return 주어진 id에 해당하는 상품
      */
@@ -60,9 +59,10 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 찾아 새로운 상품 정보로 수정한 후,
-     * 수정된 상품을 응답합니다.
+     * <p>
+     * 주어진 id의 상품을 수정한 후, 수정된 상품을 응답합니다.
      * 인증된 유저만 응답받을 수 있습니다.
+     * </p>
      * @param id 상품 식별자
      * @param productData 새로운 상품 정보
      * @return 수정된 상품
@@ -77,7 +77,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id에 해당하는 상품을 삭제합니다.
+     * 주어진 id의 상품을 삭제합니다.
      * @param id 상품 식별자
      */
     @DeleteMapping("{id}")
