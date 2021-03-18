@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -100,19 +101,30 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-products"));
+                .andDo(
+                        document("get-products",
+                                ProductTestFixture.getProductListDataResponseFieldsSnippet()
+                        )
+                );
     }
+
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
         mockMvc.perform(
-                get("/products/1")
+                RestDocumentationRequestBuilders.get("/products/{id}", 1L)
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product"));
+                .andDo(
+                        document("get-product",
+                                ProductTestFixture.getProductPathParametersSnippet(),
+                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                        )
+                );
     }
+
 
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
@@ -132,7 +144,13 @@ class ProductControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("post-product"));
+                .andDo(
+                        document("post-product",
+                                ProductTestFixture.getProductRequestHeadersSnippet(),
+                                ProductTestFixture.getProductDataRequestFields(),
+                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                        )
+                );
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -178,7 +196,7 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
+                RestDocumentationRequestBuilders.patch("/products/{id}", 1)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
@@ -186,7 +204,15 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(
+                        document("update-product",
+                                ProductTestFixture.getProductPathParametersSnippet(),
+                                ProductTestFixture.getProductRequestHeadersSnippet(),
+                                ProductTestFixture.getProductDataRequestFields(),
+                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                        )
+                );
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -200,8 +226,7 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isNotFound())
-                .andDo(document("update-product"));
+                .andExpect(status().isNotFound());
 
 
         verify(productService).updateProduct(eq(1000L), any(ProductData.class));
@@ -248,12 +273,16 @@ class ProductControllerTest {
     @Test
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
-                delete("/products/1")
+                RestDocumentationRequestBuilders.delete("/products/{id}", 1)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-product"));
-
+                .andDo(
+                        document("delete-product",
+                                ProductTestFixture.getProductPathParametersSnippet(),
+                                ProductTestFixture.getProductRequestHeadersSnippet()
+                        )
+                );
 
         verify(productService).deleteProduct(1L);
     }
