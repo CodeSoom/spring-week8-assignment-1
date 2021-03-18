@@ -26,6 +26,10 @@ include::{snippets}/get-product/http-response.adoc[]
 
 주어진 상품을 저장하고 해당 상품을 리턴한다.
 
+include::{snippets}/create-product/request-fields.adoc[]
+
+include::{snippets}/create-product/response-fields.adoc[]
+
 include::{snippets}/create-product/http-request.adoc[]
 
 include::{snippets}/create-product/http-response.adoc[]
