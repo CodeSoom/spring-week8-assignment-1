@@ -27,7 +27,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
      * HTTP 요청에 대한 보안 규칙을 정의합니다.
      *
      * @param http HTTP 보안 규칙 정보
-     * @throws Exception
+     * @throws Exception 알 수 없는 이유로 보안 규칙 설정이 실패한 경우
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
