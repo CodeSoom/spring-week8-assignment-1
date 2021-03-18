@@ -77,3 +77,17 @@ include::{snippets}/get-user/response-fields.adoc[]
 include::{snippets}/get-user/http-request.adoc[]
 
 include::{snippets}/get-user/http-response.adoc[]
+
+== PATCH /users/{id}
+
+주어진 식별자에 해당하는 사용자를 수정하고 해당 사용자를 리턴한다.
+
+include::{snippets}/update-user/path-parameters.adoc[]
+
+include::{snippets}/update-user/request-fields.adoc[]
+
+include::{snippets}/update-user/response-fields.adoc[]
+
+include::{snippets}/update-user/http-request.adoc[]
+
+include::{snippets}/update-user/http-response.adoc[]
