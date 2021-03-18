@@ -2,18 +2,22 @@ package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.utils.RestDocTestConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,7 +53,17 @@ class SessionControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(".")))
-                .andDo(document("post-session"));
+                .andDo(
+                        document("post-session",
+                                requestFields(
+                                        fieldWithPath("email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("password").type(STRING).description("유저 비밀번호")
+                                ),
+                                responseFields(
+                                        fieldWithPath("accessToken").type(STRING).description("인증 토큰")
+                                )
+                        )
+                );
     }
 
     @Test

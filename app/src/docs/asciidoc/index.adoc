@@ -1,12 +1,29 @@
 = 고양이 장난감 가게 API
 
 == 인증
+
 === 인증토큰발급
+
 - 입력된 유저 계정 정보가 유효한지 검사하고 인증토큰을 가져옵니다.
 
-include::{snippets}/post-session/http-request.adoc[]
-include::{snippets}/post-session/http-response.adoc[]
+==== Request
+:path: {snippets}/post-session
 
+Path: POST /session
+
+Parameter:
+include::{path}/request-fields.adoc[]
+
+Request(Example):
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Fields:
+include::{path}/response-fields.adoc[]
+
+Response(Example):
+include::{path}/http-response.adoc[]
 
 == 상품
 === 상품 리스트 조회
