@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * 상품과 관련된 비즈니스 로직을 담당합니다.
+ * 상품 관련 비즈니스 로직을 담당합니다.
  */
 @Service
 @Transactional
