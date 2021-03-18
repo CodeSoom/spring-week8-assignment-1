@@ -1,5 +1,6 @@
 package com.codesoom.assignment.controllers;
 
+import com.codesoom.assignment.errors.UserNotFoundException;
 import com.codesoom.assignment.application.UserService;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
@@ -38,7 +39,8 @@ public class UserController {
      * 주어진 id에 해당하는 사용자의 상세 정보를 반환합니다.
      *
      * @param id 사용자의 식별자
-     * @return 사용자
+     * @return 주어진 id를 갖는 사용자
+     * @throws UserNotFoundException 주어진 id를 갖는 사용자를 찾을 수 없는 경우
      */
     @GetMapping("{id}")
     public User detail(@PathVariable Long id) {
@@ -70,6 +72,8 @@ public class UserController {
      * @param id 수정할 사용자의 식별자
      * @param updateRequest 수정할 사용자 정보
      * @return 수정된 사용자
+     * @throws AccessDeniedException 수정할 권한이 없는 경우
+     * @throws UserNotFoundException 수정할 사용자를 찾을 수 없을 경우
      */
     @RequestMapping(value = "{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -93,6 +97,7 @@ public class UserController {
      * 'ADMIN' 권한을 가진 인증된 사용자만 사용자를 삭제할 수 있습니다.
      *
      * @param id 삭제할 사용자의 식별자
+     * @throws UserNotFoundException 삭제할 사용자를 찾을 수 없는 경우
      */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
