@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Jwt가 유효한 토큰인지 인증하기 위한 필터
+ * Jwt가 유효한 토큰인지 인증하기 위한 필터.
  */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
