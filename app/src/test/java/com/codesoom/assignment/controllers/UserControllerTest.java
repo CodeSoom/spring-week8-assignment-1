@@ -7,14 +7,13 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserCreateData;
 import com.codesoom.assignment.dto.UserResultData;
 import com.codesoom.assignment.dto.UserUpdateData;
-import com.codesoom.assignment.errors.UserBadRequestException;
 import com.codesoom.assignment.errors.UserNotFoundException;
 import com.codesoom.assignment.security.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -29,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -40,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
 @DisplayName("UserController 테스트")
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -80,11 +79,13 @@ class UserControllerTest {
     private List<User> users;
     private User setUpUser;
     private User createUser;
+    private User updatedUser;
     private User deletedUser;
 
     private List<UserResultData> resultUsers;
     private UserResultData setupUserData;
     private UserResultData createdUserData;
+    private UserResultData updatedUserData;
     private UserResultData deletedUserData;
     private UserAuthentication invalidAuthentication;
     private UserAuthentication validAuthentication;
@@ -103,6 +104,11 @@ class UserControllerTest {
                 .name(CREATE_USER_NAME)
                 .email(CREATE_USER_EMAIL)
                 .password(CREATE_USER_PASSWORD)
+                .build();
+
+        updatedUser = User.builder()
+                .name(UPDATE_USER_NAME)
+                .password(UPDATE_USER_PASSWORD)
                 .build();
 
         deletedUser = User.builder()
@@ -127,6 +133,7 @@ class UserControllerTest {
 
         setupUserData = UserResultData.of(setUpUser);
         createdUserData = UserResultData.of(createUser);
+        updatedUserData = UserResultData.of(updatedUser);
         deletedUserData = UserResultData.of(deletedUser);
         resultUsers = List.of(setupUserData, createdUserData);
 
@@ -150,17 +157,12 @@ class UserControllerTest {
 
         given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
                 .will(invocation -> {
-                    Long id = invocation.getArgument(0);
                     UserUpdateData userUpdateData = invocation.getArgument(1);
                     return UserResultData.builder()
-                            .id(id)
                             .name(userUpdateData.getName())
                             .password(userUpdateData.getPassword())
                             .build();
                 });
-
-        given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication)))
-                .willThrow(new UserBadRequestException());
 
         given(userService.updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(invalidAuthentication)))
                 .willThrow(new AccessDeniedException("Access denied"));
@@ -186,358 +188,187 @@ class UserControllerTest {
                 .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
     }
 
-    @Nested
-    @DisplayName("list 메서드는")
-    class Describe_lists {
-        @Test
-        @DisplayName("전체 사용자 목록과 OK를 리턴한다")
-        void itReturnsListOfUsersAndOKHttpStatus() throws Exception {
-            mockMvc.perform(
-                    get("/users")
-            )
-                    .andDo(print())
-                    .andExpect(content().string(containsString("\"id\":" + EXISTED_ID)))
-                    .andExpect(content().string(containsString("\"id\":" + CREATED_ID)))
-                    .andExpect(status().isOk())
-                    .andDo(document("get-users"));
+    @Test
+    void lists() throws Exception {
+        mockMvc.perform(
+                get("/users")
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("\"id\":" + EXISTED_ID)))
+                .andExpect(content().string(containsString("\"id\":" + CREATED_ID)))
+                .andExpect(status().isOk());
 
-            verify(userService).getUsers();
-        }
+        verify(userService).getUsers();
     }
 
-    @Nested
-    @DisplayName("detail 메서드는")
-    class Describe_detail {
-        @Nested
-        @DisplayName("만약 저장되어 있는 사용자의 아이디가 주어진다면")
-        class Context_WithExistedId {
-            private final Long givenExistedId = EXISTED_ID;
+    @Test
+    void detailWithExistedId() throws Exception {
+        mockMvc.perform(
+                get("/users/" + EXISTED_ID)
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("{\"id\":" + EXISTED_ID)))
+                .andExpect(status().isOk());
 
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 사용자와 OK를 리턴한다")
-            void itReturnsUserAndOkHttpStatus() throws Exception {
-                mockMvc.perform(
-                        get("/users/"+givenExistedId)
-                )
-                        .andDo(print())
-                        .andExpect(content().string(containsString("{\"id\":" + EXISTED_ID)))
-                        .andExpect(status().isOk())
-                        .andDo(document("get-user"));
-
-                verify(userService).getUser(givenExistedId);
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 저장되어 있지 않은 사용자의 아이디로 주어진다면")
-        class Context_WithNotExistedId {
-            private final Long givenNotExistedId = NOT_EXISTED_ID;
-
-            @Test
-            @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        get("/users/"+givenNotExistedId)
-                )
-                        .andExpect(content().string(containsString("User not found")))
-                        .andExpect(status().isNotFound());
-
-                verify(userService).getUser(givenNotExistedId);
-            }
-        }
+        verify(userService).getUser(EXISTED_ID);
     }
 
-    @Nested
-    @DisplayName("create 메서드는")
-    class Describe_create {
-        @Nested
-        @DisplayName("만약 사용자가 주어진다면")
-        class Context_WithUser {
-            @Test
-            @DisplayName("사용자를 저장하고 저장된 사용자와 CREATED를 리턴한다")
-            void itSavesUserAndReturnsUser() throws Exception {
-                mockMvc.perform(
-                        post("/users")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"name\":\"createdName\",\"email\":\"createdEmail\",\"password\":\"createdPassword\"}")
-                )
-                        .andExpect(jsonPath("id").value(createdUserData.getId()))
-                        .andExpect(jsonPath("name").value(createdUserData.getName()))
-                        .andExpect(jsonPath("email").value(createdUserData.getEmail()))
-                        .andExpect(jsonPath("password").value(createdUserData.getPassword()))
-                        .andExpect(status().isCreated());
+    @Test
+    void detailWithNotExistedId() throws Exception {
+        mockMvc.perform(
+                get("/users/"+NOT_EXISTED_ID)
+        )
+                .andExpect(content().string(containsString("User not found")))
+                .andExpect(status().isNotFound());
 
-                verify(userService).createUser(any(UserCreateData.class));
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 비어있는 값이 주어진다면")
-        class Context_WithEmpty {
-            @Test
-            @DisplayName("사용자 요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-            void itThrowsUserBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        post("/users")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content("{}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
+        verify(userService).getUser(NOT_EXISTED_ID);
     }
 
-    @Nested
-    @DisplayName("update 메서드는")
-    class Describe_update {
-        @Nested
-        @DisplayName("만약 저장되어 있는 사용자의 아이디와 수정 할 사용자와 본인 이메일이 주어진다면")
-        class Context_WithExistedIdAndUser {
-            private final Long givenExistedId = EXISTED_ID;
-            private UserUpdateData userUpdateData;
-            private UserAuthentication authentication;
-            private final String givenExistedEmail = MY_EMAIL;
+    @Test
+    void createWithValidUser() throws Exception {
+        mockMvc.perform(
+                post("/users")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"name\":\"createdName\",\"email\":\"createdEmail\",\"password\":\"createdPassword\"}")
+        )
+                .andExpect(jsonPath("id").value(createdUserData.getId()))
+                .andExpect(jsonPath("name").value(createdUserData.getName()))
+                .andExpect(jsonPath("email").value(createdUserData.getEmail()))
+                .andExpect(jsonPath("password").value(createdUserData.getPassword()))
+                .andExpect(status().isCreated());
 
-            @BeforeEach
-            void setUp() {
-                userUpdateData = UserUpdateData.builder()
-                        .name(UPDATE_USER_NAME)
-                        .password(UPDATE_USER_PASSWORD)
-                        .build();
-
-                authentication = UserAuthentication.builder()
-                        .email(givenExistedEmail)
-                        .roles(List.of(new Role("USER")))
-                        .build();
-            }
-
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 사용자를 수정하고 수정된 사용자와 OK를 리턴한다")
-            void itUpdatesUserAndReturnUpdatedUserAndOKHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/users/" + givenExistedId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                                .content("{\"name\":\"updatedName\",\"password\":\"updatedPassword\"}")
-                )
-                        .andDo(print())
-                        .andExpect(jsonPath("name").value(userUpdateData.getName()))
-                        .andExpect(jsonPath("password").value(userUpdateData.getPassword()))
-                        .andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 저장되어 있지 않은 사용자의 아이디가 주어진다면")
-        class Context_WithNotExistedIdAndUser {
-            private final Long givenNotExistedId = NOT_EXISTED_ID;
-            private UserAuthentication authentication;
-            private final String givenExistedEmail = MY_EMAIL;
-
-            @BeforeEach
-            void setUp() {
-                authentication = UserAuthentication.builder()
-                        .email(givenExistedEmail)
-                        .roles(List.of(new Role("USER")))
-                        .build();
-            }
-
-            @Test
-            @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsUserNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/users/"+givenNotExistedId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                                .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isNotFound());
-
-                verify(userService).updateUser(eq(givenNotExistedId), any(UserUpdateData.class), eq(authentication));
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 비어있는 값이 주어진다면")
-        class Context_WithEmpty {
-            private final Long givenExistedId = EXISTED_ID;
-            private UserAuthentication authentication;
-            private final String givenMyEmail = MY_EMAIL;
-
-            @BeforeEach
-            void setUp() {
-                authentication = UserAuthentication.builder()
-                        .email(givenMyEmail)
-                        .roles(List.of(new Role("USER")))
-                        .build();
-            }
-
-            @Test
-            @DisplayName("사용자 요청이 잘못 되었다는 예외를 던지고 BAD_REQUEST를 리턴한다")
-            void itThrowsUserBadRequestExceptionAndReturnsBAD_REQUESTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/users/" + givenExistedId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                                .content("{}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 토큰이 주어지지 않는다면")
-        class Context_WithoutToken {
-            private final Long givenExistedId = EXISTED_ID;
-
-            @Test
-            @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-            void itThrowsUnauthorizedExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/users/" + givenExistedId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 다른 사용자의 토큰이 주어진다면")
-        class Context_WithOtherToken {
-            private final Long givenExistedId = EXISTED_ID;
-            private UserAuthentication authentication;
-            private final String givenNotExistedEmail = OTHER_EMAIL;
-
-            @BeforeEach
-            void setUp() {
-                authentication = UserAuthentication.builder()
-                        .email(givenNotExistedEmail)
-                        .roles(List.of(new Role("USER")))
-                        .build();
-            }
-
-            @Test
-            @DisplayName("접근이 거부되었다는 예외를 던지고 FORBIDDEN를 리턴한다")
-            void itThrowsAccessDeniedExceptionAndReturnsFORBIDDENHttpStatus() throws Exception {
-                mockMvc.perform(
-                        patch("/users/" + givenExistedId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + OTHER_TOKEN)
-                                .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
-                )
-                        .andDo(print())
-                        .andExpect(status().isForbidden());
-
-                verify(userService).updateUser(eq(givenExistedId), any(UserUpdateData.class), eq(authentication));
-            }
-        }
+        verify(userService).createUser(any(UserCreateData.class));
     }
 
-    @Nested
-    @DisplayName("delete 메서드는")
-    class Describe_delete {
-        @Nested
-        @DisplayName("만약 저장되어 있는 사용자의 아이디가 주어진다면")
-        class Context_WithExistedId {
-            private final Long givenExistedId = EXISTED_ID;
-            private UserResultData userResultData;
+    @Test
+    void createWithEmptyUser() throws Exception {
+        mockMvc.perform(
+                post("/users")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-            @BeforeEach
-            void setUp() {
-                setUpUser.delete();
-                userResultData = UserResultData.of(setUpUser);
-            }
+    @Test
+    void updateWithExistedIdAndUserAndEmail() throws Exception {
+        mockMvc.perform(
+                patch("/users/" + EXISTED_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+                        .content("{\"name\":\"updatedName\",\"password\":\"updatedPassword\"}")
+        )
+                .andDo(print())
+                .andExpect(jsonPath("name").value(updatedUserData.getName()))
+                .andExpect(jsonPath("password").value(updatedUserData.getPassword()))
+                .andExpect(status().isOk());
 
-            @Test
-            @DisplayName("주어진 아이디에 해당하는 사용자를 삭제하고 삭제된 사용자와 NO_CONTENT를 리턴한다")
-            void itDeletesUserAndReturnsDeletedUserAndNO_CONTENTHttpStatus() throws Exception {
-                mockMvc.perform(
-                        delete("/users/" + givenExistedId)
-                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
-                )
-                        .andDo(print())
-                        .andExpect(content().string(containsString("\"deleted\":true")))
-                        .andExpect(status().isNoContent());
-            }
-        }
+        verify(userService).updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication));
+    }
 
-        @Nested
-        @DisplayName("만약 저장되어 있지 않은 사용자의 아이디가 주어진다면")
-        class Context_WithNotExistedId {
-            private final Long givenNotExistedId = NOT_EXISTED_ID;
+    @Test
+    void updateWithNotExistedId() throws Exception {
+        mockMvc.perform(
+                patch("/users/" + NOT_EXISTED_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+                        .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
 
-            @Test
-            @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsNotFoundExceptionAndReturnsNOT_FOUNDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        delete("/users/"+givenNotExistedId)
-                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
-                )
-                        .andExpect(status().isNotFound());
+        verify(userService).updateUser(eq(NOT_EXISTED_ID), any(UserUpdateData.class), eq(validAuthentication));
+    }
 
-                verify(userService).deleteUser(givenNotExistedId);
-            }
-        }
+    @Test
+    void updateWithEmpty() throws Exception {
+        mockMvc.perform(
+                patch("/users/" + EXISTED_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+                        .content("{}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
-        @Nested
-        @DisplayName("만약 이미 삭제된 사용자의 아이디가 주어진다면")
-        class Context_WithDeletedId {
-            private final Long givenDeletedId = DELETE_ID;
+    @Test
+    @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
+    void updateWithoutToken() throws Exception {
+        mockMvc.perform(
+                patch("/users/" + EXISTED_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 
-            @BeforeEach
-            void setUp() {
-                setUpUser.delete();
-            }
+    @Test
+    @DisplayName("접근이 거부되었다는 예외를 던지고 FORBIDDEN를 리턴한다")
+    void updateWithOtherToken() throws Exception {
+        mockMvc.perform(
+                patch("/users/" + EXISTED_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + OTHER_TOKEN)
+                        .content("{\"name\":\"createdUser\",\"password\":\"createdPassword\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isForbidden());
 
-            @Test
-            @DisplayName("사용자를 찾을 수 없다는 예외를 던지고 NOT_FOUND를 리턴한다")
-            void itThrowsNotFoundExceptionAndNOT_FOUNDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        delete("/users/"+DELETE_ID)
-                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
-                )
-                        .andExpect(status().isNotFound());
+        verify(userService).updateUser(eq(EXISTED_ID), any(UserUpdateData.class), eq(invalidAuthentication));
+    }
 
-                verify(userService).deleteUser(givenDeletedId);
-            }
-        }
+    @Test
+    void deleteWithExistedId() throws Exception {
+        mockMvc.perform(
+                delete("/users/" + EXISTED_ID)
+                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
+        )
+                .andDo(print())
+                .andExpect(content().string(containsString("\"deleted\":true")))
+                .andExpect(status().isNoContent());
+    }
 
-        @Nested
-        @DisplayName("만약 토큰이 주어지지 않는다면")
-        class Context_WithoutToken {
-            private final Long givenExistedId = EXISTED_ID;
+    @Test
+    void deleteWithNotExistedId() throws Exception {
+        mockMvc.perform(
+                delete("/users/" + NOT_EXISTED_ID)
+                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
+        )
+                .andExpect(status().isNotFound());
 
-            @Test
-            @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-            void itThrowsUnauthorizedExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        delete("/users/" + givenExistedId)
-                )
-                        .andDo(print())
-                        .andExpect(status().isUnauthorized());
-            }
-        }
+        verify(userService).deleteUser(NOT_EXISTED_ID);
+    }
 
-        @Nested
-        @DisplayName("만약 admin 계정이 주어지지 않는다면")
-        class Context_WithoutAdminRole {
-            private final Long givenExistedId = EXISTED_ID;
+    @Test
+    void deleteWithDeletedId() throws Exception {
+        mockMvc.perform(
+                delete("/users/" + DELETE_ID)
+                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
+        )
+                .andExpect(status().isNotFound());
 
-            @Test
-            @DisplayName("권한이 없다는 예외를 던지고 UNAUTHORIZED를 리턴한다")
-            void itThrowsUnauthorizedExceptionAndReturnsUNAUTHORIZEDHttpStatus() throws Exception {
-                mockMvc.perform(
-                        delete("/users/" + givenExistedId)
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andDo(print())
-                        .andExpect(status().isForbidden());
-            }
-        }
+        verify(userService).deleteUser(DELETE_ID);
+    }
+
+    @Test
+    void deleteWithoutToken() throws Exception {
+        mockMvc.perform(
+                delete("/users/" + EXISTED_ID)
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteWithoutAdminRole() throws Exception {
+        mockMvc.perform(
+                delete("/users/" + EXISTED_ID)
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+        )
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 }
