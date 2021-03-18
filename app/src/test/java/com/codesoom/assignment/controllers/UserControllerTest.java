@@ -298,7 +298,7 @@ class UserControllerTest {
     @Test
     void updateWithExistedIdAndUserAndEmail() throws Exception {
         mockMvc.perform(
-                patch("/users/" + EXISTED_ID)
+                RestDocumentationRequestBuilders.patch("/users/{id}", EXISTED_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + MY_TOKEN)
                         .content("{\"name\":\"updatedName\",\"password\":\"updatedPassword\"}")
@@ -310,6 +310,9 @@ class UserControllerTest {
                 .andDo(document("update-user",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("수정하고자 하는 사용자의 식별자")
+                        ),
                         requestFields(
                                 fieldWithPath("name").type(STRING).description("사용자 이름"),
                                 fieldWithPath("password").type(STRING).description("사용자 비밀번호")
