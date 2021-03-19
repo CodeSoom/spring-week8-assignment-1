@@ -146,3 +146,91 @@ include::{snippets}/delete-product/curl-request.adoc[]
 
 Example response
 include::{snippets}/delete-product/http-response.adoc[]
+
+
+
+
+[[USER]]
+== USER
+
+=== Create /users
+
+사용자를 생성한 후 JSON 형태로 돌려준다.
+
+==== Request
+:path: {snippets}/create-user
+
+Request field
+include::{path}/request-fields.adoc[]
+
+Request structure
+include::{path}/http-request.adoc[]
+
+CURL request
+include::{path}/curl-request.adoc[]
+
+==== Response
+
+Response fields
+include::{path}/response-fields.adoc[]
+
+Example response
+include::{path}/http-response.adoc[]
+
+=== Update /users/{id}
+
+사용자 정보를 갱신한 후 JSON 형태로 돌려준다.
+
+==== Request
+:path: {snippets}/update-user
+
+Request header
+include::{path}/request-headers.adoc[]
+
+Request parameters
+include::{path}/path-parameters.adoc[]
+
+Request field
+include::{path}/request-fields.adoc[]
+
+Request structure
+include::{path}/http-request.adoc[]
+
+CURL request
+include::{path}/curl-request.adoc[]
+
+==== Response
+
+Response fields
+include::{path}/response-fields.adoc[]
+
+Example response
+include::{path}/http-response.adoc[]
+
+=== Delete /users/{id}
+
+회원을 삭제한다.
+
+==== Request
+:path: {snippets}/delete-user
+
+Request header
+include::{path}/request-headers.adoc[]
+
+Request structure
+include::{path}/http-request.adoc[]
+
+Request parameters
+include::{path}/path-parameters.adoc[]
+
+CURL request
+include::{path}/curl-request.adoc[]
+
+==== Response
+
+Example response
+include::{path}/http-response.adoc[]
+
+
+
+
