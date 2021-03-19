@@ -82,7 +82,7 @@ public class UserService {
      * 등록된 사용자를 삭제한다.
      *
      * @param id 등록된 사용자 식별자
-     * @return 삭제된 사용자 id
+     * @return 삭제된 사용자 정보
      */
     public User deleteUser(Long id) {
         User user = findUser(id);
