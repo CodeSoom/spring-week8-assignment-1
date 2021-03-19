@@ -2,6 +2,7 @@ package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.UserService;
+import com.codesoom.assignment.common.RestDocsConfiguration;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
@@ -10,9 +11,12 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +27,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -128,7 +144,20 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+                .andDo(document("create-user",
+                        requestFields(
+                                fieldWithPath("email").type(STRING).description("회원 이메일"),
+                                fieldWithPath("name").type(STRING).description("회원 이름"),
+                                fieldWithPath("password").type(STRING).description("회원 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("회원 식별자"),
+                                fieldWithPath("email").type(STRING).description("회원 이메일"),
+                                fieldWithPath("name").type(STRING).description("회원 이름")
+                        ))
+                )
+        ;
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -146,7 +175,7 @@ class UserControllerTest {
     @Test
     void updateUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
+                RestDocumentationRequestBuilders.patch("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
@@ -157,7 +186,23 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(document("update-user",
+                        requestHeaders(headerWithName("Authorization").description("사용자 인증 수단, 액세스 토큰 값")),
+                        pathParameters(
+                                parameterWithName("id").description("회원 식별자")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").type(STRING).description("회원 이름"),
+                                fieldWithPath("password").type(STRING).description("회원 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("회원 식별자"),
+                                fieldWithPath("email").type(STRING).description("회원 이메일"),
+                                fieldWithPath("name").type(STRING).description("회원 이름")
+                        ))
+                )
+        ;
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -217,10 +262,17 @@ class UserControllerTest {
     @Test
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
+                RestDocumentationRequestBuilders.delete("/users/{id}", 1L)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-user",
+                        requestHeaders(headerWithName("Authorization").description("사용자 인증 수단, 액세스 토큰 값")),
+                        pathParameters(
+                                parameterWithName("id").description("회원 식별자")
+                        )
+                ))
+        ;
 
         verify(userService).deleteUser(1L);
     }

@@ -125,3 +125,121 @@ include::{path}/curl-request.adoc[]
 ====== Httpie
 
 include::{path}/httpie-request.adoc[]
+
+== User API
+
+=== POST /users
+
+:path: {snippets}/create-user
+
+회원 가입을 합니다.
+
+==== Request
+
+Request 형식은 다음과 같습니다.
+
+include::{path}/http-request.adoc[]
+
+====== Request Fields
+
+include::{path}/request-fields.adoc[]
+
+==== Response
+
+성공할 경우 response 형식은 다음과 같습니다.
+
+include::{path}/http-response.adoc[]
+
+====== Response Fields
+
+include::{path}/response-fields.adoc[]
+
+==== Request Sample
+
+====== Curl
+
+include::{path}/curl-request.adoc[]
+
+====== Httpie
+
+include::{path}/httpie-request.adoc[]
+
+=== PATCH /users/{id}
+
+:path: {snippets}/update-user
+
+회원 정보를 수정합니다.
+
+==== Request
+
+Request 형식은 다음과 같습니다.
+
+include::{path}/http-request.adoc[]
+
+====== Request Header
+
+include::{path}/request-headers.adoc[]
+
+====== Request Parameters
+
+include::{path}/path-parameters.adoc[]
+
+====== Request Fields
+
+include::{path}/request-fields.adoc[]
+
+==== Response
+
+성공할 경우 response 형식은 다음과 같습니다.
+
+include::{path}/http-response.adoc[]
+
+====== Response Fields
+
+include::{path}/response-fields.adoc[]
+
+==== Request Sample
+
+====== Curl
+
+include::{path}/curl-request.adoc[]
+
+====== Httpie
+
+include::{path}/httpie-request.adoc[]
+
+=== DELETE /users/{id}
+
+:path: {snippets}/delete-user
+
+회원 탈퇴를 합니다.
+
+==== Request
+
+Request 형식은 다음과 같습니다.
+
+include::{path}/http-request.adoc[]
+
+====== Request Header
+
+include::{path}/request-headers.adoc[]
+
+====== Request Parameters
+
+include::{path}/path-parameters.adoc[]
+
+==== Response
+
+성공할 경우 response 형식은 다음과 같습니다.
+
+include::{path}/http-response.adoc[]
+
+==== Request Sample
+
+====== Curl
+
+include::{path}/curl-request.adoc[]
+
+====== Httpie
+
+include::{path}/httpie-request.adoc[]
