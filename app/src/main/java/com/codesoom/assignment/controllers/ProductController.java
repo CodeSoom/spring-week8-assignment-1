@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 상품의 CRUD 와 관련된 HTTP 요청을 처리합니다.
+ * 상품과 관련된 HTTP 요청을 처리합니다.
  *
  */
 @RestController
