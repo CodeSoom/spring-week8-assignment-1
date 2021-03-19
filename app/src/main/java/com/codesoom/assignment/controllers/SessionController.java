@@ -18,6 +18,11 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 전달된 회원 정보로 로그인을 하고, 이로인해 얻은 정보를 리턴합니다.
+     * @param sessionRequestData 회원 로그인 정보
+     * @return 회원 세션정보
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(
