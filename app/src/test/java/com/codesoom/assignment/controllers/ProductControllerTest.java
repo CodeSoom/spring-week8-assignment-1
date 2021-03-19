@@ -7,18 +7,17 @@ import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
+import com.codesoom.assignment.utils.RestDocTestBase;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
-@AutoConfigureRestDocs
-class ProductControllerTest {
+class ProductControllerTest extends RestDocTestBase {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
     private static final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +

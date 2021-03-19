@@ -2,14 +2,12 @@ package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.errors.LoginFailException;
-import com.codesoom.assignment.utils.RestDocTestConfiguration;
+import com.codesoom.assignment.utils.RestDocTestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SessionController.class)
-@AutoConfigureRestDocs
-class SessionControllerTest {
+class SessionControllerTest extends RestDocTestBase {
     @Autowired
     private MockMvc mockMvc;
 
