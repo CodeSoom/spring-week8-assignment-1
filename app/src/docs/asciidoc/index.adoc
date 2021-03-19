@@ -238,3 +238,29 @@ include::{path}/http-response.adoc[]
 
 
 
+[[SESSION]]
+== SESSION
+
+=== Create /session
+
+인증 요청을 처리한 후 인증 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/create-session
+
+Request field
+include::{path}/request-fields.adoc[]
+
+Request structure
+include::{path}/http-request.adoc[]
+
+CURL request
+include::{path}/curl-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+include::{path}/http-response.adoc[]
