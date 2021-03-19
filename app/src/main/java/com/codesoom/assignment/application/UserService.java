@@ -60,7 +60,7 @@ public class UserService {
     }
 
     /**
-     * 전달된 식별자에 해당하는 회원을 주어진 정보로 수정한 후 리턴합니다.
+     * id로 회원을 찾아 주어진 정보로 수정한 다음 리턴합니다.
      *
      * @param id               수정할 회원 식별자
      * @param modificationData 수정할 회원 정보
