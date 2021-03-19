@@ -231,3 +231,41 @@ include::{path}/curl-request.adoc[]
 ====== Httpie
 
 include::{path}/httpie-request.adoc[]
+
+== Session API
+
+=== POST /session
+
+:path: {snippets}/create-session
+
+회원을 인증합니다.
+
+==== Request
+
+Request 형식은 다음과 같습니다.
+
+include::{path}/http-request.adoc[]
+
+====== Request Fields
+
+include::{path}/request-fields.adoc[]
+
+==== Response
+
+성공할 경우 response 형식은 다음과 같습니다.
+
+include::{path}/http-response.adoc[]
+
+====== Response Fields
+
+include::{path}/response-fields.adoc[]
+
+==== Request Sample
+
+====== Curl
+
+include::{path}/curl-request.adoc[]
+
+====== Httpie
+
+include::{path}/httpie-request.adoc[]
