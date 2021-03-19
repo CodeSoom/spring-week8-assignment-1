@@ -14,17 +14,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class UserTestFixture {
-    public static PathParametersSnippet getUserPathParametersSnippet() {
+    static PathParametersSnippet userPathParameter() {
         return pathParameters(
                 parameterWithName("id").description("유저 아이디")
         );
     }
 
-    public static RequestHeadersSnippet getUserRequestHeadersSnippet() {
+    static RequestHeadersSnippet userHeaderParameter() {
         return requestHeaders(headerWithName("Authorization").description("인증 토큰"));
     }
 
-    public static RequestFieldsSnippet getUserRegisterDataRequestFields() {
+    static RequestFieldsSnippet userCreateRequestParameter() {
         return requestFields(
                 fieldWithPath("email").type(STRING).description("유저 이메일"),
                 fieldWithPath("name").type(STRING).description("유저 이름"),
@@ -32,14 +32,14 @@ public class UserTestFixture {
         );
     }
 
-    public static RequestFieldsSnippet getUserModificationDataRequestFields() {
+    static RequestFieldsSnippet userModifyRequestParameter() {
         return requestFields(
                 fieldWithPath("name").type(STRING).description("유저 이름"),
                 fieldWithPath("password").type(STRING).description("유저 비밀번호")
         );
     }
 
-    public static ResponseFieldsSnippet getUserDataResponseFieldsSnippet() {
+    static ResponseFieldsSnippet userResponseParameter() {
         return responseFields(
                 fieldWithPath("id").type(NUMBER).description("유저 식별자"),
                 fieldWithPath("email").type(STRING).description("유저 이메일"),

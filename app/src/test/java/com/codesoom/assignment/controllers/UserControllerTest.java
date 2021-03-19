@@ -132,8 +132,8 @@ class UserControllerTest extends RestDocTestBase {
                 ))
                 .andDo(
                         document("post-user",
-                                UserTestFixture.getUserRegisterDataRequestFields(),
-                                UserTestFixture.getUserDataResponseFieldsSnippet()
+                                UserTestFixture.userCreateRequestParameter(),
+                                UserTestFixture.userResponseParameter()
                         )
                 );
 
@@ -168,10 +168,10 @@ class UserControllerTest extends RestDocTestBase {
                 .andDo(print())
                 .andDo(
                         document("update-user",
-                                UserTestFixture.getUserPathParametersSnippet(),
-                                UserTestFixture.getUserRequestHeadersSnippet(),
-                                UserTestFixture.getUserModificationDataRequestFields(),
-                                UserTestFixture.getUserDataResponseFieldsSnippet())
+                                UserTestFixture.userPathParameter(),
+                                UserTestFixture.userHeaderParameter(),
+                                UserTestFixture.userModifyRequestParameter(),
+                                UserTestFixture.userResponseParameter())
                 );
 
         verify(userService)
@@ -238,8 +238,8 @@ class UserControllerTest extends RestDocTestBase {
                 .andExpect(status().isOk())
                 .andDo(
                         document("delete-user",
-                                UserTestFixture.getUserPathParametersSnippet(),
-                                UserTestFixture.getUserRequestHeadersSnippet())
+                                UserTestFixture.userPathParameter(),
+                                UserTestFixture.userHeaderParameter())
                 );
 
         verify(userService).deleteUser(1L);
