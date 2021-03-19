@@ -9,20 +9,22 @@
 ==== Request
 :path: {snippets}/post-session
 
-Path: POST /session
+===== URL
+include::{path}/curl-request.adoc[]
 
-Parameter:
+===== Parameter
 include::{path}/request-fields.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
-
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 == 상품
@@ -34,19 +36,20 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/get-products
 
-Path: GET /products
-
-Request(Example):
-include::{path}/http-request.adoc[]
+===== URL
+include::{path}/curl-request.adoc[]
 
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
-include::{path}/http-response.adoc[]
+==== Sample
 
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
+include::{path}/http-response.adoc[]
 === 상품 조회
 
 - 주어진 id와 일치하는 상품을 가져옵니다.
@@ -54,17 +57,22 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/get-product
 
-Path: GET /product/{id}
+===== URL
+include::{path}/curl-request.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
+===== Path Parameter
+include::{path}/path-parameters.adoc[]
 
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 === 상품 생성
@@ -72,23 +80,25 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/post-product
 
-Path: POST /product
+===== URL
+include::{path}/curl-request.adoc[]
 
-Header:
+===== Header
 include::{path}/request-headers.adoc[]
 
-Parameter:
+===== Parameter
 include::{path}/request-fields.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
-
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 === 상품 수정
@@ -98,23 +108,28 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/update-product
 
-Path: PATCH /product/{id}
+===== URL
+include::{path}/curl-request.adoc[]
 
-Header:
+===== Header
 include::{path}/request-headers.adoc[]
 
-Parameter:
+===== Path Parameter
+include::{path}/path-parameters.adoc[]
+
+===== Parameter
 include::{path}/request-fields.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
-
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 === 상품 삭제
@@ -124,17 +139,21 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/delete-product
 
-Path: DELETE /product/{id}
+===== URL
+include::{path}/curl-request.adoc[]
 
-Header:
+===== Header
 include::{path}/request-headers.adoc[]
 
-Request(Example):
+===== Path Parameter
+include::{path}/path-parameters.adoc[]
+
+==== Sample
+
+===== Request
 include::{path}/http-request.adoc[]
 
-==== Response
-
-Response(Example):
+===== Response
 include::{path}/http-response.adoc[]
 
 == 유저
@@ -146,20 +165,22 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/post-user
 
-Path: POST /user
+===== URL
+include::{path}/curl-request.adoc[]
 
-Parameter:
+===== Parameter
 include::{path}/request-fields.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
-
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 === 유저 수정
@@ -169,23 +190,28 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/update-user
 
-Path: PATCH /user/{id}
+===== URL
+include::{path}/curl-request.adoc[]
 
-Header:
+===== Header
 include::{path}/request-headers.adoc[]
 
-Parameter:
+===== Path Parameter
+include::{path}/path-parameters.adoc[]
+
+===== Parameter
 include::{path}/request-fields.adoc[]
 
-Request(Example):
-include::{path}/http-request.adoc[]
-
 ==== Response
-
-Fields:
+===== Fields
 include::{path}/response-fields.adoc[]
 
-Response(Example):
+==== Sample
+
+===== Request
+include::{path}/http-request.adoc[]
+
+===== Response
 include::{path}/http-response.adoc[]
 
 === 유저 삭제
@@ -195,15 +221,19 @@ include::{path}/http-response.adoc[]
 ==== Request
 :path: {snippets}/delete-user
 
-Path: DELETE /user/{id}
+===== URL
+include::{path}/curl-request.adoc[]
 
-Header:
+===== Header
 include::{path}/request-headers.adoc[]
 
-Request(Example):
+===== Path Parameter
+include::{path}/path-parameters.adoc[]
+
+==== Sample
+
+===== Request
 include::{path}/http-request.adoc[]
 
-==== Response
-
-Response(Example):
+===== Response
 include::{path}/http-response.adoc[]
