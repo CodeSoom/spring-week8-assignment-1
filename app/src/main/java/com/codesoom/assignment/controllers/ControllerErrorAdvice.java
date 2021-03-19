@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * HTTP 요청에 대한 에러 발생시 응답을 담당합니다.
+ */
 @ResponseBody
 @ControllerAdvice
 public class ControllerErrorAdvice {
