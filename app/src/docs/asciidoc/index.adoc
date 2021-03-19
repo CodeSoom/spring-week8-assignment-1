@@ -6,7 +6,7 @@
 
 == Product API
 
-=== GET /Products
+=== GET /products
 
 :path: {snippets}/get-products
 
@@ -74,7 +74,7 @@ include::{path}/curl-request.adoc[]
 
 include::{path}/httpie-request.adoc[]
 
-=== POST /Products
+=== POST /products
 
 :path: {snippets}/create-product
 
