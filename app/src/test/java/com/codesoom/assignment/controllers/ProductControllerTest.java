@@ -101,7 +101,7 @@ class ProductControllerTest extends RestDocTestBase {
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(
                         document("get-products",
-                                ProductTestFixture.getProductListDataResponseFieldsSnippet()
+                                ProductTestFixture.productListResponseParameter()
                         )
                 );
     }
@@ -117,8 +117,8 @@ class ProductControllerTest extends RestDocTestBase {
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(
                         document("get-product",
-                                ProductTestFixture.getProductPathParametersSnippet(),
-                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                                ProductTestFixture.productPathParameter(),
+                                ProductTestFixture.productResponseParameter()
                         )
                 );
     }
@@ -144,9 +144,9 @@ class ProductControllerTest extends RestDocTestBase {
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(
                         document("post-product",
-                                ProductTestFixture.getProductRequestHeadersSnippet(),
-                                ProductTestFixture.getProductDataRequestFields(),
-                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                                ProductTestFixture.productHeaderParameter(),
+                                ProductTestFixture.productRequestParameter(),
+                                ProductTestFixture.productResponseParameter()
                         )
                 );
 
@@ -205,10 +205,10 @@ class ProductControllerTest extends RestDocTestBase {
                 .andExpect(content().string(containsString("쥐순이")))
                 .andDo(
                         document("update-product",
-                                ProductTestFixture.getProductPathParametersSnippet(),
-                                ProductTestFixture.getProductRequestHeadersSnippet(),
-                                ProductTestFixture.getProductDataRequestFields(),
-                                ProductTestFixture.getProductDataResponseFieldsSnippet()
+                                ProductTestFixture.productPathParameter(),
+                                ProductTestFixture.productHeaderParameter(),
+                                ProductTestFixture.productRequestParameter(),
+                                ProductTestFixture.productResponseParameter()
                         )
                 );
 
@@ -277,8 +277,8 @@ class ProductControllerTest extends RestDocTestBase {
                 .andExpect(status().isOk())
                 .andDo(
                         document("delete-product",
-                                ProductTestFixture.getProductPathParametersSnippet(),
-                                ProductTestFixture.getProductRequestHeadersSnippet()
+                                ProductTestFixture.productPathParameter(),
+                                ProductTestFixture.productHeaderParameter()
                         )
                 );
 

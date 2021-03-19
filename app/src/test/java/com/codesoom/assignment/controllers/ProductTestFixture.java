@@ -15,17 +15,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.snippet.Attributes.key;
 
 public class ProductTestFixture {
-    public static PathParametersSnippet getProductPathParametersSnippet() {
+    static PathParametersSnippet productPathParameter() {
         return pathParameters(
                 parameterWithName("id").description("상품 아이디")
         );
     }
 
-    public static RequestHeadersSnippet getProductRequestHeadersSnippet() {
+    static RequestHeadersSnippet productHeaderParameter() {
         return requestHeaders(headerWithName("Authorization").description("인증 토큰"));
     }
 
-    public static RequestFieldsSnippet getProductDataRequestFields() {
+    static RequestFieldsSnippet productRequestParameter() {
         return requestFields(
                 fieldWithPath("name").type(STRING).description("상품 이름")
                         .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
@@ -38,7 +38,7 @@ public class ProductTestFixture {
         );
     }
 
-    public static ResponseFieldsSnippet getProductDataResponseFieldsSnippet() {
+    static ResponseFieldsSnippet productResponseParameter() {
         return responseFields(
                 fieldWithPath("id").type(NUMBER).description("상품 식별자"),
                 fieldWithPath("name").type(STRING).description("상품 이름"),
@@ -48,7 +48,7 @@ public class ProductTestFixture {
         );
     }
 
-    public static ResponseFieldsSnippet getProductListDataResponseFieldsSnippet() {
+    static ResponseFieldsSnippet productListResponseParameter() {
         return responseFields(
                 fieldWithPath("[].id").type(NUMBER).description("상품 식별자"),
                 fieldWithPath("[].name").type(STRING).description("상품 이름"),
