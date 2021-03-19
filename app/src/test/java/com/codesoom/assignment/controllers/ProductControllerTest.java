@@ -3,6 +3,7 @@ package com.codesoom.assignment.controllers;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.common.RestDocsConfiguration;
+import com.codesoom.assignment.docs.ProductDocumentation;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.dto.ProductData;
@@ -27,15 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,16 +107,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-products",
-                        responseFields(
-                                fieldWithPath("[].id").type(NUMBER).description("상품 식별자"),
-                                fieldWithPath("[].name").type(STRING).description("상품 이름"),
-                                fieldWithPath("[].maker").type(STRING).description("상품 제조사"),
-                                fieldWithPath("[].price").type(NUMBER).description("상품 가격"),
-                                fieldWithPath("[].imageUrl").type(STRING).optional().description("상품 이미지")
-                        ))
-                )
-        ;
+                .andDo(ProductDocumentation.getProducts());
     }
 
     @Test
@@ -131,19 +118,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product",
-                        pathParameters(
-                                parameterWithName("id").description("조회할 상품 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
-                                fieldWithPath("name").type(STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
-                        ))
-                )
-        ;
+                .andDo(ProductDocumentation.getProduct());
     }
 
     @Test
@@ -164,27 +139,11 @@ class ProductControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("create-product",
-                        requestHeaders(headerWithName("Authorization").description("사용자 인증 수단, 액세스 토큰 값")),
-                        requestFields(
-                                fieldWithPath("name").type(STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
-                                fieldWithPath("name").type(STRING).description("상품 이름"),
-                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(STRING).optional().description("상품 이미지")
-                        ))
-                )
-        ;
+                .andDo(ProductDocumentation.createProduct());
 
         verify(productService).createProduct(any(ProductData.class));
     }
-
+    
     @Test
     void createWithInvalidAttributes() throws Exception {
         mockMvc.perform(
