@@ -35,7 +35,7 @@ public interface UserRepository {
     Optional<User> findByIdAndDeletedIsFalse(Long id);
 
     /**
-     *
+     * 이메일로 유저를 찾는다.
      * @param email
      * @return
      */

@@ -17,3 +17,4 @@ public class UserResultData {
 
     private String name;
 }
+
