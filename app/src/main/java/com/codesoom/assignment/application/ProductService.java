@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * Service for products.
- *
- * @author Lee Dong Wook (sh95119@gmail.com)
  */
 @Service
 @Transactional
