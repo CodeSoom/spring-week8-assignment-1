@@ -92,6 +92,10 @@ application {
     mainClass = 'com.codesoom.assignment.App'
 }
 
+asciidoctor {
+    dependsOn(test)
+}
+
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
