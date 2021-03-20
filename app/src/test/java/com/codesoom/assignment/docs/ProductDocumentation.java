@@ -23,7 +23,6 @@ public class ProductDocumentation {
     private static final Item PRICE = Item.of("price", NUMBER, "상품 가격");
     private static final Item IMAGE_URL = Item.of("imageUrl", STRING, "상품 이미지", State.OPTIONAL);
 
-
     public static RestDocumentationResultHandler getProducts() {
         ItemProvider itemProvider = new ItemProvider(
                 Item.of("[].id", NUMBER, "상품 식별자"),
