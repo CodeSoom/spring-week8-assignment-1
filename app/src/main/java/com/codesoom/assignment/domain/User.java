@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 유저 모델
+ */
 @Entity
 @Getter
 @Builder
@@ -32,19 +35,37 @@ public class User {
     @Builder.Default
     private boolean deleted = false;
 
+    /**
+     * 유저 이름을 저장한다.
+     * @param source
+     */
     public void changeWith(User source) {
         name = source.name;
     }
 
+    /**
+     * 유저 비밀번호를 변경한다.
+     * @param password 비밀번호
+     * @param passwordEncoder
+     */
     public void changePassword(String password,
                                PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
 
+    /**
+     * 유저가 삭제되었다는 표시를 한다.
+     */
     public void destroy() {
         deleted = true;
     }
 
+    /**
+     * 인증 정보를 관리한다.
+     * @param password 비밀번호
+     * @param passwordEncoder
+     * @return
+     */
     public boolean authenticate(String password,
                                 PasswordEncoder passwordEncoder) {
         return !deleted && passwordEncoder.matches(password, this.password);
