@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * 유저와 관련된 결과를 저장하는 형식
+ */
 @Getter
 @Builder
 @AllArgsConstructor

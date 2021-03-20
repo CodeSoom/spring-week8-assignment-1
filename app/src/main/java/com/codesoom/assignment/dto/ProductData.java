@@ -10,6 +10,9 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 상품 정보를 전달하는 형식.
+ */
 @Setter
 @Getter
 @Builder
