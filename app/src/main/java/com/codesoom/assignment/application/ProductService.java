@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * Service for products.
+ * 상품과 관련된 서비스입니다.
  */
 @Service
 @Transactional
@@ -36,12 +36,8 @@ public class ProductService {
     }
 
     /**
-     * Returns the product with given ID.
-     *
-     * @param id is the identifier of the product.
-     * @return the product with given ID.
-     * @throws ProductNotFoundException in case any product doesn't exist
-     * with the given ID
+     * 상품을 반환합니다.
+     * @return 상품
      */
     public Product getProduct(Long id) {
         return findProduct(id);
@@ -52,6 +48,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    /**
+     *  상품 정보를 갱신합니다.
+     * @param id 아이디
+     * @param productData 상품 정보
+     * @return 상품
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -60,6 +62,11 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 상품을 삭제합니다.
+     * @param id 아이디
+     * @return 삭제된 상품
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -68,6 +75,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 상품을 검색합니다.
+     * @param id
+     * @return 상품
+     * @throws ProductNotFoundException
+     */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
