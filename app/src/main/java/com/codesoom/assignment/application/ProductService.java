@@ -28,9 +28,8 @@ public class ProductService {
     }
 
     /**
-     * Returns all products in this application.
-     *
-     * @return return all products.
+     * 상품 목록을 반환합니다.
+     * @return 상품 목록
      */
     public List<Product> getProducts() {
         return productRepository.findAll();
