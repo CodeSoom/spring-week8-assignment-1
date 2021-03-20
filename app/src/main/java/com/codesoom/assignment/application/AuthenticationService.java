@@ -52,7 +52,7 @@ public class AuthenticationService {
 
     /**
      * 토큰을 반환합니다.
-     * @param accessToken
+     * @param accessToken 인증 토큰
      * @return 토큰
      */
     public Long parseToken(String accessToken) {
@@ -62,7 +62,7 @@ public class AuthenticationService {
 
     /**
      * 회원들의 권한 정보를 반환합니다.
-     * @param userId
+     * @param userId 아이디
      * @return 권한 정보 목록
      */
     public List<Role> roles(Long userId) {
