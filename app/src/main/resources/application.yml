@@ -1,9 +1,6 @@
 spring:
   datasource:
-    #url: jdbc:h2:~/data/demo
-    url: jdbc:mariadb://localhost:3306/test
-    username: root
-    password: root1234
+    url: jdbc:h2:mem:test
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,3 +12,13 @@ server:
     encoding:
       charset: UTF-8
       force: true
+---
+spring:
+  profiles: mariadb
+  datasource:
+    url: jdbc:mariadb://localhost:3306/test
+    username: root
+    password: root1234
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
