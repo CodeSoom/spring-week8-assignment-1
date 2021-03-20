@@ -1,11 +1,9 @@
 spring:
-  profiles:
-    active: local
   datasource:
     url: jdbc:h2:mem:test
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
 jwt:
   secret: "12345678901234567890123456789010"
@@ -16,12 +14,3 @@ server:
       charset: UTF-8
       force: true
 
----
-spring:
-  profiles:
-    active: test
-  datasource:
-    url: jdbc:h2:mem:test
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
