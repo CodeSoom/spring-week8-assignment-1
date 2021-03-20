@@ -87,6 +87,7 @@ dependencies {
     }
 
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
+    testImplementation 'io.rest-assured:xml-path:4.2.0'
 }
 
 application {
