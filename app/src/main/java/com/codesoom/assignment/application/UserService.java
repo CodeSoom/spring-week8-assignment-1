@@ -65,7 +65,7 @@ public class UserService {
      * @param modificationData 변경할 유저 정보
      * @param userId 변경할 유저의 아이디
      * @return 변경된 유저
-     * @throws AccessDeniedException 유저 정보를 변경할 권한이 없는 경우 에러를 반환합니다
+     * @throws AccessDeniedException 유저 정보를 변경할 권한이 없는 경우
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {

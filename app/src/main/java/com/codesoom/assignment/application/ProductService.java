@@ -41,7 +41,7 @@ public class ProductService {
      *
      * @param id 가져오려는 프로덕트의 아이디
      * @return 가져온 프로덕트
-     * @throws ProductNotFoundException 프로덕트를 못찾은 경우 에러가 발생합니다
+     * @throws ProductNotFoundException 프로덕트를 못찾은 경우
      */
     public Product getProduct(Long id) {
         return findProduct(id);
