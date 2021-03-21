@@ -35,12 +35,12 @@ public class AuthenticationService {
     }
 
     /**
-     * 애플리케이션에 로그인 한다.
+     * 사용자를 인증하고, 토큰을 발행한다.
      *
-     * @param email 로그인할 계정 이메일
-     * @param password 로그인할 계정 비밀번호
-     * @return 전체 장난감들
-     * @throws LoginFailException 로그인 실패 예외
+     * @param email 사용자 이메일
+     * @param password 사용자 비밀번호
+     * @return 토큰
+     * @throws LoginFailException 로그인을 실패했을 때
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -54,7 +54,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 토큰을 복호화하고, 계정 아이디로 반환한다.
+     * 토큰을 복호화하여 사용자 아이디로 반환한다.
      *
      * @param accessToken 인증 토큰
      * @return 복호화된 유저 아이디
@@ -68,7 +68,7 @@ public class AuthenticationService {
      * 유저 권한을 반환한다.
      *
      * @param userId 유저 식별자
-     * @return 주어진 유저 식별자를 가진 계정 권한 목록
+     * @return 사용자의 권한 목록
      */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
