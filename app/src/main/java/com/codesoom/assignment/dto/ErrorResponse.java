@@ -1,7 +1,7 @@
 package com.codesoom.assignment.dto;
 
 /**
- * 에러를 전달하는 형식.
+ * 에러 응답.
  */
 public class ErrorResponse {
     private String message;

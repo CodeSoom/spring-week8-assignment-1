@@ -3,7 +3,7 @@ package com.codesoom.assignment.dto;
 import lombok.Getter;
 
 /**
- * 세션을 전달하는 형식
+ * 세션 요청서.
  */
 @Getter
 public class SessionRequestData {

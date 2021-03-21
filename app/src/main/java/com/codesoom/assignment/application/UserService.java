@@ -63,7 +63,7 @@ public class UserService {
      * @param modificationData 갱신 정보
      * @param userId 아이디
      * @return 갱신된 회원
-     * @throws AccessDeniedException
+     * @throws AccessDeniedException 접근 권한이 없는 유저가 요청할 때 예외가 던져집니다.
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {

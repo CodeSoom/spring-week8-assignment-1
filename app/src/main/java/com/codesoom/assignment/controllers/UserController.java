@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 회원과 관련된 요청을 한다.
+ * 회원과 관련된 요청을 처리합니다.
  */
 @RestController
 @RequestMapping("/users")
@@ -68,7 +68,7 @@ public class UserController {
     }
 
     /**
-     * 회원 정보를 검색한다.
+     * 회원 정보를 검색 및 존재하면 리턴한다.
      * @param user 회원
      * @return 회원 정보
      */

@@ -49,7 +49,7 @@ public class ProductService {
     }
 
     /**
-     *  상품 정보를 갱신합니다.
+     * 상품 정보를 갱신합니다.
      * @param id 아이디
      * @param productData 상품 정보
      * @return 상품
@@ -63,7 +63,7 @@ public class ProductService {
     }
 
     /**
-     * 상품을 삭제합니다.
+     * 상품을 삭제하고, 삭제한 상품 정보를 리턴합니다.
      * @param id 아이디
      * @return 삭제된 상품
      */
@@ -76,7 +76,7 @@ public class ProductService {
     }
 
     /**
-     * 상품을 검색합니다.
+     * ID로 상품을 검색해 리턴합니다.
      * @param id
      * @return 상품
      * @throws ProductNotFoundException

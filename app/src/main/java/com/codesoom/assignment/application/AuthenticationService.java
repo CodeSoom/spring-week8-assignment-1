@@ -51,7 +51,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 토큰을 반환합니다.
+     * 엑세스 토큰을 복호화한 값을 리턴합니다.
      * @param accessToken 인증 토큰
      * @return 토큰
      */
