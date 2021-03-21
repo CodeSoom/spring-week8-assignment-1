@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 유저 인증 정보.
+ */
 public class UserAuthentication extends AbstractAuthenticationToken {
     private final Long userId;
 
@@ -16,21 +19,41 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         this.userId = userId;
     }
 
+    /**
+     * 유저 자격 정보를 반환합니다.
+     *
+     * @return 유저 자격 정보
+     */
     @Override
     public Object getCredentials() {
         return null;
     }
 
+    /**
+     * 유저 접근 주체 정보를 반환합니다.
+     *
+     * @return 유저 접근 주체
+     */
     @Override
     public Object getPrincipal() {
         return userId;
     }
 
+    /**
+     * 유저 인증 여부를 반환합니다.
+     *
+     * @return 인증 여부
+     */
     @Override
     public boolean isAuthenticated() {
         return true;
     }
 
+    /**
+     * 유저 식별자를 반환합니다.
+     *
+     * @return 유저 식별자
+     */
     public Long getUserId() {
         return userId;
     }

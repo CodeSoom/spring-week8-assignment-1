@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * 상품 HTTP 요청 핸들러.
+ */
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -24,16 +27,33 @@ public class ProductController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 존재하는 모든 상품 목록을 응답합니다.
+     *
+     * @return 상품 목록
+     */
     @GetMapping
     public List<Product> list() {
         return productService.getProducts();
     }
 
+    /**
+     * 대응되는 식별자의 상품을 응답합니다.
+     *
+     * @param id 상품 식별자
+     * @return 상품
+     */
     @GetMapping("{id}")
     public Product detail(@PathVariable Long id) {
         return productService.getProduct(id);
     }
 
+    /**
+     * 주어진 상품 정보로 새로운 상품을 생성하고 응답합니다.
+     *
+     * @param productData 생성 상품 정보
+     * @return 생성된 상품
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -41,6 +61,13 @@ public class ProductController {
         return productService.createProduct(productData);
     }
 
+    /**
+     * 대응되는 식별자의 상품을 주어진 상품 정보로 수정하고 응답합니다.
+     *
+     * @param id          상품 식별자
+     * @param productData 수정 상품 정보
+     * @return 수정된 상품
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public Product update(
@@ -50,6 +77,11 @@ public class ProductController {
         return productService.updateProduct(id, productData);
     }
 
+    /**
+     * 대응되는 식별자의 상품을 삭제합니다.
+     *
+     * @param id 상품 식별자
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public void destroy(@PathVariable Long id) {

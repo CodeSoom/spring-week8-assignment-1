@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 유저 인증 전처리기.
+ */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
@@ -26,6 +29,15 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 주어진 요청이 인증이 필요한 경우 인증을 수행합니다.
+     *
+     * @param request  요청 정보
+     * @param response 응답 정보
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

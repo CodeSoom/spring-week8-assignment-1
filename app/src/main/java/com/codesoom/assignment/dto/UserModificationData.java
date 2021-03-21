@@ -4,12 +4,17 @@ import com.github.dozermapper.core.Mapping;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * 유저 수정 요청 정보.
+ */
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserModificationData {
     @NotBlank
