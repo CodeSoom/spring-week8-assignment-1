@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * 계정 서비스
+ * 사용자 서비스
  *
  * @author newoo (newoo4297@naver.com)
  */
@@ -39,10 +39,11 @@ public class UserService {
     }
 
     /**
-     * 애플리케이션에 계정을 등록하고, 등록된 계정을 반환한다.
+     * 계정을 등록하고, 등록된 계정을 반환한다.
      *
      * @param registrationData 등록할 계정 데이터
      * @return 등록된 계정
+     * @throws UserEmailDuplicationException 사용자의 이메일이 이미 존재할 경우
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -61,13 +62,13 @@ public class UserService {
     }
 
     /**
-     * 주어진 식별자들을 가지고, 계정을 수정하고, 수정된 계정을 반환한다.
+     * 주어진 식별자에 해당하는 계정을 수정하고, 수정된 계정을 반환한다.
      *
      * @param id 수정할 계정의 식별자
      * @param modificationData 수정할 계정 데이터
-     * @param userId 수정을 요청한 계정의 식별
+     * @param userId 수정을 요청한 계정의 식별자
      * @return 수정된 계정
-     * @throws AccessDeniedException 계정정보 수정 권한이 없을 경우 발생
+     * @throws AccessDeniedException 계정정보 수정 권한이 없을 경우
     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
@@ -84,7 +85,7 @@ public class UserService {
     }
 
     /**
-     * 주어진 식별자를 가진 계정을 삭제하고, 삭제된 계정을 반환한다.
+     * 주어진 식별자에 해당하는 계정을 삭제하고, 삭제된 계정을 반환한다.
      *
      * @param id 삭제할 계정의 식별자
      * @return 삭제된 계정
@@ -96,10 +97,11 @@ public class UserService {
     }
 
     /**
-     * 주어진 식별자를 가진 계정을 찾고, 찾은 계정을 반환한다.
+     * 주어진 식별자로 계정을 찾고, 찾은 계정을 반환한다.
      *
      * @param id 찾을 계정의 식별자
      * @return 찾은 계정
+     * @throws UserNotFoundException 주어진 식별자에 해당하는 계정이 없을 경우
      */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
