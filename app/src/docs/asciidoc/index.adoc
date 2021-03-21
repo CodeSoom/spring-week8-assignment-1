@@ -1,17 +1,333 @@
-= 고양이 장난감 가게 API
+= Rest Docs API Document
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
 
-== GET /products
+[[introduction]]
+== Overview
 
-상품 목록을 JSON 형태로 돌려준다.
+고양이 장난감 가게 API
 
-include::{snippets}/get-products/http-request.adoc[]
+[[overview]]
+== HTTP verbs
 
-include::{snippets}/get-products/http-response.adoc[]
+HTTP 동사(verbs)는 표준 HTTP와 REST 규약을 따릅니다.
 
-== GET /product/{id}
+|===
+| 동사 | 용례
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+| `GET`
+| 리소스를 가져올 때 사용
 
-include::{snippets}/get-product/http-request.adoc[]
+| `POST`
+| 새 리소스를 만들 때 사용
 
-include::{snippets}/get-product/http-response.adoc[]
+| `PUT`
+| 리소스를 수정할 때 사용
+
+| `PATCH`
+| 리소스의 일부를 수정할 때 사용
+
+| `DELETE`
+| 리소스를 삭제할 떄 사용
+|===
+
+[[overview-http-status-codes]]
+== HTTP status code
+
+HTTP 상태 코드는 표준 HTTP와 REST 규약을 따릅니다.
+
+|===
+| 상태 코드 | 용례
+
+| `200 OK`
+| 요청을 성공적으로 처리함
+
+| `201 Created`
+| 새 리소스를 성공적으로 생성함.
+
+| `204 No Content`
+| 요청에 대해서 보내줄 수 있는 콘텐츠가 없습니다.
+
+| `400 Bad Request`
+| 잘못된 요청을 보낸 경우.
+응답 본문에 더 오류에 대한 정보가 담겨있다.
+
+| `403 Forbidden`
+| 클라이언트는 콘텐츠에 접근할 권리를 가지고 있지 않습니다.
+
+| `404 Not Found`
+| 요청한 리소스가 없음.
+|===
+
+[[PRODUCT]]
+== PRODUCT
+
+=== GET /products
+
+상품 목록을 돌려준다.
+
+==== Request
+:path: {snippets}/get-products
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== GET /products/{id}
+
+상품에 대한 자세한 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/get-product
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Create /products
+
+상품을 생성하고 생성 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/create-product
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Update /products/{id}
+
+상품을 갱신하고 갱신 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/update-product
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Delete /products/{id}
+
+상품을 삭제한다.
+
+==== Request
+:path: {snippets}/delete-product
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+[[USER]]
+== USER
+
+=== Create /users
+
+사용자를 생성하고 생성 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/create-user
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Update /users/{id}
+
+사용자 정보 갱신하고 갱신 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/update-user
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Delete /users/{id}
+
+상품을 삭제한다.
+
+==== Request
+:path: {snippets}/delete-user
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+[[SESSION]]
+== SESSION
+
+=== Create /session
+
+사용자 인증 요청을 처리하고 인증 정보를 리턴한다.
+
+==== Request
+:path: {snippets}/create-session
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
