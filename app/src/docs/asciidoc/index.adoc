@@ -63,3 +63,11 @@ include::{snippets}/patch-user/http-response.adoc[]
 include::{snippets}/delete-user/http-request.adoc[]
 
 include::{snippets}/delete-user/http-response.adoc[]
+
+== POST /session
+
+로그인하고, 인증 토큰을 돌려준다.
+
+include::{snippets}/post-session/http-request.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]
