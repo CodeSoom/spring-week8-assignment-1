@@ -62,7 +62,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 회원의 ID가 가지고 있는 권한을 리턴합니다.
+     * 사용자의 권한 목록을 반환합니다.
      *
      * @param userId 회원 ID
      * @return 회원의 권한
