@@ -35,9 +35,9 @@ public class AuthenticationService {
     /**
      * 로그인합니다.
      *
-     * @param email 로그인 하려는 유저의 이메일.
-     * @param password 로그인 하려는 유저의 비밀번호.
-     * @return 인증에 필요한 토큰.
+     * @param email 로그인 하려는 유저의 이메일
+     * @param password 로그인 하려는 유저의 비밀번호
+     * @return 인증에 필요한 토큰
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -53,8 +53,8 @@ public class AuthenticationService {
     /**
      * 토큰을 파싱합니다.
      *
-     * @param accessToken 발급받은 토큰.
-     * @return 토큰을 발급받은 유저 아이디.
+     * @param accessToken 발급받은 토큰
+     * @return 토큰을 발급받은 유저 아이디
      */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);

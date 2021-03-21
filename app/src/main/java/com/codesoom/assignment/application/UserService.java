@@ -39,8 +39,8 @@ public class UserService {
     /**
      * 유저를 등록한다.
      *
-     * @param registrationData 등록하기 위한 데이터.
-     * @return 등록된 유저.
+     * @param registrationData 등록하기 위한 데이터
+     * @return 등록된 유저
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -61,11 +61,11 @@ public class UserService {
     /**
      * 유저 정보를 변경합니다.
      *
-     * @param id 이 작업을 실행한 유저의 아이디.
-     * @param modificationData 변경할 유저 정보.
-     * @param userId 변경할 유저의 아이디.
-     * @return 변경된 유저.
-     * @throws AccessDeniedException 유저 정보를 변경할 권한이 없는 경우 에러를 반환합니다.
+     * @param id 이 작업을 실행한 유저의 아이디
+     * @param modificationData 변경할 유저 정보
+     * @param userId 변경할 유저의 아이디
+     * @return 변경된 유저
+     * @throws AccessDeniedException 유저 정보를 변경할 권한이 없는 경우 에러를 반환합니다
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
@@ -85,7 +85,7 @@ public class UserService {
      * 유저를 삭제합니다.
      *
      * @param id 삭제할 유저의 아이디.
-     * @return 삭제된 유저.
+     * @return 삭제된 유저
      */
     public User deleteUser(Long id) {
         User user = findUser(id);
