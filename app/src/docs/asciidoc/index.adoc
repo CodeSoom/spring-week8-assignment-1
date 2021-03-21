@@ -4,9 +4,9 @@
 
 상품 목록을 JSON 형태로 돌려준다.
 
-include::{snippets}/get-products/http-request.adoc[]
+include::{snippets}/get-all-products/http-request.adoc[]
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{snippets}/get-all-products/http-response.adoc[]
 
 == GET /product/{id}
 
