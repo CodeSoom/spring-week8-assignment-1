@@ -6,6 +6,9 @@ import com.codesoom.assignment.dto.SessionResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 세션을 반환하는 컨트롤러
+ */
 @RestController
 @RequestMapping("/session")
 public class SessionController {
@@ -15,6 +18,11 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 토큰 생성을 요청하고, 세션 정보를 반환한다.
+     * @param sessionRequestData
+     * @return
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(

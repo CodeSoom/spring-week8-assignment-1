@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 권한 모델
+ */
 @Entity
 @NoArgsConstructor
 public class Role {

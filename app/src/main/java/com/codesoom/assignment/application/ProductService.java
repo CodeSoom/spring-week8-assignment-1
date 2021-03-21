@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * 상품과 관련된 서비스입니다.
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -24,10 +27,18 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * 상품 목록을 반환합니다.
+     * @return 상품 목록
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * 상품을 반환합니다.
+     * @return 상품
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
@@ -37,6 +48,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    /**
+     * 상품 정보를 갱신합니다.
+     * @param id 아이디
+     * @param productData 상품 정보
+     * @return 상품
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -45,6 +62,11 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 상품을 삭제하고, 삭제한 상품 정보를 리턴합니다.
+     * @param id 아이디
+     * @return 삭제된 상품
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -53,6 +75,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * ID로 상품을 검색해 리턴합니다.
+     * @param id
+     * @return 상품
+     * @throws ProductNotFoundException
+     */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));

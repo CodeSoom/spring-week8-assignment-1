@@ -15,3 +15,9 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+상품이 존재하지 않을 때,
+
+include::{snippets}/get-not-existed-product/http-request.adoc[]
+
+include::{snippets}/get-not-existed-product/http-response.adoc[]
