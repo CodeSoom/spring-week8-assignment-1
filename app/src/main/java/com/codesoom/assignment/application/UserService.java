@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 회원과 관련된 비즈니스 로직을 담당합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,7 +36,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(UserRegistrationData registrationData) {
+    /**
+     * 주어진 회원 정보로 회원을 생성하고, 생성된 회원을 리턴합니다.
+     *
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
+     * @throws UserEmailDuplicationException 회원 이메일이 중복될 경우
+     */
+    public User registerUser(UserRegistrationData registrationData)
+            throws UserEmailDuplicationException {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new UserEmailDuplicationException(email);
@@ -49,8 +60,21 @@ public class UserService {
         return user;
     }
 
-    public User updateUser(Long id, UserModificationData modificationData,
-                           Long userId) throws AccessDeniedException {
+    /**
+     * 주어진 id에 해당하는 회원을 전달받은 회원 수정 정보로 변경하고,
+     * 변경된 회원을 리턴합니다.
+     *
+     * @param id 변경하고자 하는 회원 식별자
+     * @param modificationData 회원 수정 정보
+     * @param userId 인증된 회원 식별자
+     * @return 변경된 회원
+     * @throws AccessDeniedException 변경하려고 하는 회원이 자기 자신이 아닐 경우
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
+     */
+    public User updateUser(Long id,
+                           UserModificationData modificationData,
+                           Long userId)
+            throws AccessDeniedException, UserNotFoundException {
         if (!id.equals(userId)) {
             throw new AccessDeniedException("Access denied");
         }
@@ -63,7 +87,14 @@ public class UserService {
         return user;
     }
 
-    public User deleteUser(Long id) {
+    /**
+     * 주어진 id에 해당하는 회원을 삭제하고, 삭제된 회원을 리턴합니다.
+     *
+     * @param id 회원의 식별자
+     * @return 삭제된 회원
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
+     */
+    public User deleteUser(Long id) throws UserNotFoundException {
         User user = findUser(id);
         user.destroy();
         return user;

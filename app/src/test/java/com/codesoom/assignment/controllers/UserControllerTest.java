@@ -2,6 +2,8 @@ package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.UserService;
+import com.codesoom.assignment.common.RestDocsConfiguration;
+import com.codesoom.assignment.docs.UserDocumentation;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
@@ -10,9 +12,12 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -128,7 +135,8 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+                .andDo(UserDocumentation.createUser());
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -146,7 +154,7 @@ class UserControllerTest {
     @Test
     void updateUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
+                RestDocumentationRequestBuilders.patch("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
@@ -157,7 +165,8 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(UserDocumentation.updateUser());
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -217,10 +226,11 @@ class UserControllerTest {
     @Test
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
+                RestDocumentationRequestBuilders.delete("/users/{id}", 1L)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(UserDocumentation.deleteUser());
 
         verify(userService).deleteUser(1L);
     }

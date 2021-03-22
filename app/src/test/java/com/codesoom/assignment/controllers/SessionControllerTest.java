@@ -1,12 +1,16 @@
 package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
+import com.codesoom.assignment.common.RestDocsConfiguration;
+import com.codesoom.assignment.docs.SessionDocumentation;
 import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SessionController.class)
+@AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class SessionControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -45,9 +51,10 @@ class SessionControllerTest {
                                 "\"password\":\"test\"}")
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(".")));
+                .andExpect(content().string(containsString(".")))
+                .andDo(SessionDocumentation.createSession());
     }
-
+    
     @Test
     void loginWithWrongEmail() throws Exception {
         mockMvc.perform(

@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 회원 인증.
+ */
 public class UserAuthentication extends AbstractAuthenticationToken {
     private final Long userId;
 

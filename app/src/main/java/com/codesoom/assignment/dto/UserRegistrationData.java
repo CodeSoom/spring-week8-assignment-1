@@ -1,16 +1,22 @@
 package com.codesoom.assignment.dto;
 
 import com.github.dozermapper.core.Mapping;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * 회원 가입 정보.
+ */
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserRegistrationData {
     @NotBlank
     @Size(min = 3)
