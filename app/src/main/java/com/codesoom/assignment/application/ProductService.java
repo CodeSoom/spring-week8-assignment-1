@@ -55,7 +55,7 @@ public class ProductService {
      * @param productUpdateData - 수정하고자 하는 새로운 상품
      * @return 수정 된 상품
      * @throws ProductNotFoundException 만약
-     *         주어진  {@code id}에 해당하는 상품이 저장되어 있지 않은 경우
+     *         주어진  {@code id}에 해당하는 상품을 찾을 수 없는 경우
      */
     public ProductResultData updateProduct(Long id, ProductUpdateData productUpdateData) {
         Product product = getProduct(id);
