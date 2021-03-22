@@ -37,7 +37,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 사용자를 인증하고 사용자의 이메일을 이용해 토큰을 생성하여 리턴한다.
+     * 주어진 사용자 정보를 이용해 토큰을 생성하고 해당 토큰을 리턴한다
      *
      * @param sessionCreateData - 인증하고자 하는 사용자
      * @return 생성된 토큰
@@ -74,7 +74,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 이메일과 비밀번호에 해당하는 사용자를 리턴한다.
+     * 주어진 이메일과 비밀번호로 사용자를 인증하고 해당 사용자를 리턴한다.
      *
      * @param email - 조회하고자 하는 사용자 이메일
      * @param password - 조회하고자 하는 사용자 비밀번호
@@ -91,10 +91,10 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 이메일에 해당하는 계정을 리턴한다.
+     * 주어진 이메일에 해당하는 권한 목록을 리턴한다.
      *
-     * @param email - 계정을 확인하고자 하는 이메일
-     * @return 주어진 {@code email}에 해당하는 계정
+     * @param email - 권한 목록을 확인하고자 하는 이메일
+     * @return 주어진 {@code email}에 해당하는 권한 목로
      */
     public List<Role> roles(String email) {
         return roleRepository.findAllByEmail(email);
