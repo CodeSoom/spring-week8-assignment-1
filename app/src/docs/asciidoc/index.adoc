@@ -4,14 +4,47 @@
 
 상품 목록을 JSON 형태로 돌려준다.
 
-include::{snippets}/get-products/http-request.adoc[]
+include::{snippets}/get-all-products/http-request.adoc[]
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{snippets}/get-all-products/http-response.adoc[]
 
-== GET /product/{id}
+== GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+id에 해당하는 상품이 없다면 에러를 돌려둔다.
+
+include::{snippets}/get-product-not-exist/http-request.adoc[]
+
+include::{snippets}/get-product-not-exist/http-response.adoc[]
+
+== POST /products
+
+새로운 상품을 생성하고 생성된 상품을 JSON 형태로 돌려준다.
+상품을 생성하기 위해서는 로그인하여 얻은 토큰이 필요하다.
+
+include::{snippets}/create-product/http-request.adoc[]
+
+include::{snippets}/create-product/http-response.adoc[]
+
+만약 생성하려는 상품의 정보가 잘못되었다면 에러를 돌려준다.
+
+include::{snippets}/create-product-invalid/http-request.adoc[]
+
+include::{snippets}/create-product-invalid/http-response.adoc[]
+
+토큰없이 상품을 생성하려는 경우 에러를 돌려준다.
+
+include::{snippets}/create-product-without-token/http-request.adoc[]
+
+include::{snippets}/create-product-without-token/http-response.adoc[]
+
+잘못된 토큰을 사용하는 경우 에러를 돌려준다.
+
+include::{snippets}/create-product-with-invalid-token/http-request.adoc[]
+
+include::{snippets}/create-product-with-invalid-token/http-response.adoc[]
