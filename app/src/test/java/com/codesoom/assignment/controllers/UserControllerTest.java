@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -26,11 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@AutoConfigureRestDocs
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +45,7 @@ class UserControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
 
-    private static final Long MY_ID = 1L;
+    private static final Long USER_ID = 1L;
     private static final Long NOT_EXIST_ID = 100L;
     private static final Long OTHER_ID = 2L;
     private static final Long ADMIN_ID = 500L;
@@ -79,34 +72,34 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .id(USER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .password(PASSWORD)
                 .build();
 
         updatedUser = User.builder()
+                .id(USER_ID)
                 .name(NAME)
                 .email(UPDATE_EMAIL)
-                .password(UPDATE_PASSWORD)
                 .build();
 
         given(userService.createUser(any(UserCreateRequestDto.class)))
                 .willReturn(user);
 
-        given(userService.updateUser(eq(MY_ID), any(UserUpdateRequestDto.class), eq(MY_ID)))
+        given(userService.updateUser(eq(USER_ID), any(UserUpdateRequestDto.class), eq(USER_ID)))
                 .willReturn(updatedUser);
 
-        given(userService.updateUser(eq(NOT_EXIST_ID), any(UserUpdateRequestDto.class), eq(MY_ID)))
+        given(userService.updateUser(eq(NOT_EXIST_ID), any(UserUpdateRequestDto.class), eq(USER_ID)))
                 .willThrow(new UserNotFoundException(NOT_EXIST_ID));
 
-        given(userService.updateUser(eq(OTHER_ID), any(UserUpdateRequestDto.class), eq(MY_ID)))
+        given(userService.updateUser(eq(OTHER_ID), any(UserUpdateRequestDto.class), eq(USER_ID)))
                 .willThrow(new AccessDeniedException("Access denied"));
 
         given(userService.deleteUser(eq(NOT_EXIST_ID)))
                 .willThrow(new UserNotFoundException(NOT_EXIST_ID));
 
         given(authenticationService.parseToken(MY_TOKEN))
-                .willReturn(MY_ID);
+                .willReturn(USER_ID);
 
         given(authenticationService.parseToken(OTHER_TOKEN))
                 .willReturn(OTHER_ID);
@@ -114,7 +107,7 @@ class UserControllerTest {
         given(authenticationService.parseToken(ADMIN_TOKEN))
                 .willReturn(ADMIN_ID);
 
-        given(authenticationService.roles(MY_ID))
+        given(authenticationService.roles(USER_ID))
                 .willReturn(Arrays.asList(new Role("USER")));
 
         given(authenticationService.roles(OTHER_ID))
@@ -152,17 +145,7 @@ class UserControllerTest {
                 )
                         .andExpect(status().isCreated())
                         .andExpect(jsonPath("name").value(NAME))
-                        .andExpect(jsonPath("email").value(EMAIL))
-                        .andDo(document("create-user",
-                                requestFields(
-                                        fieldWithPath("name").type(STRING).description("사용자 이름"),
-                                        fieldWithPath("email").type(STRING).description("사용자 이메일"),
-                                        fieldWithPath("password").type(STRING).description("사용자 비밀번호")),
-                                responseFields(
-                                        fieldWithPath("name").type(STRING).description("사용자 이름"),
-                                        fieldWithPath("email").type(STRING).description("사용자 이메일"),
-                                        fieldWithPath("password").type(STRING).description("사용자 비밀번호"))
-                        ));
+                        .andExpect(jsonPath("email").value(EMAIL));
 
 
                 verify(userService).createUser(any(UserCreateRequestDto.class));
@@ -212,9 +195,9 @@ class UserControllerTest {
                         .password(UPDATE_PASSWORD)
                         .build();
 
-                givenValidId = MY_ID;
+                givenValidId = USER_ID;
 
-                userId = MY_ID;
+                userId = USER_ID;
             }
 
             @Test
@@ -247,7 +230,7 @@ class UserControllerTest {
 
                 givenInvalidId = NOT_EXIST_ID;
 
-                userId = MY_ID;
+                userId = USER_ID;
             }
 
             @Test
@@ -303,7 +286,7 @@ class UserControllerTest {
 
                 givenOtherId = OTHER_ID;
 
-                userId = MY_ID;
+                userId = USER_ID;
             }
 
             @Test
@@ -381,7 +364,7 @@ class UserControllerTest {
 
             @BeforeEach
             void setUp() {
-                givenValidId = MY_ID;
+                givenValidId = USER_ID;
             }
 
             @Test
@@ -419,7 +402,7 @@ class UserControllerTest {
 
         @Nested
         @DisplayName("토큰이 주어지지 않는다면")
-       class Context_without_access_token {
+        class Context_without_access_token {
 
             @Test
             @DisplayName("응답코드 401을 반환한다")
