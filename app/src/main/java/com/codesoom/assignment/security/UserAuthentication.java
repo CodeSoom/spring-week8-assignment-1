@@ -1,6 +1,7 @@
 package com.codesoom.assignment.security;
 
 import com.codesoom.assignment.domain.Role;
+import lombok.Builder;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,12 +9,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** 사용자 인증을 수행한다 */
 public class UserAuthentication extends AbstractAuthenticationToken {
-    private final Long userId;
+    private final String email;
 
-    public UserAuthentication(Long userId, List<Role> roles) {
+    @Builder
+    public UserAuthentication(String email, List<Role> roles) {
         super(authorities(roles));
-        this.userId = userId;
+        this.email = email;
     }
 
     @Override
@@ -23,7 +26,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return userId;
+        return this.email;
     }
 
     @Override
@@ -31,13 +34,15 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         return true;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getEmail() {
+        return this.email;
     }
 
     @Override
     public String toString() {
-        return "Authentication(" + userId + ")";
+        return "UserAuthentication{" +
+                "email='" + email + '\'' +
+                '}';
     }
 
     private static List<GrantedAuthority> authorities(List<Role> roles) {

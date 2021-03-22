@@ -4,15 +4,21 @@ import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
-import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.dto.SessionCreateData;
+import com.codesoom.assignment.dto.SessionResultData;
+import com.codesoom.assignment.errors.AuthenticationBadRequestException;
+import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.utils.JwtUtil;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+/** 토큰에 대한 요청을 수행한다. */
 @Service
+@Transactional
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -22,30 +28,75 @@ public class AuthenticationService {
     public AuthenticationService(UserRepository userRepository,
                                  RoleRepository roleRepository,
                                  JwtUtil jwtUtil,
-                                 PasswordEncoder passwordEncoder) {
+                                 PasswordEncoder passwordEncoder
+                                 ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String login(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new LoginFailException(email));
+    /**
+     * 주어진 사용자 정보를 이용해 토큰을 생성하고 해당 토큰을 리턴한다
+     *
+     * @param sessionCreateData - 인증하고자 하는 사용자
+     * @return 생성된 토큰
+     */
+    public SessionResultData createToken(SessionCreateData sessionCreateData) {
+        User user = authenticateUser(
+                sessionCreateData.getEmail(),
+                sessionCreateData.getPassword()
+        );
 
-        if (!user.authenticate(password, passwordEncoder)) {
-            throw new LoginFailException(email);
+        String accessToken = jwtUtil.encode(user.getEmail());
+
+        return SessionResultData.of(accessToken);
+    }
+
+    /**
+     * 주어진 토큰을 해석하여 사용자 정보를 리턴한다.
+     *
+     * @param token - 해석하고자 하는 토큰
+     * @return 주어진 {@code token} 안에 있는 사용자 정보
+     * @throws InvalidTokenException 만약
+     *         주어진 {@code token}이 비어있는 경우, 공백인 경우, 유효하지 않을 경우
+     */
+    public String parseToken(String token) {
+        if(token == null || token.isBlank()) {
+            throw new InvalidTokenException(token);
         }
 
-        return jwtUtil.encode(user.getId());
+        try {
+            return jwtUtil.decode(token).getSubject();
+        } catch(SignatureException e) {
+            throw new InvalidTokenException(token);
+        }
     }
 
-    public Long parseToken(String accessToken) {
-        Claims claims = jwtUtil.decode(accessToken);
-        return claims.get("userId", Long.class);
+    /**
+     * 주어진 이메일과 비밀번호로 사용자를 인증하고 해당 사용자를 리턴한다.
+     *
+     * @param email - 조회하고자 하는 사용자 이메일
+     * @param password - 조회하고자 하는 사용자 비밀번호
+     * @return 주어진 {@code email}, {@code password}에 해당하는 사용자
+     * @throws AuthenticationBadRequestException 만약
+     *         {@code email}에 해당되는 사용자가 저장되어 있지 않은 경우
+     *         {@code email}에 해당하는 사용자가 저장되어 있지만 {@code password}이 다른 경우
+     *         {@code email}에 해당하는 사용자가 저장되어 있지만 이미 삭제된 경우
+     */
+    public User authenticateUser(String email, String password) {
+        return userRepository.findByEmail(email)
+                .filter(u -> u.authenticate(password, passwordEncoder))
+                .orElseThrow(AuthenticationBadRequestException::new);
     }
 
-    public List<Role> roles(Long userId) {
-        return roleRepository.findAllByUserId(userId);
+    /**
+     * 주어진 이메일에 해당하는 권한 목록을 리턴한다.
+     *
+     * @param email - 권한 목록을 확인하고자 하는 이메일
+     * @return 주어진 {@code email}에 해당하는 권한 목로
+     */
+    public List<Role> roles(String email) {
+        return roleRepository.findAllByEmail(email);
     }
 }

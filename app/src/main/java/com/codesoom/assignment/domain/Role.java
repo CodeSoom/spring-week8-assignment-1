@@ -1,30 +1,40 @@
 package com.codesoom.assignment.domain;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/** 계정 정보를 다룬다. */
 @Entity
-@NoArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Role {
+    /** 계정 식별자 */
     @Id
     @GeneratedValue
     private Long id;
 
-    private Long userId;
+    /** 계정 사용자 이메일 */
+    private String email;
 
-    @Getter
+    /** 계정 사용자 이름 */
     private String name;
 
-    public Role(Long userId, String name) {
-        this.userId = userId;
-        this.name = name;
-    }
-
+    @Builder
     public Role(String name) {
         this(null, name);
+    }
+
+    @Builder
+    public Role(String email, String name) {
+        this.email = email;
+        this.name = name;
     }
 }

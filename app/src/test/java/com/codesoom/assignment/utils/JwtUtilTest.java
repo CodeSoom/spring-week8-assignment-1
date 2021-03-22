@@ -1,20 +1,19 @@
 package com.codesoom.assignment.utils;
 
-import com.codesoom.assignment.errors.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("JwtUtil 테스트")
 class JwtUtilTest {
-    private static final String SECRET = "12345678901234567890123456789012";
-
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
-    private static final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaD0";
+    private static final String SECRET = "12345678901234567890123456789010";
+    private static final String EXISTED_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJzdWIiOiJleGlzdGVkRW1haWwifQ.UQodS3elf3Cu4g0PDFHqVloFbcKHHmTTnk0jGmiwPXY";
+    private static final String EXISTED_EMAIL = "existedEmail";
 
     private JwtUtil jwtUtil;
 
@@ -23,35 +22,39 @@ class JwtUtilTest {
         jwtUtil = new JwtUtil(SECRET);
     }
 
-    @Test
-    void encode() {
-        String token = jwtUtil.encode(1L);
+    @Nested
+    @DisplayName("encode 메서드는")
+    class Describe_encode {
+        @Nested
+        @DisplayName("만약 저장되어 있는 이메일이 주어진다면")
+        class Context_WithExistedEmail {
+            private final String givenExistedEmail = EXISTED_EMAIL;
 
-        assertThat(token).isEqualTo(VALID_TOKEN);
+            @Test
+            @DisplayName("주어진 이메일로 토큰을 생성하고 리턴한다")
+            void itCreatesTokenAndReturnsToken () {
+                String token = jwtUtil.encode(givenExistedEmail);
+
+                assertThat(token).isEqualTo(EXISTED_TOKEN);
+            }
+        }
     }
 
-    @Test
-    void decodeWithValidToken() {
-        Claims claims = jwtUtil.decode(VALID_TOKEN);
+    @Nested
+    @DisplayName("decode 메서드는")
+    class Describe_decode {
+        @Nested
+        @DisplayName("만약 유효한 토큰이 주어진다면")
+        class Context_WithExistedToken {
+            private final String givenExistedToken = EXISTED_TOKEN;
 
-        assertThat(claims.get("userId", Long.class)).isEqualTo(1L);
-    }
+            @Test
+            @DisplayName("주어진 토큰을 해석하여 내용을 리턴한다")
+            void itReturnsClaims() {
+                Claims claims = jwtUtil.decode(givenExistedToken);
 
-    @Test
-    void decodeWithInvalidToken() {
-        assertThatThrownBy(() -> jwtUtil.decode(INVALID_TOKEN))
-                .isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
-    void decodeWithEmptyToken() {
-        assertThatThrownBy(() -> jwtUtil.decode(null))
-                .isInstanceOf(InvalidTokenException.class);
-
-        assertThatThrownBy(() -> jwtUtil.decode(""))
-                .isInstanceOf(InvalidTokenException.class);
-
-        assertThatThrownBy(() -> jwtUtil.decode("   "))
-                .isInstanceOf(InvalidTokenException.class);
+                assertThat(claims.getSubject()).isEqualTo(EXISTED_EMAIL);
+            }
+        }
     }
 }

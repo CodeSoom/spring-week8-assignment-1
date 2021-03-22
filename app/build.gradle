@@ -13,9 +13,12 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    // Asciidoctor
+    id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-sourceCompatibility = '1.8'
+sourceCompatibility = '15'
 
 configurations {
     developmentOnly
@@ -67,6 +70,7 @@ dependencies {
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -78,6 +82,23 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Use for Spring Security Test
+    //testImplementation 'org.springframework.security:spring-security-test:5.4.5'
+
+    // Spring REST Docs
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // MariaDB Java Client
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
+}
+
+javadoc {
+    options.addStringOption("locale","ko_KR");
+    options.addStringOption("encoding","UTF-8");
+    options.addStringOption("charset","UTF-8");
+    options.addStringOption("docencoding","UTF-8");
 }
 
 application {
@@ -85,7 +106,11 @@ application {
     mainClass = 'com.codesoom.assignment.App'
 }
 
-tasks.named('test') {
+test {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+}
+
+asciidoctor {
+    dependsOn test
 }
