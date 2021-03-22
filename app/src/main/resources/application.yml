@@ -1,19 +1,22 @@
 spring:
   datasource:
-    url: jdbc:h2:~/data/test
-#    url: jdbc:mariadb://localhost:3306/test
+#    url: jdbc:h2:~/data/test
+    url: jdbc:mariadb://localhost:3306/test
+    username: root
+    password: 1234
   jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 jwt:
   secret: "12345678901234567890123456789010"
 
-#---
-#
-#spring:
-#  profiles: mariadb
-#  datasource:
-#    url: jdbc:mariadb://mariadb:3306:test
-#    username: root
-#    password: apsssword
+---
+
+spring:
+  profiles: mariadb
+  datasource:
+    url: jdbc:mariadb://mariadb:3306:test
+    username: root
+    password: 1234

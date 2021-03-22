@@ -2,10 +2,10 @@ package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
+import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.SessionCreateData;
 import com.codesoom.assignment.dto.SessionResultData;
-import com.codesoom.assignment.dto.UserResultData;
 import com.codesoom.assignment.errors.AuthenticationBadRequestException;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.utils.JwtUtil;
@@ -43,12 +43,12 @@ public class AuthenticationService {
      * @return 생성된 토큰
      */
     public SessionResultData createToken(SessionCreateData sessionCreateData) {
-        UserResultData userResultData = authenticateUser(
+        User user = authenticateUser(
                 sessionCreateData.getEmail(),
                 sessionCreateData.getPassword()
         );
 
-        String accessToken = jwtUtil.encode(userResultData.getEmail());
+        String accessToken = jwtUtil.encode(user.getEmail());
 
         return SessionResultData.of(accessToken);
     }
@@ -84,10 +84,9 @@ public class AuthenticationService {
      *         {@code email}에 해당하는 사용자가 저장되어 있지만 {@code password}이 다른 경우
      *         {@code email}에 해당하는 사용자가 저장되어 있지만 이미 삭제된 경우
      */
-    public UserResultData authenticateUser(String email, String password) {
+    public User authenticateUser(String email, String password) {
         return userRepository.findByEmail(email)
                 .filter(u -> u.authenticate(password, passwordEncoder))
-                .map(UserResultData::of)
                 .orElseThrow(AuthenticationBadRequestException::new);
     }
 

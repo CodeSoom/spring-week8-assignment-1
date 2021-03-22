@@ -6,7 +6,6 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.SessionCreateData;
 import com.codesoom.assignment.dto.SessionResultData;
-import com.codesoom.assignment.dto.UserResultData;
 import com.codesoom.assignment.errors.AuthenticationBadRequestException;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.utils.JwtUtil;
@@ -86,9 +85,9 @@ class AuthenticationServiceTest {
             void itReturnsUser() {
                 given(userRepository.findByEmail(givenExistedEmail)).willReturn(Optional.of(user));
 
-                UserResultData userResultData = authenticationService.authenticateUser(givenExistedEmail, givenExistedPassword);
+                User authenticatedUser = authenticationService.authenticateUser(givenExistedEmail, givenExistedPassword);
 
-                assertThat(userResultData.getEmail()).isEqualTo(user.getEmail());
+                assertThat(authenticatedUser.getEmail()).isEqualTo(user.getEmail());
             }
         }
 
