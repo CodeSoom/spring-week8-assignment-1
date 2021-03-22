@@ -1,5 +1,6 @@
 package com.codesoom.assignment.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @Entity
+@Builder
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue
@@ -32,14 +35,6 @@ public class Product {
 
     @Setter
     private String image;
-
-    @Builder
-    public Product(String name, String maker, Integer price, String image) {
-        this.name = name;
-        this.maker = maker;
-        this.price = price;
-        this.image = image;
-    }
 
     /**
      * 상품 정보를 수정합니다.
