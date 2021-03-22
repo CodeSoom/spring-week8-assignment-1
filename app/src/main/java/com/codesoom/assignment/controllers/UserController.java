@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * 사용자와 관련한 HTTP 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,6 +25,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 전달된 사용자 정보로 사용자를 생성하고, 생성된 사용자를 리턴합니다.
+     * @param registrationData 사용자 정보
+     * @return 생성된 사용자
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -29,6 +37,14 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 전달된 사용자 id와 정보로 기존 사용자 정보를 수정하고, 수정된 사용자를 리턴합니다.
+     * @param id 사용자 id
+     * @param modificationData 수정할 사용자 정보
+     * @param authentication 사용자 인증 정보
+     * @return 수정된 사용자
+     * @throws AccessDeniedException 사용자가 허가된 사용자가 아닐경우
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -41,6 +57,10 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 전달된 사용자 id에 해당하는 사용자를 삭제합니다.
+     * @param id 사용자 id
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
