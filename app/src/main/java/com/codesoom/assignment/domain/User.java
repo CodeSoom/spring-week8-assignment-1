@@ -29,22 +29,46 @@ public class User {
     @Builder.Default
     private String password = "";
 
+    /**
+     * 삭제된 회원이면 true, 그렇지 않다면 false.
+     */
     @Builder.Default
     private boolean deleted = false;
 
+    /**
+     * 회원의 정보를 변경합니다.
+     *
+     * @param source 갱신할 회원 정보
+     */
     public void changeWith(User source) {
         name = source.name;
     }
 
+    /**
+     * 회원의 비밀번호를 암호화하여 변경합니다.
+     *
+     * @param password        평문 패스워드
+     * @param passwordEncoder 패스워드 인코더
+     */
     public void changePassword(String password,
                                PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
 
+    /**
+     * 회원을 삭제(탈퇴)처리 합니다.
+     */
     public void destroy() {
         deleted = true;
     }
 
+    /**
+     * 삭제(탈퇴)하지 않은 사용자이며 패스워드가 일치하면 true, 아니면 false를 반환합니다.
+     *
+     * @param password 사용자 비밀번호
+     * @param passwordEncoder 패스워드 인코더
+     * @return 인증 여부
+     */
     public boolean authenticate(String password,
                                 PasswordEncoder passwordEncoder) {
         return !deleted && passwordEncoder.matches(password, this.password);

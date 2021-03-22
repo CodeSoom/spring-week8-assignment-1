@@ -27,6 +27,11 @@ public class Product {
 
     private String imageUrl;
 
+    /**
+     * 상품의 정보를 변경합니다.
+     *
+     * @param source 변경할 상품 정보
+     */
     public void changeWith(Product source) {
         this.name = source.name;
         this.maker = source.maker;

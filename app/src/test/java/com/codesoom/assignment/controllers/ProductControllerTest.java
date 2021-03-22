@@ -10,9 +10,11 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -23,11 +25,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -96,17 +112,29 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-products"));
     }
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
         mockMvc.perform(
-                get("/products/1")
+                RestDocumentationRequestBuilders.get("/products/{id}", 1L)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-product",
+                        pathParameters(
+                                parameterWithName("id").description("상품의 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품명"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지 url").optional()
+                        )));
     }
 
     @Test
@@ -118,7 +146,7 @@ class ProductControllerTest {
     @Test
     void createWithValidAttributes() throws Exception {
         mockMvc.perform(
-                post("/products")
+                RestDocumentationRequestBuilders.post("/products")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
@@ -126,7 +154,24 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("create-product",
+                        requestHeaders(headerWithName("Authorization").description("JWT 액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("name").type(STRING).description("상품명"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지 url").optional()
+
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품명"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지 url").optional()
+                        )
+                ));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -172,7 +217,7 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
+                RestDocumentationRequestBuilders.patch("/products/{id}",1L)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
@@ -180,7 +225,27 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product",
+                        requestHeaders(headerWithName("Authorization").description("JWT 액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("상품의 식별자")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").type(STRING).description("상품명"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지 url").optional()
+
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(STRING).description("상품명"),
+                                fieldWithPath("maker").type(STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(STRING).description("상품 이미지 url").optional()
+                        )
+                ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -240,10 +305,16 @@ class ProductControllerTest {
     @Test
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
-                delete("/products/1")
+                RestDocumentationRequestBuilders.delete("/products/{id}",1L)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product",
+                        requestHeaders(headerWithName("Authorization").description("JWT 액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("상품의 식별자")
+                        )
+                ));
 
         verify(productService).deleteProduct(1L);
     }
