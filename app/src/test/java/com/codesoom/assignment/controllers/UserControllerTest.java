@@ -9,13 +9,13 @@ import com.codesoom.assignment.dto.UserUpdateRequestDto;
 import com.codesoom.assignment.errors.UserNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -65,12 +67,37 @@ class UserControllerTest {
     private User updatedUser;
     private UserCreateRequestDto createRequest;
     private UserUpdateRequestDto updateRequest;
+    private UserCreateRequestDto invalidCreateAttributes;
+    private UserUpdateRequestDto invalidUpdateAttributes;
     private Long givenValidId;
     private Long givenInvalidId;
     private Long givenOtherId;
+    private Long userId;
 
     @BeforeEach
     void setUp() {
+        createRequest = UserCreateRequestDto.builder()
+                .name(NAME)
+                .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+
+        updateRequest = UserUpdateRequestDto.builder()
+                .email(UPDATE_EMAIL)
+                .password(UPDATE_PASSWORD)
+                .build();
+
+        invalidCreateAttributes = UserCreateRequestDto.builder()
+                .name("")
+                .email("")
+                .password("")
+                .build();
+
+        invalidUpdateAttributes = UserUpdateRequestDto.builder()
+                .email("")
+                .password("")
+                .build();
+
         user = User.builder()
                 .id(USER_ID)
                 .name(NAME)
@@ -82,6 +109,11 @@ class UserControllerTest {
                 .name(NAME)
                 .email(UPDATE_EMAIL)
                 .build();
+
+        givenValidId = USER_ID;
+        givenInvalidId = NOT_EXIST_ID;
+        givenOtherId = OTHER_ID;
+        userId = USER_ID;
 
         given(userService.createUser(any(UserCreateRequestDto.class)))
                 .willReturn(user);
@@ -117,313 +149,140 @@ class UserControllerTest {
                 .willReturn(Arrays.asList(new Role("ADMIN")));
     }
 
-    @Nested
-    @DisplayName("create 메소드는")
-    class Describe_create {
-        UserCreateRequestDto invalidAttributes;
+    @Test
+    void createWithValidAttributes() throws Exception {
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.
+                post("/users")
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest))
+        )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("name").value(NAME))
+                .andExpect(jsonPath("email").value(EMAIL))
+                .andDo(document("create-user"));
 
-        @Nested
-        @DisplayName("사용자 정보가 주어진다면")
-        class Context_with_valid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                createRequest = UserCreateRequestDto.builder()
-                        .name(NAME)
-                        .email(EMAIL)
-                        .password(PASSWORD)
-                        .build();
-            }
-
-            @Test
-            @DisplayName("새로운 사용자를 등록하고 사용자와 응답코드 201을 반환한다")
-            void it_returns_user_and_created() throws Exception {
-                mockMvc.perform(
-                        post("/users")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(createRequest))
-                )
-                        .andExpect(status().isCreated())
-                        .andExpect(jsonPath("name").value(NAME))
-                        .andExpect(jsonPath("email").value(EMAIL));
-
-
-                verify(userService).createUser(any(UserCreateRequestDto.class));
-            }
-        }
-
-        @Nested
-        @DisplayName("사용자 정보가 주어지지 않는다면")
-        class Context_with_invalid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                invalidAttributes = UserCreateRequestDto.builder()
-                        .name("")
-                        .email("")
-                        .password("")
-                        .build();
-            }
-
-            @Test
-            @DisplayName("응답코드 400을 반환한다")
-            void it_returns_bad_request() throws Exception {
-                mockMvc.perform(
-                        post("/users")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(invalidAttributes))
-                )
-                        .andExpect(status().isBadRequest());
-            }
-        }
+        verify(userService).createUser(any(UserCreateRequestDto.class));
     }
 
-    @Nested
-    @DisplayName("update 메소드는")
-    class Describe_update {
-        Long userId;
-        UserUpdateRequestDto invalidAttributes;
-
-        @Nested
-        @DisplayName("등록된 사용자 ID와 수정할 정보가 주어진다면")
-        class Context_with_existed_id_and_valid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                updateRequest = UserUpdateRequestDto.builder()
-                        .email(UPDATE_EMAIL)
-                        .password(UPDATE_PASSWORD)
-                        .build();
-
-                givenValidId = USER_ID;
-
-                userId = USER_ID;
-            }
-
-            @Test
-            @DisplayName("해당 ID를 갖는 사용자의 정보를 수정하고 사용자와 응답코드 200을 반환한다")
-            void it_returns_user_and_ok() throws Exception {
-                mockMvc.perform(
-                        patch("/users/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(updateRequest))
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("email").value(UPDATE_EMAIL));
-
-                verify(userService).updateUser(eq(givenValidId), any(UserUpdateRequestDto.class), eq(userId));
-            }
-        }
-
-
-        @Nested
-        @DisplayName("등록되지 않은 사용자 ID와 수정할 정보가 주어진다면")
-        class Context_with_not_existed_id_and_valid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                updateRequest = UserUpdateRequestDto.builder()
-                        .email(UPDATE_EMAIL)
-                        .password(UPDATE_PASSWORD)
-                        .build();
-
-                givenInvalidId = NOT_EXIST_ID;
-
-                userId = USER_ID;
-            }
-
-            @Test
-            @DisplayName("응답코드 404를 반환한다")
-            void it_returns_not_found() throws Exception {
-                mockMvc.perform(
-                        patch("/users/100")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(updateRequest))
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andExpect(status().isNotFound());
-
-                verify(userService).updateUser(eq(givenInvalidId), any(UserUpdateRequestDto.class), eq(userId));
-            }
-        }
-
-        @Nested
-        @DisplayName("수정할 사용자 정보가 주어지지 않는다면")
-        class Context_with_invalid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                invalidAttributes = UserUpdateRequestDto.builder()
-                        .email("")
-                        .password("")
-                        .build();
-            }
-
-            @Test
-            @DisplayName("응답코드 400을 반환한다")
-            void it_returns_bad_request() throws Exception {
-                mockMvc.perform(
-                        patch("/users/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(invalidAttributes))
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andExpect(status().isBadRequest());
-            }
-        }
-
-        @Nested
-        @DisplayName("권한이 없는 ID와 수정할 정보가 주어진다면")
-        class Context_with_other_id_and_valid_attributes {
-
-            @BeforeEach
-            void setUp() {
-                updateRequest = UserUpdateRequestDto.builder()
-                        .email(UPDATE_EMAIL)
-                        .password(UPDATE_PASSWORD)
-                        .build();
-
-                givenOtherId = OTHER_ID;
-
-                userId = USER_ID;
-            }
-
-            @Test
-            @DisplayName("응답코드 403를 반환한다")
-            void it_returns_forbidden() throws Exception {
-                mockMvc.perform(
-                        patch("/users/2")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(updateRequest))
-                                .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andExpect(status().isForbidden());
-
-                verify(userService).updateUser(eq(givenOtherId), any(UserUpdateRequestDto.class), eq(userId));
-            }
-        }
-
-        @Nested
-        @DisplayName("토큰이 주어지지 않는다면")
-        class Context_without_access_token {
-
-            @BeforeEach
-            void setUp() {
-                updateRequest = UserUpdateRequestDto.builder()
-                        .email(UPDATE_EMAIL)
-                        .password(UPDATE_PASSWORD)
-                        .build();
-            }
-
-            @Test
-            @DisplayName("응답코드 401을 반환한다")
-            void it_returns_unauthorized() throws Exception {
-                mockMvc.perform(
-                        patch("/users/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(updateRequest))
-                )
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-
-        @DisplayName("타인의 토큰으로 접근한다면")
-        class Context_with_others_access_token {
-
-            @BeforeEach
-            void setUp() {
-                updateRequest = UserUpdateRequestDto.builder()
-                        .email(UPDATE_EMAIL)
-                        .password(UPDATE_PASSWORD)
-                        .build();
-            }
-
-            @Test
-            @DisplayName("응답코드 403을 반환한다")
-            void it_returns_forbidden() throws Exception {
-                mockMvc.perform(
-                        patch("/users/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(updateRequest))
-                                .header("Authorization", "Bearer " + OTHER_TOKEN)
-
-                )
-                        .andExpect(status().isForbidden());
-            }
-        }
+    @Test
+    void createWithInvalidAttributes() throws Exception {
+        mockMvc.perform(
+                post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidCreateAttributes))
+        )
+                .andExpect(status().isBadRequest());
     }
 
-    @Nested
-    @DisplayName("delete 메소드는")
-    class Describe_delete {
-
-        @Nested
-        @DisplayName("삭제할 사용자 ID가 주어진다면")
-        class Context_with_existed_id {
-
-            @BeforeEach
-            void setUp() {
-                givenValidId = USER_ID;
-            }
-
-            @Test
-            @DisplayName("해당 ID를 갖는 사용자를 삭제하고 응답코드 200을 반환한다")
-            void it_returns_ok() throws Exception {
-                mockMvc.perform(delete("/users/1")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-                )
-                        .andExpect(status().isOk());
-
-                verify(userService).deleteUser(givenValidId);
-            }
-        }
-
-        @Nested
-        @DisplayName("등록되지 않은 사용자 ID가 주어진다면")
-        class Context_with_not_existed_id {
-
-            @BeforeEach
-            void setUp() {
-                givenInvalidId = NOT_EXIST_ID;
-            }
-
-            @Test
-            @DisplayName("응답코드 404를 반환한다")
-            void it_returns_not_found() throws Exception {
-                mockMvc.perform(delete("/users/100")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-                )
-                        .andExpect(status().isNotFound());
-
-                verify(userService).deleteUser(givenInvalidId);
-            }
-        }
-
-        @Nested
-        @DisplayName("토큰이 주어지지 않는다면")
-        class Context_without_access_token {
-
-            @Test
-            @DisplayName("응답코드 401을 반환한다")
-            void it_returns_ok() throws Exception {
-                mockMvc.perform(delete("/users/1"))
-                        .andExpect(status().isUnauthorized());
-            }
-        }
-
-        @Nested
-        @DisplayName("관리자 토큰이 주어지지 않는다면")
-        class Context_without_admin_role {
-
-            @Test
-            @DisplayName("응답코드 401를 반환한다")
-            void it_returns_forbidden() throws Exception {
-                mockMvc.perform(delete("/users/1")
+    @Test
+    void updateWithExistedUserId() throws Exception {
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.
+                patch("/users/{id}", 1L)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
                         .header("Authorization", "Bearer " + MY_TOKEN)
-                )
-                        .andExpect(status().isForbidden());
-            }
-        }
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("email").value(UPDATE_EMAIL))
+                .andDo(document("update-user"));
+
+        verify(userService).updateUser(eq(givenValidId), any(UserUpdateRequestDto.class), eq(userId));
+    }
+
+    @Test
+    void updateWithNotExistedUserId() throws Exception {
+        mockMvc.perform(
+                patch("/users/100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+        )
+                .andExpect(status().isNotFound());
+
+        verify(userService).updateUser(eq(givenInvalidId), any(UserUpdateRequestDto.class), eq(userId));
+    }
+
+    @Test
+    void updateWithInvalidAttributes() throws Exception {
+        mockMvc.perform(
+                patch("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidUpdateAttributes))
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+        )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateWithOthersId() throws Exception {
+        mockMvc.perform(
+                patch("/users/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                        .header("Authorization", "Bearer " + MY_TOKEN)
+        )
+                .andExpect(status().isForbidden());
+
+        verify(userService).updateUser(eq(givenOtherId), any(UserUpdateRequestDto.class), eq(userId));
+    }
+
+    @Test
+    void updateWithoutAccessToken() throws Exception {
+        mockMvc.perform(
+                patch("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void updateWithOthersAccessToken() throws Exception {
+        mockMvc.perform(
+                patch("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                        .header("Authorization", "Bearer " + OTHER_TOKEN)
+
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteWithExistedUserId() throws Exception {
+        mockMvc.perform(delete("/users/1")
+                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+        )
+                .andExpect(status().isOk());
+
+        verify(userService).deleteUser(USER_ID);
+    }
+
+    @Test
+    void deleteWithNotExistedUserId() throws Exception {
+        mockMvc.perform(delete("/users/100")
+                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+        )
+                .andExpect(status().isNotFound());
+
+        verify(userService).deleteUser(NOT_EXIST_ID);
+    }
+
+    @Test
+    void deleteWithoutAccessToken() throws Exception {
+        mockMvc.perform(delete("/users/1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteWithoutAdminToken() throws Exception {
+        mockMvc.perform(delete("/users/1")
+                .header("Authorization", "Bearer " + MY_TOKEN)
+        )
+                .andExpect(status().isForbidden());
     }
 }
