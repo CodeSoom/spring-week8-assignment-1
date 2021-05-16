@@ -8,11 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 세션 요청 DTO.
+ * 사용자 등록 요청 정보.
  */
 @Getter
 @NoArgsConstructor
-public class SessionRequestData {
+public class UserCreateRequestDto {
+    @NotBlank
+    @Mapping("name")
+    private String name;
+
     @NotBlank
     @Mapping("email")
     private String email;
@@ -22,12 +26,9 @@ public class SessionRequestData {
     private String password;
 
     @Builder
-    public SessionRequestData(String email, String password) {
+    public UserCreateRequestDto(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public boolean authenticate(String password) {
-        return password.equals(this.password);
     }
 }
