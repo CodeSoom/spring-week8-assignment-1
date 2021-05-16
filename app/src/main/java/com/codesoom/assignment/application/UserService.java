@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 회원과 관련된 비즈니스 로직을 담당합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 올바른 회원 정보라면 생성하여 반환하고, 잘못된 정보라면 예외를 던집니다.
+     *
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
+     * @throws UserEmailDuplicationException 회원 이메일이 중복될 경우
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +59,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 올바른 회원 정보라면 수정하고 반환하지만, 잘못된 정보라면 예외를 던집니다.
+     *
+     * @param id 수정 회원 id
+     * @param modificationData 회원 정보
+     * @param userId 인증된 회원 id
+     * @return 수정된 회원
+     * @throws AccessDeniedException 수정 권한이 없을 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +82,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 회원을 삭제하고 반환합니다.
+     *
+     * @param id 삭제 회원 id
+     * @return 삭제된 회원
+     * @throws UserNotFoundException 회원을 찾을 수 없는 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();

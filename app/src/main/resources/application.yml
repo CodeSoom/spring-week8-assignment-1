@@ -1,9 +1,21 @@
 spring:
   datasource:
-    url: jdbc:h2:~/data/demo
+    url: jdbc:h2:mem:demo
+    username: root
+    password: password
   jpa:
     hibernate:
       ddl-auto: update
 
 jwt:
   secret: "12345678901234567890123456789010"
+
+---
+
+#"mariadb" Profile을 쓸 때...
+spring:
+  profiles: mariadb
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/test
+    username: root
+    password: password
