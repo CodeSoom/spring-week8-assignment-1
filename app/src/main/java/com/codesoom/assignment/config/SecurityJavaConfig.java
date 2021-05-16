@@ -14,12 +14,21 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import javax.servlet.Filter;
 
+/**
+ * Spring Security 설정을 담당합니다.
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationService authenticationService;
 
+    /**
+     * HTTP 요청의 보안 규칙을 설정합니다.
+     *
+     * @param http HTTP 요청에 대한 보안 정보
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         Filter authenticationFilter = new JwtAuthenticationFilter(
