@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,8 @@ class AuthenticationServiceTest {
                 .willReturn(Arrays.asList(new Role("USER")));
         given(roleRepository.findAllByUserId(1004L))
                 .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+        given(roleRepository.findAllByUserId(9999L))
+                .willReturn(Collections.EMPTY_LIST);
     }
 
     @Nested
@@ -149,19 +152,41 @@ class AuthenticationServiceTest {
         }
     }
 
-    @Test
+    @Nested
     @DisplayName("roles 메서드")
-    void roles() {
-        assertThat(
-                authenticationService.roles(1L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER"));
+    class DescribeRoles {
+        @Nested
+        @DisplayName("존재하는 회원 아이디라면")
+        class ContextWithExistUserId {
+            @Test
+            @DisplayName("권한 리스트를 반환합니다")
+            void returnsRoles() {
+                assertThat(
+                        authenticationService.roles(1L).stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toList())
+                ).isEqualTo(Arrays.asList("USER"));
 
-        assertThat(
-                authenticationService.roles(1004L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER", "ADMIN"));
+                assertThat(
+                        authenticationService.roles(1004L).stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toList())
+                ).isEqualTo(Arrays.asList("USER", "ADMIN"));
+            }
+        }
+
+        @Nested
+        @DisplayName("존재하지 않는 회원 아이디라면")
+        class ContextWithNotExistUserId {
+            @Test
+            @DisplayName("빈 리스트를 반환합니다")
+            void returnsEmptyList() {
+                assertThat(
+                        authenticationService.roles(9999L).stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toList())
+                ).isEqualTo(Collections.EMPTY_LIST);
+            }
+        }
     }
 }
