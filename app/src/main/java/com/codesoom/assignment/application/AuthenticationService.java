@@ -61,6 +61,12 @@ public class AuthenticationService {
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * 특정 회원의 권한 정보를 가져옵니다.
+     * 
+     * @param userId 회원 아이디
+     * @return 해당 회원의 권한 리스트
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
