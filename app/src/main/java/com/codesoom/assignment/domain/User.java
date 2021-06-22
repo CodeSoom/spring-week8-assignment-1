@@ -63,8 +63,8 @@ public class User {
     /**
      * 회원이 삭제되지 않았고, 비밀번호가 일치한다면 true를 반환합니다.
      *
-     * @param password
-     * @param passwordEncoder
+     * @param password 암호화 되지 않은 회원의 비밀번호
+     * @param passwordEncoder 패스워드 인코더
      * @return true | false
      */
     public boolean authenticate(String password,

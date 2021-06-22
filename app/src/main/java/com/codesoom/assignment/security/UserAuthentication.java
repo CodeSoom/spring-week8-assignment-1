@@ -19,21 +19,33 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         this.userId = userId;
     }
 
+    /**
+     * 회원 자격 정보를 반환합니다.
+     */
     @Override
     public Object getCredentials() {
         return null;
     }
 
+    /**
+     * 회원 인증 식별자를 반환합니다.
+     */
     @Override
     public Object getPrincipal() {
         return userId;
     }
 
+    /**
+     * 인증된 회원이라면 true를 반환합니다.
+     */
     @Override
     public boolean isAuthenticated() {
         return true;
     }
 
+    /**
+     * 회원 식별자를 반환합니다.
+     */
     public Long getUserId() {
         return userId;
     }
@@ -43,6 +55,9 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         return "Authentication(" + userId + ")";
     }
 
+    /**
+     * 인증된 회원의 권한을 반환합니다.
+     */
     private static List<GrantedAuthority> authorities(List<Role> roles) {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

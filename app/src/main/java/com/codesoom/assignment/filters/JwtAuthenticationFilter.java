@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Jwt가 유효한 토큰인지 인증하기 위한 필터.
+ */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
@@ -26,6 +29,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         this.authenticationService = authenticationService;
     }
 
+
+    /**
+     * 주어진 요청으로 회원 인증을 수행합니다.
+     *
+     * @param request  요청 정보
+     * @param response 응답 정보
+     * @param chain    필터 체인
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
