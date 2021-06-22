@@ -3,8 +3,11 @@ package com.codesoom.assignment.controllers;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -12,11 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SessionController.class)
+@AutoConfigureRestDocs
 class SessionControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -36,37 +41,59 @@ class SessionControllerTest {
                 .willThrow(new LoginFailException("tester@example.com"));
     }
 
-    @Test
-    void loginWithRightEmailAndPassword() throws Exception {
-        mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
-                .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(".")));
-    }
+    @Nested
+    @DisplayName("login 메서드")
+    class DescribeLogin {
+        @Nested
+        @DisplayName("이메일과 패스워드가 일치하는 회원이 있을 경우")
+        class ContextWithRightEmailAndPassword {
+            @Test
+            @DisplayName("토큰을 반환한다")
+            void returnsAccessToken() throws Exception {
+                mockMvc.perform(
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
+                        .andExpect(status().isCreated())
+                        .andExpect(content().string(containsString(".")))
+                        .andDo(document("login"));
+            }
+        }
 
-    @Test
-    void loginWithWrongEmail() throws Exception {
-        mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"badguy@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
-                .andExpect(status().isBadRequest());
-    }
+        @Nested
+        @DisplayName("이메일이 잘못된 경우")
+        class ContextWithWrongEmail {
+            @Test
+            @DisplayName("BAD REQUEST 응답코드를 반환한다")
+            void loginWithWrongEmail() throws Exception {
+                mockMvc.perform(
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"badguy@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
+                        .andExpect(status().isBadRequest())
+                        .andDo(document("login-wrong-email"));
+            }
+        }
 
-    @Test
-    void loginWithWrongPassword() throws Exception {
-        mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"xxx\"}")
-        )
-                .andExpect(status().isBadRequest());
+        @Nested
+        @DisplayName("패스워드가 잘못된 경우")
+        class ContextWithWrongPassword {
+            @Test
+            @DisplayName("BAD REQUEST 응답코드를 반환한다")
+            void loginWithWrongEmail() throws Exception {
+                mockMvc.perform(
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"xxx\"}")
+                )
+                        .andExpect(status().isBadRequest())
+                        .andDo(document("login-wrong-password"));
+            }
+        }
     }
 }
