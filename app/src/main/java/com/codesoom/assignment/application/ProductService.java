@@ -48,7 +48,7 @@ public class ProductService {
     }
 
     /**
-     * 프로덕트를 생성합니다.
+     * 프로덕트를 생성하여 리턴합니다.
      *
      * @param productData 생성할 프로덕트의 정보
      * @return 생성된 프로덕트
