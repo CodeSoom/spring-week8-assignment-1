@@ -8,7 +8,13 @@ import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.LoginFailException;
 import com.codesoom.assignment.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,13 +28,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@DisplayName("AuthenticationService 클래스")
 class AuthenticationServiceTest {
-    private static final String SECRET = "12345678901234567890123456789012";
+    private final String SECRET = "12345678901234567890123456789010";
 
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
-    private static final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaD0";
+    private final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJ1c2VySWQiOjF9.neCsyNLzy3lQ4o2yliotWT06FwSGZagaHpKdAkjnGGw";
+    private final String INVALID_TOKEN = VALID_TOKEN + "INVALID";
 
     private AuthenticationService authenticationService;
 
@@ -55,49 +61,96 @@ class AuthenticationServiceTest {
                 .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
     }
 
-    @Test
-    void loginWithRightEmailAndPassword() {
-        String accessToken = authenticationService.login(
-                "tester@example.com", "test");
+    @Nested
+    @DisplayName("login 메서드")
+    class DescribeLogin {
+        @Nested
+        @DisplayName("올바른 이메일과 비밀번호 입력 시")
+        class ContextLoginWithRightEmailAndPassword {
+            @Test
+            @DisplayName("회원 식별자에 따른 인증토큰을 반환한다")
+            void returnsValidToken() {
+                String accessToken = authenticationService.login(
+                        "tester@example.com", "test");
 
-        assertThat(accessToken).isEqualTo(VALID_TOKEN);
+                assertThat(accessToken).isEqualTo(VALID_TOKEN);
 
-        verify(userRepository).findByEmail("tester@example.com");
+                verify(userRepository).findByEmail("tester@example.com");
+            }
+        }
+
+        @Nested
+        @DisplayName("올바른 이메일과 잘못된 비밀번호 입력 시")
+        class ContextLoginWithRightEmailAndWrongPassword {
+            @Test
+            @DisplayName("로그인 실패 예외를 반환한다")
+            void throwsLoginFailException() {
+                assertThatThrownBy(
+                        () -> authenticationService.login("tester@example.com", "xxx")
+                ).isInstanceOf(LoginFailException.class);
+
+                verify(userRepository).findByEmail("tester@example.com");
+            }
+        }
+
+        @Nested
+        @DisplayName("잘못된 이메일 입력 시")
+        class ContextLoginWithWrongEmail {
+            @Test
+            @DisplayName("로그인 실패 예외를 반환한다")
+            void throwsLoginFailException() {
+                assertThatThrownBy(
+                        () -> authenticationService.login("badguy@example.com", "test")
+                ).isInstanceOf(LoginFailException.class);
+
+                verify(userRepository).findByEmail("badguy@example.com");
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("parseToken 메서드")
+    class DescribeParseToken {
+        @Nested
+        @DisplayName("유효한 토큰이라면")
+        class ContextWithValidToken {
+            @Test
+            @DisplayName("유효한 토큰이라면")
+            void returnsUserId() {
+                Long userId = authenticationService.parseToken(VALID_TOKEN);
+
+                assertThat(userId).isEqualTo(1L);
+            }
+        }
+
+        @Nested
+        @DisplayName("잘못된 토큰이라면")
+        class ContextWithInvalidToken {
+            @Test
+            @DisplayName("잘못된 토큰 예외를 반환한다")
+            void throwsInvalidTokenException() {
+                assertThatThrownBy(() -> authenticationService.parseToken(INVALID_TOKEN))
+                        .isInstanceOf(InvalidTokenException.class);
+            }
+        }
+
+        @Nested
+        @DisplayName("빈 토큰이라면")
+        class ContextWithEmptyToken {
+            @ParameterizedTest(name = "{index}: <{0}>")
+            @NullSource
+            @EmptySource
+            @ValueSource(strings = {" "})
+            @DisplayName("잘못된 토큰 예외를 반환한다")
+            void throwsInvalidTokenException(String input) {
+                assertThatThrownBy(() -> authenticationService.parseToken(input))
+                        .isInstanceOf(InvalidTokenException.class);
+            }
+        }
     }
 
     @Test
-    void loginWithWrongEmail() {
-        assertThatThrownBy(
-                () -> authenticationService.login("badguy@example.com", "test")
-        ).isInstanceOf(LoginFailException.class);
-
-        verify(userRepository).findByEmail("badguy@example.com");
-    }
-
-    @Test
-    void loginWithWrongPassword() {
-        assertThatThrownBy(
-                () -> authenticationService.login("tester@example.com", "xxx")
-        ).isInstanceOf(LoginFailException.class);
-
-        verify(userRepository).findByEmail("tester@example.com");
-    }
-
-    @Test
-    void parseTokenWithValidToken() {
-        Long userId = authenticationService.parseToken(VALID_TOKEN);
-
-        assertThat(userId).isEqualTo(1L);
-    }
-
-    @Test
-    void parseTokenWithInvalidToken() {
-        assertThatThrownBy(
-                () -> authenticationService.parseToken(INVALID_TOKEN)
-        ).isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
+    @DisplayName("roles 메서드")
     void roles() {
         assertThat(
                 authenticationService.roles(1L).stream()
