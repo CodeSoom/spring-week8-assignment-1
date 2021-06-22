@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     /**
-     * 특정한 프로덕트를 가져옵니다.
+     * 프로덕트를 리턴합니다.
      *
      * @param id 가져오려는 프로덕트의 아이디
      * @return 가져온 프로덕트
