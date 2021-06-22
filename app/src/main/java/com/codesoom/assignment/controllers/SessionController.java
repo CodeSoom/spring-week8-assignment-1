@@ -6,6 +6,9 @@ import com.codesoom.assignment.dto.SessionResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 인증에 대한 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/session")
 public class SessionController {
@@ -15,6 +18,12 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 받은 인증 정보를 유저 정보와 비교하고, 인증이 끝나면 인가 토큰을 발급합니다.
+     *
+     * @param sessionRequestData 인증 정보
+     * @return 인가 토큰
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(
