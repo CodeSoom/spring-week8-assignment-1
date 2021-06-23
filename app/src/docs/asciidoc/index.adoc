@@ -79,6 +79,65 @@ include::{snippets}/register-user-invalid-attribute/http-request.adoc[]
 
 include::{snippets}/register-user-invalid-attribute/http-response.adoc[]
 
+== PATCH /products/{id}
+
+제품 정보를 수정하고 수정된 제품을 JSON 형태로 돌려준다.
+제품 정보를 수정하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
+
+include::{snippets}/update-product/http-request.adoc[]
+
+include::{snippets}/update-product/http-response.adoc[]
+
+존재하지 않는 제품에 대한 정보를 수정하려는 경우 Not Found를 응답한다.
+
+include::{snippets}/update-product-with-unknown-product/http-request.adoc[]
+
+include::{snippets}/update-product-with-unknown-product/http-response.adoc[]
+
+제품 정보를 수정하기 위해 잘못된 요청 데이터를 보낸 경우 Bad Request를 응답한다.
+
+include::{snippets}/update-product-with-invalid-attribute/http-request.adoc[]
+
+include::{snippets}/update-product-with-invalid-attribute/http-response.adoc[]
+
+토큰 없이 제품 정보를 수정하려는 경우 Unauthorized를 응답한다.
+
+include::{snippets}/update-product-without-token/http-request.adoc[]
+
+include::{snippets}/update-product-without-token/http-response.adoc[]
+
+잘못된 토큰으로 제품 정보를 수정하려는 경우 Unauthorized를 응답한다.
+
+include::{snippets}/update-product-with-invalid-token/http-request.adoc[]
+
+include::{snippets}/update-product-with-invalid-token/http-response.adoc[]
+
+== DELETE /products/{id}
+
+특정 제품 삭제한다. 제품을 삭제하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
+
+존재하지 않는 제품을 삭제하려는 경우 Not Found를 응답한다.
+
+include::{snippets}/delete-product-with-unknown-product/http-request.adoc[]
+
+include::{snippets}/delete-product-with-unknown-product/http-response.adoc[]
+
+토큰 없이 제품을 삭제하려는 경우 Unauthorized를 응답한다.
+
+include::{snippets}/delete-product-without-token/http-request.adoc[]
+
+include::{snippets}/delete-product-without-token/http-response.adoc[]
+
+잘못된 토큰으로 제품을 삭제하려는 경우 Unauthorized를 응답한다.
+
+include::{snippets}/delete-product-with-invalid-token/http-request.adoc[]
+
+include::{snippets}/delete-product-with-invalid-token/http-response.adoc[]
+
 == PATCH /users/{id}
 
 회원 정보를 갱신하고 갱신된 회원을 JSON 형태로 돌려준다.
