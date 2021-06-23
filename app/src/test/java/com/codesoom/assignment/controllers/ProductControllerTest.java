@@ -295,7 +295,6 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(document("delete-need-login"));
-
     }
 
     @Test

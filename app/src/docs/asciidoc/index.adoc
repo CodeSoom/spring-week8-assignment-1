@@ -128,5 +128,3 @@ include::{snippets}/delete-need-login/http-response.adoc[]
 
 include::{snippets}/delete-invalid-token/http-request.adoc[]
 include::{snippets}/delete-invalid-token/http-response.adoc[]
-
-
