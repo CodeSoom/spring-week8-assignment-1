@@ -9,3 +9,5 @@
 include::products.adoc[]
 
 include::users.adoc[]
+
+include::session.adoc[]

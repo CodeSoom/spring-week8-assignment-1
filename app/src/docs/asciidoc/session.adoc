@@ -1,0 +1,9 @@
+== 세션
+
+=== POST `/session`
+
+사용자를 인증하고 토큰을 발급해서 JSON 형태로 돌려준다.
+
+include::{snippets}/post-session/http-request.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]

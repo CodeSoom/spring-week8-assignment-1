@@ -9,6 +9,7 @@ import com.codesoom.assignment.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional(readOnly = true)
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -45,6 +47,7 @@ public class AuthenticationService {
         return claims.get("userId", Long.class);
     }
 
+    @Transactional(readOnly = true)
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
