@@ -104,7 +104,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void deatilWithExsitedProduct() throws Exception {
+    void detailWithExistedProduct() throws Exception {
         mockMvc.perform(
                 get("/products/1")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -116,9 +116,10 @@ class ProductControllerTest {
     }
 
     @Test
-    void deatilWithNotExsitedProduct() throws Exception {
+    void detailWithNotExistedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("non-existed-product"));
     }
 
     @Test
@@ -132,7 +133,9 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("create-product"));
+
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -147,7 +150,9 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("create-invalid-product"));
+
     }
 
     @Test
@@ -159,7 +164,9 @@ class ProductControllerTest {
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("create-need-login"));
+
     }
 
     @Test
@@ -172,7 +179,9 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("create-need-proper-login"));
+
     }
 
     @Test
@@ -186,7 +195,9 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product"));
+
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -200,7 +211,9 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("update-non-existed-product"));
+
 
         verify(productService).updateProduct(eq(1000L), any(ProductData.class));
     }
@@ -215,7 +228,9 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("update-invalid-product"));
+
     }
 
     @Test
@@ -227,7 +242,8 @@ class ProductControllerTest {
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("update-need-login"));
     }
 
     @Test
@@ -240,7 +256,8 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("update-invalid-token"));
     }
 
     @Test
