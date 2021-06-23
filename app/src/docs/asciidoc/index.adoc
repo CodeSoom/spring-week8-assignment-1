@@ -1,5 +1,11 @@
 = 고양이 장난감 가게 API
-
-== Products
+:toc: left
+:toclevels: 4
+:source-highlighter: highlightjs
+:sectlinks:
+:sectnums:
+:sectnumlevels: 4
 
 include::products.adoc[]
+
+include::users.adoc[]
