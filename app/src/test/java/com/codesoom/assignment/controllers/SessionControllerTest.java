@@ -4,7 +4,6 @@ import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -23,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SessionController.class)
 @AutoConfigureRestDocs
 class SessionControllerTest {
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -32,7 +34,7 @@ class SessionControllerTest {
     @BeforeEach
     void setUp() {
         given(authenticationService.login("tester@example.com", "test"))
-                .willReturn("a.b.c");
+                .willReturn(ACCESS_TOKEN);
 
         given(authenticationService.login("badguy@example.com", "test"))
                 .willThrow(new LoginFailException("badguy@example.com"));

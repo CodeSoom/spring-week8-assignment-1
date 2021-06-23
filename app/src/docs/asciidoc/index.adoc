@@ -1,5 +1,13 @@
 = 고양이 장난감 가게 API
 
+== POST /session
+
+로그인 결과에 따라 인증 토큰을 발급합니다.
+
+include::{snippets}/login/http-request.adoc[]
+
+include::{snippets}/login/http-response.adoc[]
+
 == GET /products
 
 상품 목록을 JSON 형태로 돌려준다.
