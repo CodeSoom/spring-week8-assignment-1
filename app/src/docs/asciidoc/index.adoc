@@ -10,11 +10,23 @@ include::{snippets}/app-say-hello/http-response.adoc[]
 
 == POST /session
 
-로그인 결과에 따라 인증 토큰을 발급합니다.
+로그인 결과에 따라 인증 토큰을 발급합니다. 로그인 성공한 경우 인증 토큰을 JSON 형태로 반환합니다.
 
 include::{snippets}/login/http-request.adoc[]
 
 include::{snippets}/login/http-response.adoc[]
+
+이메일을 잘못 입력한 경우 BAD REQUEST 응답합니다.
+
+include::{snippets}/login-wrong-email/http-request.adoc[]
+
+include::{snippets}/login-wrong-email/http-response.adoc[]
+
+패스워드를 잘못 입력한 경우 BAD REQUEST 응답합니다.
+
+include::{snippets}/login-wrong-password/http-request.adoc[]
+
+include::{snippets}/login-wrong-password/http-response.adoc[]
 
 == GET /products
 

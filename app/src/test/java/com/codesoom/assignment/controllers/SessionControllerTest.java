@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentRequest;
+import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -54,7 +56,11 @@ class SessionControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(".")))
-                .andDo(document("login"));
+                .andDo(
+                        document("login",
+                                getDocumentRequest(),
+                                getDocumentResponse())
+                );
     }
 
     @Test
@@ -67,7 +73,11 @@ class SessionControllerTest {
                                 "\"password\":\"test\"}")
         )
                 .andExpect(status().isBadRequest())
-                .andDo(document("login-wrong-email"));
+                .andDo(
+                        document("login-wrong-email",
+                                getDocumentRequest(),
+                                getDocumentResponse())
+                );
     }
 
     @Test
@@ -80,7 +90,11 @@ class SessionControllerTest {
                                 "\"password\":\"xxx\"}")
         )
                 .andExpect(status().isBadRequest())
-                .andDo(document("login-wrong-password"));
+                .andDo(
+                        document("login-wrong-password",
+                                getDocumentRequest(),
+                                getDocumentResponse())
+                );
     }
 
 //    @Nested
