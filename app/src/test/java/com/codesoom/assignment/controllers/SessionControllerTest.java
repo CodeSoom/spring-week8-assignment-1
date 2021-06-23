@@ -41,59 +41,65 @@ class SessionControllerTest {
                 .willThrow(new LoginFailException("tester@example.com"));
     }
 
-    @Nested
-    @DisplayName("login 메서드")
-    class DescribeLogin {
-        @Nested
-        @DisplayName("이메일과 패스워드가 일치하는 회원이 있을 경우")
-        class ContextWithRightEmailAndPassword {
-            @Test
-            @DisplayName("토큰을 반환한다")
-            void returnsAccessToken() throws Exception {
-                mockMvc.perform(
-                        post("/session")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"email\":\"tester@example.com\"," +
-                                        "\"password\":\"test\"}")
-                )
-                        .andExpect(status().isCreated())
-                        .andExpect(content().string(containsString(".")))
-                        .andDo(document("login"));
-            }
-        }
-
-        @Nested
-        @DisplayName("이메일이 잘못된 경우")
-        class ContextWithWrongEmail {
-            @Test
-            @DisplayName("BAD REQUEST 응답코드를 반환한다")
-            void loginWithWrongEmail() throws Exception {
-                mockMvc.perform(
-                        post("/session")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"email\":\"badguy@example.com\"," +
-                                        "\"password\":\"test\"}")
-                )
-                        .andExpect(status().isBadRequest())
-                        .andDo(document("login-wrong-email"));
-            }
-        }
-
-        @Nested
-        @DisplayName("패스워드가 잘못된 경우")
-        class ContextWithWrongPassword {
-            @Test
-            @DisplayName("BAD REQUEST 응답코드를 반환한다")
-            void loginWithWrongEmail() throws Exception {
-                mockMvc.perform(
-                        post("/session")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"email\":\"tester@example.com\"," +
-                                        "\"password\":\"xxx\"}")
-                )
-                        .andExpect(status().isBadRequest())
-                        .andDo(document("login-wrong-password"));
-            }
-        }
+    @Test
+    @DisplayName("이메일과 패스워드 정확할 경우 토큰을 반환한다")
+    void returnsAccessTokenWhenRightEmailAndPassword() throws Exception {
+        mockMvc.perform(
+                post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"tester@example.com\"," +
+                                "\"password\":\"test\"}")
+        )
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString(".")))
+                .andDo(document("login"));
     }
+
+    @Test
+    @DisplayName("BAD REQUEST 응답코드를 반환한다")
+    void returnsBadRequestWhenWrongEmail() throws Exception {
+        mockMvc.perform(
+                post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"badguy@example.com\"," +
+                                "\"password\":\"test\"}")
+        )
+                .andExpect(status().isBadRequest())
+                .andDo(document("login-wrong-email"));
+    }
+
+    @Test
+    @DisplayName("BAD REQUEST 응답코드를 반환한다")
+    void returnsBadRequestWhenWrongPassword() throws Exception {
+        mockMvc.perform(
+                post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"tester@example.com\"," +
+                                "\"password\":\"xxx\"}")
+        )
+                .andExpect(status().isBadRequest())
+                .andDo(document("login-wrong-password"));
+    }
+
+//    @Nested
+//    @DisplayName("login 메서드")
+//    class DescribeLogin {
+//        @Nested
+//        @DisplayName("")
+//        class Context {
+//
+//        }
+//
+//        @Nested
+//        @DisplayName("이메일이 잘못된 경우")
+//        class ContextWithWrongEmail {
+//
+//        }
+//
+//        @Nested
+//        @DisplayName("패스워드가 잘못된 경우")
+//        class ContextWithWrongPassword {
+//
+//        }
+//    }
 }
