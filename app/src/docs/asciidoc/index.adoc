@@ -1,5 +1,13 @@
 = 고양이 장난감 가게 API
 
+== GET /
+
+고양이 장난감 가게 API 서버가 가동되고 있음을 알려주는 인사말을 반환합니다.
+
+include::{snippets}/app-say-hello/http-request.adoc[]
+
+include::{snippets}/app-say-hello/http-response.adoc[]
+
 == POST /session
 
 로그인 결과에 따라 인증 토큰을 발급합니다.
