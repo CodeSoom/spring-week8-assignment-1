@@ -95,3 +95,38 @@ include::{snippets}/update-need-login/http-response.adoc[]
 
 include::{snippets}/update-invalid-token/http-request.adoc[]
 include::{snippets}/update-invalid-token/http-response.adoc[]
+
+
+
+== DELETE /products/{id}
+
+상품을 삭제한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+include::{snippets}/delete-product/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+존재하지 않은 상품은 삭제할 수 없다.
+
+include::{snippets}/delete-non-existed-product/http-request.adoc[]
+include::{snippets}/delete-non-existed-product/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+상품을 삭제하려면 로그인 해야한다.
+
+include::{snippets}/delete-need-login/http-request.adoc[]
+include::{snippets}/delete-need-login/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+등록되지 않은 회원은 상품을 삭제할 수 없다.
+
+include::{snippets}/delete-invalid-token/http-request.adoc[]
+include::{snippets}/delete-invalid-token/http-response.adoc[]
+
+

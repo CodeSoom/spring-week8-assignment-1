@@ -266,7 +266,8 @@ class ProductControllerTest {
                 delete("/products/1")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product"));
 
         verify(productService).deleteProduct(1L);
     }
@@ -277,7 +278,8 @@ class ProductControllerTest {
                 delete("/products/1000")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("delete-non-existed-product"));
 
         verify(productService).deleteProduct(1000L);
     }
@@ -291,7 +293,9 @@ class ProductControllerTest {
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("delete-need-login"));
+
     }
 
     @Test
@@ -304,6 +308,7 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("delete-invalid-token"));
     }
 }
