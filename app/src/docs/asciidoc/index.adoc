@@ -56,3 +56,77 @@ include::{snippets}/create-product-without-token/http-response.adoc[]
 include::{snippets}/create-product-with-invalid-token/http-request.adoc[]
 
 include::{snippets}/create-product-with-invalid-token/http-response.adoc[]
+
+== POST /users
+
+회원을 신규 등록하고 등록된 회원을 JSON 형태로 돌려준다.
+
+include::{snippets}/register-user/http-request.adoc[]
+
+include::{snippets}/register-user/http-response.adoc[]
+
+잘못된 요청 데이터로 회원을 등록하려는 경우 Bad Request를 응답한다.
+
+include::{snippets}/register-user-invalid-attribute/http-request.adoc[]
+
+include::{snippets}/register-user-invalid-attribute/http-response.adoc[]
+
+== PATCH /users/{id}
+
+회원 정보를 갱신하고 갱신된 회원을 JSON 형태로 돌려준다.
+본인의 정보를 갱신하기 위해서는 로그인하여 얻은 토큰이 필요하며 본인이 아닌 회원에 대해서는 접근할 수 없다.
+
+include::{snippets}/update-user/http-request.adoc[]
+
+include::{snippets}/update-user/http-response.adoc[]
+
+잘못된 요청 데이터로 회원을 갱싱하려는 경우 Bad Request를 응답한다.
+
+include::{snippets}/update-user-with-invalid-attribute/http-request.adoc[]
+
+include::{snippets}/update-user-with-invalid-attribute/http-response.adoc[]
+
+존재하지 않는 회원 정보를 갱신하려는 경우 Bad Request를 응답한다
+
+include::{snippets}/update-user-with-unknown-id/http-request.adoc[]
+
+include::{snippets}/update-user-with-unknown-id/http-response.adoc[]
+
+토큰 없이 회원 정보를 갱신하려는 경우 Unauthorized를 응답한다
+
+include::{snippets}/update-user-without-token/http-request.adoc[]
+
+include::{snippets}/update-user-without-token/http-response.adoc[]
+
+본인이 아닌 회원 정보를 갱신하려는 경우 Forbidden을 응답한다.
+
+include::{snippets}/update-user-with-other-token/http-request.adoc[]
+
+include::{snippets}/update-user-with-other-token/http-response.adoc[]
+
+== DELETE /users/{id}
+
+회원을 삭제 처리하고 삭제 처리된 회원을 JSON 형태로 돌려준다.
+회원 삭제는 관리자 계정으로 로그인하여 얻은 토큰이 필요하다. 관리자가 아닌 회원은 삭제 권한이 없다.
+
+include::{snippets}/delete-user/http-request.adoc[]
+
+include::{snippets}/delete-user/http-response.adoc[]
+
+존재하지 않는 회원을 삭제하려는 경우 Not Found를 응답한다
+
+include::{snippets}/delete-user-with-unknown-id/http-request.adoc[]
+
+include::{snippets}/delete-user-with-unknown-id/http-response.adoc[]
+
+토큰 없이 회원을 삭제하려는 경우 Unauthorized를 응답한다
+
+include::{snippets}/delete-user-without-token/http-request.adoc[]
+
+include::{snippets}/delete-user-without-token/http-response.adoc[]
+
+관리자가 아닌 계정으로 회원을 삭제하려는 경우 Forbidden을 응답한다
+
+include::{snippets}/delete-user-without-admin-role/http-request.adoc[]
+
+include::{snippets}/delete-user-without-admin-role/http-response.adoc[]
