@@ -12,11 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentRequest;
-import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentResponse;
+import static com.codesoom.assignment.helper.ApiDocumentUtils.defaultApiDocumentForm;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,9 +55,7 @@ class SessionControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(".")))
                 .andDo(
-                        document("login",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("login")
                 );
     }
 
@@ -74,9 +70,7 @@ class SessionControllerTest {
         )
                 .andExpect(status().isBadRequest())
                 .andDo(
-                        document("login-wrong-email",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("login-wrong-email")
                 );
     }
 
@@ -91,9 +85,7 @@ class SessionControllerTest {
         )
                 .andExpect(status().isBadRequest())
                 .andDo(
-                        document("login-wrong-password",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("login-wrong-password")
                 );
     }
 

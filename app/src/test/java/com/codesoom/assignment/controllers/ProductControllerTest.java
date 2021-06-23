@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codesoom.assignment.helper.ApiDocumentUtils.defaultApiDocumentForm;
 import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentRequest;
 import static com.codesoom.assignment.helper.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
@@ -28,7 +29,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -149,9 +153,7 @@ class ProductControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(
-                        document("create-product",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("create-product")
                 );
 
         verify(productService).createProduct(any(ProductData.class));
@@ -169,9 +171,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isBadRequest())
                 .andDo(
-                        document("create-product-invalid",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("create-product-invalid")
                 );
     }
 
@@ -186,9 +186,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("create-product-without-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("create-product-without-token")
                 );
     }
 
@@ -204,9 +202,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("create-product-with-invalid-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("create-product-with-invalid-token")
                 );
     }
 
@@ -223,9 +219,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
                 .andDo(
-                        document("update-product",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("update-product")
                 );
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
@@ -242,9 +236,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isNotFound())
                 .andDo(
-                        document("update-product-with-unknown-product",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("update-product-with-unknown-product")
                 );
 
         verify(productService).updateProduct(eq(1000L), any(ProductData.class));
@@ -262,9 +254,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isBadRequest())
                 .andDo(
-                        document("update-product-with-invalid-attribute",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("update-product-with-invalid-attribute")
                 );
     }
 
@@ -279,9 +269,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("update-product-without-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("update-product-without-token")
                 );
     }
 
@@ -297,9 +285,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("update-product-with-invalid-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("update-product-with-invalid-token")
                 );
     }
 
@@ -311,9 +297,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andDo(
-                        document("delete-product",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("delete-product")
                 );
 
         verify(productService).deleteProduct(1L);
@@ -327,9 +311,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isNotFound())
                 .andDo(
-                        document("delete-product-with-unknown-product",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("delete-product-with-unknown-product")
                 );
 
         verify(productService).deleteProduct(1000L);
@@ -346,9 +328,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("delete-product-without-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("delete-product-without-token")
                 );
     }
 
@@ -364,9 +344,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(
-                        document("delete-product-with-invalid-token",
-                                getDocumentRequest(),
-                                getDocumentResponse())
+                        defaultApiDocumentForm("delete-product-with-invalid-token")
                 );
     }
 }

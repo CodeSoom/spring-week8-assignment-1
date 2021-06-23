@@ -21,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.codesoom.assignment.helper.ApiDocumentUtils.defaultApiDocumentForm;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -136,7 +136,9 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
                 ))
-                .andDo(document("register-user"));
+                .andDo(
+                        defaultApiDocumentForm("register-user")
+                );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -150,7 +152,9 @@ class UserControllerTest {
                         .content("{}")
         )
                 .andExpect(status().isBadRequest())
-                .andDo(document("register-user-invalid-attribute"));
+                .andDo(
+                        defaultApiDocumentForm("register-user-invalid-attribute")
+                );
     }
 
     @Test
@@ -169,7 +173,9 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
                 ))
-                .andDo(document("update-user"));
+                .andDo(
+                        defaultApiDocumentForm("update-user")
+                );
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -185,7 +191,9 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
                 .andExpect(status().isBadRequest())
-                .andDo(document("update-user-with-invalid-attribute"));
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-invalid-attribute")
+                );
     }
 
     @Test
@@ -198,7 +206,9 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
                 .andExpect(status().isNotFound())
-                .andDo(document("update-user-with-unknown-id"));
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-unknown-id")
+                );
 
         verify(userService).updateUser(
                 eq(100L),
@@ -215,7 +225,9 @@ class UserControllerTest {
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
         )
                 .andExpect(status().isUnauthorized())
-                .andDo(document("update-user-without-token"));
+                .andDo(
+                        defaultApiDocumentForm("update-user-without-token")
+                );
     }
 
     @Test
@@ -228,7 +240,9 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + OTHER_TOKEN)
         )
                 .andExpect(status().isForbidden())
-                .andDo(document("update-user-with-other-token"));
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-other-token")
+                );
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(2L));
@@ -242,7 +256,9 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-user"));
+                .andDo(
+                        defaultApiDocumentForm("delete-user")
+                );
 
         verify(userService).deleteUser(1L);
     }
@@ -255,7 +271,9 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
                 .andExpect(status().isNotFound())
-                .andDo(document("delete-user-with-unknown-id"));
+                .andDo(
+                        defaultApiDocumentForm("delete-user-with-unknown-id")
+                );
 
         verify(userService).deleteUser(100L);
     }
@@ -265,7 +283,9 @@ class UserControllerTest {
     void destroyWithoutAccessToken() throws Exception {
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isUnauthorized())
-                .andDo(document("delete-user-without-token"));
+                .andDo(
+                        defaultApiDocumentForm("delete-user-without-token")
+                );
     }
 
     @Test
@@ -276,6 +296,8 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
                 .andExpect(status().isForbidden())
-                .andDo(document("delete-user-without-admin-role"));
+                .andDo(
+                        defaultApiDocumentForm("delete-user-without-admin-role")
+                );
     }
 }
