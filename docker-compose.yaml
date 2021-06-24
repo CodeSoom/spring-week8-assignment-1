@@ -17,6 +17,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    image: markruler/codesoom:latest
     depends_on:
       - mariadb
     restart: unless-stopped
