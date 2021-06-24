@@ -8,10 +8,84 @@ include::{snippets}/register-user/http-request.adoc[]
 include::{snippets}/register-user/http-response.adoc[]
 
 
-== PATCH /users/
+== POST /users/
 
 유효하지 않은 정보를 입력하면 회원가입을 할 수 없다.
 
 :path: {snippets}/register-invalid-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== PATCH /users/{id}
+
+유저의 정보를 수정한다.
+
+:path: {snippets}/update-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+
+== PATCH /users/{id}
+
+유효하지 않은 정보가 입력되면, 유저 정보를 수정할 수 없다.
+
+:path: {snippets}/update-invalid-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== PATCH /users/{id}
+
+존재하지 않은 사용자의 정보는 수정할 수 없다.
+
+:path: {snippets}/update-not-existed-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== PATCH /users/{id}
+
+로그인 하지 않으면 사용자 정보를 수정할 수 없다.
+
+:path: {snippets}/update-need-login
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== PATCH /users/{id}
+
+다른 사용자의 정보는 수정할 수 없다.
+
+:path: {snippets}/update-proper-login
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+
+== DELETE /users/{id}
+
+사용자를 삭제한다.
+
+:path: {snippets}/delete-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== DELETE /users/{id}
+
+존재하지 않은 사용자는 삭제할 수 없다.
+
+:path: {snippets}/delete-not-existed-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+== DELETE /users/{id}
+
+관리자만 사용자를 삭제할 수 있다.
+
+:path: {snippets}/only-admin-delete
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
