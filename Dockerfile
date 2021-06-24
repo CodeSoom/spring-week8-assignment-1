@@ -2,7 +2,7 @@ FROM openjdk:11-jre-slim-buster AS builder
 
 COPY . .
 
-CMD ["./gradlew", "app:assemble"]
+RUN ["./gradlew", "assemble"]
 
 FROM openjdk:11-jre-slim-buster
 
