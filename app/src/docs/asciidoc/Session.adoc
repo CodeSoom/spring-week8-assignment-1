@@ -1,0 +1,39 @@
+== 고양이 장난감 가게 Session API
+
+== POST /session/
+등록된 이메일과 비밀번호를 입력하여, 로그인 토큰을 발급받습니다.
+
+:path: {snippets}/proper-login
+
+== Request
+include::{path}/http-request.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|email
+|String
+|사용자 EMAIL
+| O
+
+|password
+|String
+|사용자 비밀번호
+| O
+|===
+
+
+== Response
+
+include::{path}/http-response.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|accessToken
+|String
+| 사용자 접근 토큰 값
+| O
+|===
