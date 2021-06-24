@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 인증관련 비즈니스 로직을 처리합니다.
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -29,6 +32,12 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 로그인을 하고 엑세스 토큰을 발급해 리턴합니다.
+     * @param email 사용자 이메일
+     * @param password 사용자 비밀번호
+     * @return 엑세스 토큰
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +49,21 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * 엑세스 토큰을 파싱해 로그인 한 사용자 id를 리턴합니다.
+     * @param accessToken 엑세스 토큰
+     * @return 사용자 id
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * 사용자 권한목록을 조회해 리턴합니다.
+     * @param userId 조회 할 사용자 id
+     * @return 권한 목록
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
