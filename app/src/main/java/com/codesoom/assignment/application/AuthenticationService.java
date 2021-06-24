@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 인증에 관한 유즈케이스를 담당합니다.
+ * 인증 시 처리를 담당합니다.
  */
 @Service
 public class AuthenticationService {
@@ -35,9 +35,9 @@ public class AuthenticationService {
     /**
      * 로그인합니다.
      *
-     * @param email 로그인 하려는 유저의 이메일
-     * @param password 로그인 하려는 유저의 비밀번호
-     * @return 인증에 필요한 토큰
+     * @param email 로그인 하려는 회원의 Email
+     * @param password 로그인 하려는 회원의 비밀번호
+     * @return 회원의 인증 토큰
      * @throws LoginFailException 로그인에 실패 시 예외를 던집니다.
      */
     public String login(String email, String password) {
@@ -54,8 +54,8 @@ public class AuthenticationService {
     /**
      * 토큰을 파싱합니다.
      *
-     * @param accessToken 발급받은 토큰
-     * @return 토큰을 발급받은 유저 아이디
+     * @param accessToken 회원의 토큰
+     * @return 토큰에 해당하는 회원의 고유 식별자
      */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
