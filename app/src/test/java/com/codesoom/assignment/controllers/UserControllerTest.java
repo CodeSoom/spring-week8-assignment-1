@@ -141,7 +141,9 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}")
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("register-invalid-user"));
+
     }
 
     @Test

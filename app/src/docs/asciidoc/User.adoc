@@ -1,9 +1,17 @@
 = 고양이 장난감 가게 User API
 
-== POST /products/
+== POST /users/
 
 새로운 사용자가 회원가입 한다.
 
 include::{snippets}/register-user/http-request.adoc[]
 include::{snippets}/register-user/http-response.adoc[]
 
+
+== PATCH /users/
+
+유효하지 않은 정보를 입력하면 회원가입을 할 수 없다.
+
+:path: {snippets}/register-invalid-user
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
