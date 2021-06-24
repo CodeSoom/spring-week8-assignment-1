@@ -37,3 +37,87 @@ include::{path}/http-response.adoc[]
 | 사용자 접근 토큰 값
 | O
 |===
+
+:hardbreaks:
+
+
+
+== POST /session/
+
+등록되지 않은 이메일로 로그인하면, 토큰을 발급 받을 수 없다.
+
+:path: {snippets}/improper-login-wrong-email
+
+== Request
+include::{path}/http-request.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|email
+|String
+|사용자 EMAIL
+| O
+
+|password
+|String
+|사용자 비밀번호
+| O
+|===
+
+
+== Response
+
+include::{path}/http-response.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|message
+|String
+| 상태 메시지
+| X
+|===
+
+
+== POST /session/
+
+등록되지 않은 비밀번호 로그인하면, 토큰을 발급 받을 수 없다.
+
+:path: {snippets}/improper-login-wrong-password
+
+== Request
+include::{path}/http-request.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|email
+|String
+|사용자 EMAIL
+| O
+
+|password
+|String
+|사용자 비밀번호
+| O
+|===
+
+
+== Response
+
+include::{path}/http-response.adoc[]
+
+[cols="1,1,2,1"]
+|===
+|Name |Type |Description| Required
+
+|message
+|String
+| 상태 메시지
+| X
+|===
+
