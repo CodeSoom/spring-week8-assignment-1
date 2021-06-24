@@ -190,7 +190,8 @@ class  ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product"));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -204,7 +205,8 @@ class  ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("update-product-with-not-existed"));
 
         verify(productService).updateProduct(eq(1000L), any(ProductData.class));
     }
@@ -219,7 +221,8 @@ class  ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("update-product-with-invalid-data"));
     }
 
     @Test
@@ -231,7 +234,8 @@ class  ProductControllerTest {
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("update-product-without-token"));
     }
 
     @Test
@@ -244,7 +248,8 @@ class  ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("update-product-with-invalid-token"));
     }
 
     @Test
@@ -253,7 +258,8 @@ class  ProductControllerTest {
                 delete("/products/1")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("destroy-product"));
 
         verify(productService).deleteProduct(1L);
     }
@@ -264,7 +270,8 @@ class  ProductControllerTest {
                 delete("/products/1000")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("destroy-product-with-not-existed-data"));
 
         verify(productService).deleteProduct(1000L);
     }
@@ -278,7 +285,8 @@ class  ProductControllerTest {
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("destroy-product-without-token"));
     }
 
     @Test
@@ -291,6 +299,7 @@ class  ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("destroy-product-with-invalid-token"));
     }
 }
