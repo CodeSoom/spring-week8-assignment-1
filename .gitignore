@@ -9,3 +9,5 @@ build
 
 # memo
 memo.md
+
+app/src/main/resources/application.yml
