@@ -5,7 +5,6 @@
 * 상품 목록을 JSON 형태로 돌려줍니다.
 
 include::{snippets}/get-all-products/http-request.adoc[]
-
 include::{snippets}/get-all-products/http-response.adoc[]
 
 == GET /products/{id}
@@ -13,13 +12,11 @@ include::{snippets}/get-all-products/http-response.adoc[]
 * 상품에 대한 자세한 정보를 JSON 형태로 돌려줍니다.
 
 include::{snippets}/get-product/http-request.adoc[]
-
 include::{snippets}/get-product/http-response.adoc[]
 
 * id에 해당하는 상품이 없다면 에러를 돌려줍니다.
 
 include::{snippets}/get-product-not-exist/http-request.adoc[]
-
 include::{snippets}/get-product-not-exist/http-response.adoc[]
 
 == POST /products
@@ -28,25 +25,21 @@ include::{snippets}/get-product-not-exist/http-response.adoc[]
 상품을 생성하기 위해서는 로그인하여 얻은 토큰이 필요합니다.
 
 include::{snippets}/create-product/http-request.adoc[]
-
 include::{snippets}/create-product/http-response.adoc[]
 
 * 만약 생성하려는 상품의 정보가 잘못되었다면 에러를 돌려줍니다.
 
 include::{snippets}/create-product-invalid/http-request.adoc[]
-
 include::{snippets}/create-product-invalid/http-response.adoc[]
 
 * 토큰없이 상품을 생성하려는 경우 에러를 돌려줍니다.
 
 include::{snippets}/create-product-without-token/http-request.adoc[]
-
 include::{snippets}/create-product-without-token/http-response.adoc[]
 
 * 잘못된 토큰을 사용하는 경우 에러를 돌려줍니다.
 
 include::{snippets}/create-product-with-invalid-token/http-request.adoc[]
-
 include::{snippets}/create-product-with-invalid-token/http-response.adoc[]
 
 == PATCH /products/{id}
@@ -55,31 +48,26 @@ include::{snippets}/create-product-with-invalid-token/http-response.adoc[]
 상품을 수정하기 위해서는 로그인하여 얻은 토큰이 필요합니다.
 
 include::{snippets}/update-product/http-request.adoc[]
-
 include::{snippets}/update-product/http-response.adoc[]
 
 * id에 해당하는 상품이 없다면 에러를 돌려줍니다.
 
 include::{snippets}/update-product-with-not-existed/http-request.adoc[]
-
 include::{snippets}/update-product-with-not-existed/http-response.adoc[]
 
 * 수정하려는 상품의 정보가 잘못되었다면 에러를 돌려줍니다.
 
 include::{snippets}/update-product-with-invalid-data/http-request.adoc[]
-
 include::{snippets}/update-product-with-invalid-data/http-response.adoc[]
 
 * 토큰없이 상품을 수정하려 한다면 에러를 돌려줍니다.
 
 include::{snippets}/update-product-without-token/http-request.adoc[]
-
 include::{snippets}/update-product-without-token/http-response.adoc[]
 
 * 잘못된 토큰을 사용하여 상품을 수정하려 한다면 에러를 돌려줍니다.
 
 include::{snippets}/update-product-with-invalid-token/http-request.adoc[]
-
 include::{snippets}/update-product-with-invalid-token/http-response.adoc[]
 
 == DELETE /products/{id}
@@ -87,23 +75,61 @@ include::{snippets}/update-product-with-invalid-token/http-response.adoc[]
 * 상품의 정보를 삭제합니다.
 
 include::{snippets}/destroy-product/http-request.adoc[]
-
 include::{snippets}/destroy-product/http-response.adoc[]
 
 * id에 해당하는 상품이 없다면 에러를 돌려줍니다.
 
 include::{snippets}/destroy-product-with-not-existed-data/http-request.adoc[]
-
 include::{snippets}/destroy-product-with-not-existed-data/http-response.adoc[]
 
 * 토큰 없이 상품을 삭제하려고 하면 에러를 돌려줍니다.
 
 include::{snippets}/destroy-product-without-token/http-request.adoc[]
-
 include::{snippets}/destroy-product-without-token/http-response.adoc[]
 
 * 잘못된 토큰으로 상품을 삭제하려고 하면 에러를 돌려줍니다.
 
 include::{snippets}/destroy-product-with-invalid-token/http-request.adoc[]
-
 include::{snippets}/destroy-product-with-invalid-token/http-response.adoc[]
+
+
+== POST /users
+
+* 새로운 회원정보를 생성하고, 생성된 회원정보를 JSON 방식으로 돌려줍니다.
+
+include::{snippets}/register-user/http-request.adoc[]
+include::{snippets}/register-user/http-response.adoc[]
+
+* 만약 생성하려는 회원정보가 잘못되었다면, 에러를 돌려줍니다.
+
+include::{snippets}/register-user-with-invalid-data/http-request.adoc[]
+include::{snippets}/register-user-with-invalid-data/http-response.adoc[]
+
+== PATCH /users/{id}
+
+* 회원정보를 수정하고, 수정된 회원정보를 JSON 방식으로 돌려줍니다. +
+회원정보를 수정하기 위해서는 회원 본인의 로그인하여 얻은 토큰이 필요합니다.
+
+include::{snippets}/update-user/http-request.adoc[]
+include::{snippets}/update-user/http-response.adoc[]
+
+* id에 해당하는 회원정보가 없다면 에러를 돌려줍니다.
+
+include::{snippets}/update-user-with-not-existed/http-request.adoc[]
+include::{snippets}/update-user-with-not-existed/http-response.adoc[]
+
+* 잘못된 정보로 회원정보를 수정하려하면 에러를 돌려줍니다.
+
+include::{snippets}/update-user-with-invalid-data/http-request.adoc[]
+include::{snippets}/update-user-with-invalid-data/http-response.adoc[]
+
+* 토큰 없이 회원정보를 수정하려하면 에러를 돌려줍니다.
+
+include::{snippets}/update-user-without-token/http-request.adoc[]
+include::{snippets}/update-user-without-token/http-response.adoc[]
+
+* 본인 이외의 토큰으로 회원정보를 수정하려하면 에러를 돌려줍니다.
+
+include::{snippets}/update-user-with-other-token/http-request.adoc[]
+include::{snippets}/update-user-with-other-token/http-response.adoc[]
+
