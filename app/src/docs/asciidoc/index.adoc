@@ -1,6 +1,6 @@
 = 고양이 장난감 가게 API
-Firstname Lastname <author@asciidoctor.org>
-1.0, July 29, 2014, Asciidoctor 1.5 article template
+TaeWoong Kim <ktaewoong46@gmail.com>
+v1.0, June 27, 2021, with Asciidoctor 2.4
 :toc: left
 :toclevels: 4
 :sectnums:
