@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for User Access
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -29,6 +32,13 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     *  Returns AccessToken given User email and password.
+     * @param email  Email is the user`s email
+     * @param password Password is the user`s password
+     * @return the created AccessToken with given email and password.
+     * @throws LoginFailException User`Email is  not existed. User password doesn`t match .
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +50,21 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * After Parsing the token, the User Id is returned.
+     * @param accessToken accessToken is the identifier of the access token
+     * @return  the user ID with given AccessToken.
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     *  Returns the privileges corresponding to the user.
+     * @param userId   ID is the identifier of the  Access User.
+     * @return  the privileges with give User ID.
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }

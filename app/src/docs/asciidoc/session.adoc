@@ -1,0 +1,31 @@
+= 사용자 정보 API
+
+== POST /session
+사용자 정보로 Access Token을 받아온다.
+
+=== - Request
+==== - Http Request
+include::{snippets}/user-session/http-request.adoc[]
+
+==== - Http Request Header
+include::{snippets}/user-session/request-headers.adoc[]
+
+=== - Response
+==== - Http Response
+include::{snippets}/user-session/http-response.adoc[]
+
+==== - Http Response Header
+include::{snippets}/user-session/response-headers.adoc[]
+
+==== - Response Fieled
+include::{snippets}/user-session/response-fields.adoc[]
+
+=== - Sample
+Request : 사용자 정보로 Access Token을 받아온다.
+
+==== - curl
+include::{snippets}/user-session/curl-request.adoc[]
+
+==== - httpie
+include::{snippets}/user-session/httpie-request.adoc[]
+

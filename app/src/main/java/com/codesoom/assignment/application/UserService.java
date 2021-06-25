@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
+/**
+ * Service for User (CRUD)
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +35,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Registers  a given User. Returns registered User.
+     * @param registrationData registrationData is registered User
+     * @return the User with registered User
+     * @throws UserEmailDuplicationException in case User Email is already registered.
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +57,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     *  Modify a given User. Returns modified User.
+     * @param id ID is the identifier of the  modified User
+     * @param modificationData  modificationData is  modified User
+     * @param userId userID is the identifier of the access User
+     * @return the User with modified User.
+     * @throws AccessDeniedException Access User is not equals to modified User
+     * @throws UserNotFoundException  in case Modified User with given ID is not existed.
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +80,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Delete a given User. Returns deleted User.
+     * @param id ID is the identifier of the  deleted User
+     * @return the User with deleted User.
+     * @throws UserNotFoundException  in case Deleted User with given ID is not existed.
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
