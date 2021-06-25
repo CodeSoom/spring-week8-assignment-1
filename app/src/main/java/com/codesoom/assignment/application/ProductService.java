@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     /**
-     * 조건에 맞는 Product를 반환합니다.
+     * 회원 고유 식별자로 Product를 찾아 반환합니다.
      *
      * @param id Product 식별자
      * @return 검색된 Product

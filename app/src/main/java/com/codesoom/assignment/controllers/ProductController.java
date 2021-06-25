@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     /**
-     * 전체 Product 목록을 리턴합니다.
+     * 전체 Product 목록을 반환합니다.
      *
      * @return 전체 Product의 목록
      */
@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     /**
-     * 특정 Product를 리턴합니다.
+     * 회원정보 식별자에 해당하는 Product를 반환합니다.
      *
      * @param id 조회하려는 Product의 식별자
      * @return 조회한 Product
@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     /**
-     * 특정 Product의 정보를 변경합니다.
+     * 회원정보 식별자에 해당하는 Product의 정보를 변경합니다.
      *
      * @param id 변경하려는 Product의 식별자
      * @param productData 변경할 Product의 정보

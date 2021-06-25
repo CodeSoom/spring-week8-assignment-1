@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *  Product의 레포지토리
+ *  Product 레포지토리
  */
 public interface ProductRepository {
 
@@ -16,10 +16,10 @@ public interface ProductRepository {
     List<Product> findAll();
 
     /**
-     * Product의 Optional 객체를 반환
+     * Product 정보 유무 객체를 반환
      *
-     * @param id Product의 고유 식별자
-     * @return Product의 Optional 객체
+     * @param id Product 고유 식별자
+     * @return Product 정보 유무 객체
      */
     Optional<Product> findById(Long id);
 

@@ -38,7 +38,7 @@ public class AuthenticationService {
      * @param email 로그인 하려는 회원의 Email
      * @param password 로그인 하려는 회원의 비밀번호
      * @return 회원의 인증 토큰
-     * @throws LoginFailException 로그인에 실패 시 예외를 던집니다.
+     * @throws LoginFailException 사용자 인증 정보를 찾을 수 없는 경우 로그인에 실패하고 LoginFainException을 던집니다.
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -52,7 +52,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 토큰을 파싱합니다.
+     * 토큰을 파싱하여 회원의 고유 식별자를 반환합니다.
      *
      * @param accessToken 회원의 토큰
      * @return 토큰에 해당하는 회원의 고유 식별자
