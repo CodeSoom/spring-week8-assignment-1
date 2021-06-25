@@ -133,3 +133,22 @@ include::{snippets}/update-user-without-token/http-response.adoc[]
 include::{snippets}/update-user-with-other-token/http-request.adoc[]
 include::{snippets}/update-user-with-other-token/http-response.adoc[]
 
+== POST /session
+
+* 회원정보의 Email과 비밀번호로 로그인을 시도하고, +
+생성된 토큰을 JSON 방식으로 돌려줍니다.
+
+include::{snippets}/login-with-right-info/http-request.adoc[]
+include::{snippets}/login-with-right-info/http-response.adoc[]
+
+* 회원정보 중 Email이 올바르지 않다면 에러를 돌려줍니다.
+
+include::{snippets}/login-with-wrong-email/http-request.adoc[]
+include::{snippets}/login-with-wrong-email/http-response.adoc[]
+
+* 회원정보 중 비밀번호가 올바르지 않다면 에러를 돌려줍니다.
+
+include::{snippets}/login-with-wrong-password/http-request.adoc[]
+include::{snippets}/login-with-wrong-password/http-response.adoc[]
+
+
