@@ -89,22 +89,6 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== POST /users
-
-회원을 신규 등록하고 등록된 회원을 JSON 형태로 돌려준다.
-
-:path: {snippets}/register-user
-
-include::{path}/http-request.adoc[]
-include::{path}/http-response.adoc[]
-
-잘못된 요청 데이터로 회원을 등록하려는 경우 Bad Request를 응답한다.
-
-:path: {snippets}/register-user-invalid-attribute
-
-include::{path}/http-request.adoc[]
-include::{path}/http-response.adoc[]
-
 == PATCH /products/{id}
 
 제품 정보를 수정하고 수정된 제품을 JSON 형태로 돌려준다.
@@ -169,6 +153,22 @@ include::{path}/http-response.adoc[]
 잘못된 토큰으로 제품을 삭제하려는 경우 Unauthorized를 응답한다.
 
 :path: {snippets}/delete-product-with-invalid-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== POST /users
+
+회원을 신규 등록하고 등록된 회원을 JSON 형태로 돌려준다.
+
+:path: {snippets}/register-user
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 요청 데이터로 회원을 등록하려는 경우 Bad Request를 응답한다.
+
+:path: {snippets}/register-user-invalid-attribute
 
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
