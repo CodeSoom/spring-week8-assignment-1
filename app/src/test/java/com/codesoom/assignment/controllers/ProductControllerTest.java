@@ -1,5 +1,6 @@
 package com.codesoom.assignment.controllers;
 
+import com.codesoom.assignment.RestDocsConfiguration;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.domain.Product;
@@ -8,12 +9,16 @@ import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -24,12 +29,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@Import(RestDocsConfiguration.class)
 @AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -93,25 +106,45 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 리스트 반환.")
     void list() throws Exception {
         mockMvc.perform(
                 get("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-all-products"));
+                .andDo(print())
+                .andDo(document("get-products",
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("[].maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                        )));
     }
 
     @Test
     void detailWithExistedProduct() throws Exception {
         mockMvc.perform(
-                get("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                RestDocumentationRequestBuilders.get("/products/{id}",1L)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product"));
+                .andDo(print())
+                .andDo(document("get-product",
+                        pathParameters(
+                                parameterWithName("id").description("상품 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                        )
+                    )
+                );
     }
 
     @Test
@@ -125,7 +158,6 @@ class ProductControllerTest {
     void createWithValidAttributes() throws Exception {
         mockMvc.perform(
                 post("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -142,7 +174,6 @@ class ProductControllerTest {
     void createWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                 post("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\",\"maker\":\"\"," +
                                 "\"price\":0}")
@@ -156,7 +187,6 @@ class ProductControllerTest {
     void createWithoutAccessToken() throws Exception {
         mockMvc.perform(
                 post("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -169,7 +199,6 @@ class ProductControllerTest {
     void createWithWrongAccessToken() throws Exception {
         mockMvc.perform(
                 post("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -182,15 +211,36 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                RestDocumentationRequestBuilders.
+                        patch("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(print())
+                .andDo(document("update-product",
+                        requestHeaders(headerWithName("Authorization").description("JWT 인증 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("상품 식별자")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).optional().description("상품 이미지")
+                        ))
+                );
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -213,7 +263,6 @@ class ProductControllerTest {
     void updateWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                 patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\",\"maker\":\"\"," +
                                 "\"price\":0}")
@@ -226,7 +275,6 @@ class ProductControllerTest {
     void updateWithoutAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -238,7 +286,6 @@ class ProductControllerTest {
     void updateWithInvalidAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -249,11 +296,18 @@ class ProductControllerTest {
 
     @Test
     void destroyWithExistedProduct() throws Exception {
-        mockMvc.perform(
-                delete("/products/1")
-                        .header("Authorization", "Bearer " + VALID_TOKEN)
+        mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/products/{id}", 1L)
+                .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("delete-product",
+                        requestHeaders(headerWithName("Authorization").description("JWT 인증 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("상품 아이디")
+                        )
+                ));
 
         verify(productService).deleteProduct(1L);
     }
@@ -273,7 +327,6 @@ class ProductControllerTest {
     void destroyWithoutAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
@@ -285,7 +338,6 @@ class ProductControllerTest {
     void destroyWithInvalidAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
