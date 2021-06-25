@@ -1,5 +1,11 @@
 = 고양이 장난감 가게 API
+Firstname Lastname <author@asciidoctor.org>
+1.0, July 29, 2014, Asciidoctor 1.5 article template
 :toc: left
+:toclevels: 4
+:sectnums:
+:source-highlighter: highlightjs
+:stylesheet: asciidoctor.css
 
 == GET /
 

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.codesoom.assignment.helper.ApiDocumentUtils.defaultApiDocumentForm;
@@ -123,6 +124,7 @@ class UserControllerTest {
         mockMvc.perform(
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"email\":\"tester@example.com\"," +
                                 "\"name\":\"Tester\",\"password\":\"test\"}")
         )
@@ -149,6 +151,7 @@ class UserControllerTest {
         mockMvc.perform(
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{}")
         )
                 .andExpect(status().isBadRequest())
@@ -163,6 +166,7 @@ class UserControllerTest {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
@@ -187,6 +191,7 @@ class UserControllerTest {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"\",\"password\":\"\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
@@ -202,6 +207,7 @@ class UserControllerTest {
         mockMvc.perform(
                 patch("/users/100")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
@@ -222,6 +228,7 @@ class UserControllerTest {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
         )
                 .andExpect(status().isUnauthorized())
@@ -236,6 +243,7 @@ class UserControllerTest {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + OTHER_TOKEN)
         )

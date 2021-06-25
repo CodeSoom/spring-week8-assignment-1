@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,6 +147,7 @@ class ProductControllerTest {
                 post("/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
@@ -165,6 +167,7 @@ class ProductControllerTest {
                 post("/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"\",\"maker\":\"\"," +
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
@@ -181,6 +184,7 @@ class ProductControllerTest {
                 post("/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
@@ -196,6 +200,7 @@ class ProductControllerTest {
                 post("/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
@@ -212,6 +217,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
@@ -230,6 +236,7 @@ class ProductControllerTest {
         mockMvc.perform(
                 patch("/products/1000")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
@@ -248,6 +255,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"\",\"maker\":\"\"," +
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
@@ -264,6 +272,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
@@ -279,6 +288,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
@@ -323,6 +333,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
         )
@@ -338,6 +349,7 @@ class ProductControllerTest {
                 patch("/products/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
