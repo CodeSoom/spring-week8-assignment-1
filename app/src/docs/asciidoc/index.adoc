@@ -1,5 +1,5 @@
 = 고양이 장난감 가게 API
-:toc:
+:toc: left
 
 == GET /
 
