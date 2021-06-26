@@ -29,6 +29,13 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 전달받은 유저 정보를 인증하고 권한을 가진 토큰을 반환합니다.
+     *
+     * @param email 전달받은 이메일
+     * @param password 전달받은 비밀번호
+     * @return 인가 토큰
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +47,23 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * 전달받은 토큰이 유효한지 검증하고 그 안의 정보를 반환합니다.
+     *
+     * @param accessToken 인가 토큰
+     * @return 유저 식별자
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * 유저의 권한을 반환합니다.
+     *
+     * @param userId 유저 식별자
+     * @return 유저의 권한
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
