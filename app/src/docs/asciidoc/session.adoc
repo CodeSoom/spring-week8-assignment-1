@@ -1,9 +1,13 @@
 == 세션
 
-=== POST `/session`
+=== 토큰 받기
 
-사용자를 인증하고 토큰을 발급해서 JSON 형태로 돌려준다.
+사용자를 인증하고 토큰을 발급해서 JSON 형태로 돌려줍니다.
+
+.Request
 
 include::{snippets}/post-session/http-request.adoc[]
+
+.Response
 
 include::{snippets}/post-session/http-response.adoc[]

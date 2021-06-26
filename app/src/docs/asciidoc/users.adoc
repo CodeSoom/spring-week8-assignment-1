@@ -1,25 +1,37 @@
 == 사용자
 
-=== POST `/users`
+=== 사용자 정보 저장하기
 
-사용자를 생성하고 JSON 형태로 돌려준다.
+사용자 정보를 저장하고 JSON 형태로 돌려줍니다.
+
+.Request
 
 include::{snippets}/post-users/http-request.adoc[]
 
+.Response
+
 include::{snippets}/post-users/http-response.adoc[]
 
-=== PATCH `/users/{id}`
+=== 사용자 정보 수정하기
 
-사용자 정보를 수정하고 JSON 형태로 돌려준다.
+사용자 정보를 수정하고 JSON 형태로 돌려줍니다.
+
+.Request
 
 include::{snippets}/patch-users/http-request.adoc[]
 
+.Response
+
 include::{snippets}/patch-users/http-response.adoc[]
 
-=== DELETE `/users/{id}`
+=== 사용자 정보 삭제하기
 
-사용자를 삭제한다.
+사용자 정보를 삭제합니다.
+
+.Request
 
 include::{snippets}/delete-users/http-request.adoc[]
+
+.Response
 
 include::{snippets}/delete-users/http-response.adoc[]
