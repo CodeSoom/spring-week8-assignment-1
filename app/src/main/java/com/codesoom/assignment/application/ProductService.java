@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * 상품을 관리합니다.
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -24,19 +27,43 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * 전체 상품 목록을 반환합니다.
+     *
+     * @return 상품 목록
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * 전달받은 식별자를 가진 상품 하나의 정보를 반환합니다.
+     *
+     * @param id 상품 식별자
+     * @return 상품
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
 
+    /**
+     * 전달받은 상품의 정보로 상품을 생성하고 반환합니다.
+     *
+     * @param productData 생성할 상품의 정보
+     * @return 생성된 상품
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
 
+    /**
+     * 전달받은 식별자를 가진 상품의 정보를 수정하고 반환합니다.
+     *
+     * @param id 상품 식별자
+     * @param productData 상품의 정보
+     * @return 수정된 상품
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -45,6 +72,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 전달받은 식별자를 가진 상품을 삭제합니다.
+     *
+     * @param id 상품 식별자
+     * @return 삭제된 상품
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
