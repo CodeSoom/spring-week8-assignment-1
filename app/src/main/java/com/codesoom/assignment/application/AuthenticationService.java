@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 유저 인증을 관리합니다.
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
