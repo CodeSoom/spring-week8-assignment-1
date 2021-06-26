@@ -1,4 +1,4 @@
-= 사용자 정보 API
+= 로그인 API
 
 == POST /session
 사용자 정보로 Access Token을 받아온다.
@@ -17,7 +17,7 @@ include::{snippets}/user-session/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/user-session/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/user-session/response-fields.adoc[]
 
 === - Sample

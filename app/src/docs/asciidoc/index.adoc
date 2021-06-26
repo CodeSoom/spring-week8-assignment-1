@@ -18,7 +18,7 @@ include::{snippets}/get-products/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/get-products/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/get-products/response-fields.adoc[]
 
 === - Sample
@@ -49,7 +49,7 @@ include::{snippets}/get-product/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/get-product/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/get-product/response-fields.adoc[]
 
 === - Sample
@@ -80,7 +80,7 @@ include::{snippets}/create-product/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/create-product/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/create-product/response-fields.adoc[]
 
 === - Sample
@@ -111,7 +111,7 @@ include::{snippets}/update-product/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/update-product/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/update-product/response-fields.adoc[]
 
 === - Sample
@@ -142,7 +142,7 @@ include::{snippets}/delete-product/http-response.adoc[]
 ==== - Http Response Header
 없음
 
-==== - Response Fieled
+==== - Response Field
 없음
 
 === - Sample

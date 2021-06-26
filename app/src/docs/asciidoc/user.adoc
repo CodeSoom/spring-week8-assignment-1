@@ -17,7 +17,7 @@ include::{snippets}/register-user/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/register-user/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/register-user/response-fields.adoc[]
 
 === - Sample
@@ -47,7 +47,7 @@ include::{snippets}/update-user/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/update-user/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 include::{snippets}/update-user/response-fields.adoc[]
 
 === - Sample
@@ -77,7 +77,7 @@ include::{snippets}/delete-user/http-response.adoc[]
 ==== - Http Response Header
 include::{snippets}/delete-user/response-headers.adoc[]
 
-==== - Response Fieled
+==== - Response Field
 없음
 
 === - Sample
