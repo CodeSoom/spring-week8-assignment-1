@@ -14,18 +14,30 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentRequest;
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,6 +65,7 @@ class ProductControllerTest {
                 .name("쥐돌이")
                 .maker("냥이월드")
                 .price(5000)
+                .imageUrl("http://localhost:8080/images/1")
                 .build();
 
         given(productService.getProducts()).willReturn(List.of(product));
@@ -74,6 +87,7 @@ class ProductControllerTest {
                             .name(productData.getName())
                             .maker(productData.getMaker())
                             .price(productData.getPrice())
+                            .imageUrl(productData.getImageUrl())
                             .build();
                 });
 
@@ -100,7 +114,18 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-products"));
+                .andDo(document("products-list",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                responseFields(
+                                        fieldWithPath("[]").type(JsonFieldType.ARRAY).description("상품 목록"),
+                                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("식별자"),
+                                        fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("[].maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("이미지 경로")
+                                              ))
+                      );
     }
 
     @Test
@@ -111,7 +136,16 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product"));
+                .andDo(document("products-get",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("이미지 경로")
+                                              )));
     }
 
     @Test
@@ -127,12 +161,27 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
-                                "\"price\":5000}")
+                                "\"price\":5000,\"imageUrl\":\"http://localhost:8080/images/1\"}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("post-products"));
+                .andDo(document("products-post",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("이미지 경로").optional()
+                                             ),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("이미지 경로")
+                                              )));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -178,16 +227,35 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
+                // urlTemplate not found. If you are using MockMvc did you use RestDocumentationRequestBuilders to build the request?
+                RestDocumentationRequestBuilders.patch("/products/{id}", 1L)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
-                                "\"price\":5000}")
+                                "\"price\":5000,\"imageUrl\":\"http://localhost:8080/images/1\"}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
-                .andDo(document("patch-products"));
+                .andDo(document("products-patch",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("id").description("식별자")
+                                              ),
+                                requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("이미지 경로").optional()
+                                             ),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("이미지 경로")
+                                              )));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -247,11 +315,16 @@ class ProductControllerTest {
     @Test
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
-                delete("/products/1")
+                RestDocumentationRequestBuilders.delete("/products/{id}", 1L)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-products"));
+                .andDo(document("products-delete",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("id").description("식별자")
+                                              )));
 
         verify(productService).deleteProduct(1L);
     }

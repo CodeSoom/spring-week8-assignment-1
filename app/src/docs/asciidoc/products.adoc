@@ -6,11 +6,13 @@
 
 .Request
 
-include::{snippets}/get-products/http-request.adoc[]
+include::{snippets}/products-list/http-request.adoc[]
 
 .Response
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{snippets}/products-list/http-response.adoc[]
+
+include::{snippets}/products-list/response-fields.adoc[]
 
 === 상품 정보 가져오기
 
@@ -18,11 +20,13 @@ include::{snippets}/get-products/http-response.adoc[]
 
 .Request
 
-include::{snippets}/get-product/http-request.adoc[]
+include::{snippets}/products-get/http-request.adoc[]
 
 .Response
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{snippets}/products-get/http-response.adoc[]
+
+include::{snippets}/products-get/response-fields.adoc[]
 
 === 상품 정보 저장하기
 
@@ -30,11 +34,15 @@ include::{snippets}/get-product/http-response.adoc[]
 
 .Request
 
-include::{snippets}/post-products/http-request.adoc[]
+include::{snippets}/products-post/http-request.adoc[]
+
+include::{snippets}/products-post/request-fields.adoc[]
 
 .Response
 
-include::{snippets}/post-products/http-response.adoc[]
+include::{snippets}/products-post/http-response.adoc[]
+
+include::{snippets}/products-post/response-fields.adoc[]
 
 === 상품 정보 수정하기
 
@@ -42,11 +50,17 @@ include::{snippets}/post-products/http-response.adoc[]
 
 .Request
 
-include::{snippets}/patch-products/http-request.adoc[]
+include::{snippets}/products-patch/http-request.adoc[]
+
+include::{snippets}/products-patch/path-parameters.adoc[]
+
+include::{snippets}/products-patch/request-fields.adoc[]
 
 .Response
 
-include::{snippets}/patch-products/http-response.adoc[]
+include::{snippets}/products-patch/http-response.adoc[]
+
+include::{snippets}/products-patch/response-fields.adoc[]
 
 === 상품 정보 삭제하기
 
@@ -54,8 +68,10 @@ include::{snippets}/patch-products/http-response.adoc[]
 
 .Request
 
-include::{snippets}/delete-products/http-request.adoc[]
+include::{snippets}/products-delete/http-request.adoc[]
+
+include::{snippets}/products-delete/path-parameters.adoc[]
 
 .Response
 
-include::{snippets}/delete-products/http-response.adoc[]
+include::{snippets}/products-delete/http-response.adoc[]

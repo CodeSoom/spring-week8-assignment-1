@@ -99,5 +99,5 @@ tasks.named('test') {
 }
 
 asciidoctor {
-    dependsOn(test)
+    dependsOn(clean, test)
 }

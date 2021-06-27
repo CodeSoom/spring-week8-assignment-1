@@ -6,11 +6,15 @@
 
 .Request
 
-include::{snippets}/post-users/http-request.adoc[]
+include::{snippets}/users-post/http-request.adoc[]
+
+include::{snippets}/users-post/request-fields.adoc[]
 
 .Response
 
-include::{snippets}/post-users/http-response.adoc[]
+include::{snippets}/users-post/http-response.adoc[]
+
+include::{snippets}/users-post/response-fields.adoc[]
 
 === 사용자 정보 수정하기
 
@@ -18,11 +22,15 @@ include::{snippets}/post-users/http-response.adoc[]
 
 .Request
 
-include::{snippets}/patch-users/http-request.adoc[]
+include::{snippets}/users-patch/http-request.adoc[]
+
+include::{snippets}/users-patch/request-fields.adoc[]
 
 .Response
 
-include::{snippets}/patch-users/http-response.adoc[]
+include::{snippets}/users-patch/http-response.adoc[]
+
+include::{snippets}/users-patch/response-fields.adoc[]
 
 === 사용자 정보 삭제하기
 
@@ -30,8 +38,8 @@ include::{snippets}/patch-users/http-response.adoc[]
 
 .Request
 
-include::{snippets}/delete-users/http-request.adoc[]
+include::{snippets}/users-delete/http-request.adoc[]
 
 .Response
 
-include::{snippets}/delete-users/http-response.adoc[]
+include::{snippets}/users-delete/http-response.adoc[]

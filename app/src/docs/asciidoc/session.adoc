@@ -6,8 +6,12 @@
 
 .Request
 
-include::{snippets}/post-session/http-request.adoc[]
+include::{snippets}/session-post/http-request.adoc[]
+
+include::{snippets}/session-post/request-fields.adoc[]
 
 .Response
 
-include::{snippets}/post-session/http-response.adoc[]
+include::{snippets}/session-post/http-response.adoc[]
+
+include::{snippets}/session-post/response-fields.adoc[]
