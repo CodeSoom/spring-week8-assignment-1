@@ -50,7 +50,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 엑세스 토큰을 파싱해 로그인 한 사용자 id를 리턴합니다.
+     * 엑세스 토큰을 파싱해 사용자 id를 리턴합니다.
      * @param accessToken 엑세스 토큰
      * @return 사용자 id
      */
