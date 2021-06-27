@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 식별자를 가진 상품 상세 정보를 반환합니다.
+     * 식별자를 가진 상품 상세 정보를 반환합니다.
      *
      * @param id 상품 식별자
      * @return 상품 정보
@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 식별자를 가진 상품의 정보를 수정합니다.
+     * 식별자를 가진 상품의 정보를 수정합니다.
      *
      * @param id 상품 식별자
      * @param productData 상품 정보
@@ -78,7 +78,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 식별자를 가진 상품을 삭제합니다.
+     * 식별자를 가진 상품을 삭제합니다.
      *
      * @param id 상품 식별자
      */

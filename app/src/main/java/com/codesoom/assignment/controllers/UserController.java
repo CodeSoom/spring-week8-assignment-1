@@ -23,7 +23,7 @@ public class UserController {
     }
 
     /**
-     * 전달받은 정보로 유저를 생성하고 반환합니다.
+     * 정보로 유저를 생성하고 반환합니다.
      *
      * @param registrationData 생성할 유저의 정보
      * @return 생성된 유저
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     /**
-     * 전달받은 식별자를 가진 유저를 삭제합니다.
+     * 식별자를 가진 유저를 삭제합니다.
      *
      * @param id 삭제될 유저의 식별자
      */

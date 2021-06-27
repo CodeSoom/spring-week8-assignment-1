@@ -19,7 +19,7 @@ public class SessionController {
     }
 
     /**
-     * 받은 인증 정보를 유저 정보와 비교하고, 인증이 끝나면 인가 토큰을 발급합니다.
+     * 인증 정보를 유저 정보와 비교하고, 인증이 끝나면 인가 토큰을 발급합니다.
      *
      * @param sessionRequestData 인증 정보
      * @return 인가 토큰

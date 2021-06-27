@@ -83,6 +83,7 @@ public class UserService {
 
     /**
      * 유저를 삭제하고 반환합니다.
+     *
      * @param id 유저 식별자
      * @return 삭제된 유저
      */

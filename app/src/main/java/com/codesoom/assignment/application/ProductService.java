@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     /**
-     * 전달받은 식별자를 가진 상품 하나의 정보를 반환합니다.
+     * 식별자를 가진 상품 하나의 정보를 반환합니다.
      *
      * @param id 상품 식별자
      * @return 상품
@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     /**
-     * 전달받은 상품의 정보로 상품을 생성하고 반환합니다.
+     * 상품의 정보로 상품을 생성하고 반환합니다.
      *
      * @param productData 생성할 상품의 정보
      * @return 생성된 상품
@@ -58,7 +58,7 @@ public class ProductService {
     }
 
     /**
-     * 전달받은 식별자를 가진 상품의 정보를 수정하고 반환합니다.
+     * 식별자를 가진 상품의 정보를 수정하고 반환합니다.
      *
      * @param id 상품 식별자
      * @param productData 상품의 정보
@@ -73,7 +73,7 @@ public class ProductService {
     }
 
     /**
-     * 전달받은 식별자를 가진 상품을 삭제합니다.
+     * 식별자를 가진 상품을 삭제합니다.
      *
      * @param id 상품 식별자
      * @return 삭제된 상품
