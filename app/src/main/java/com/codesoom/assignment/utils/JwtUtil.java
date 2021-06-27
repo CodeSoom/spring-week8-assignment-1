@@ -41,7 +41,8 @@ public class JwtUtil {
      * @return 디코딩 된 정보의 Body
      */
     public Claims decode(String token) {
-        if (token == null || token.isBlank()) {
+        // ToDo : isBlank 가 대체 왜 컴파일이 안돼는가...? - 임시로 isEmpty 로 구동
+        if (token == null || token.isEmpty()) {
             throw new InvalidTokenException(token);
         }
 

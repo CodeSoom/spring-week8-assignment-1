@@ -70,6 +70,7 @@ dependencies {
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -85,6 +86,9 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // MariaDB
+//    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 }
 
 application {
