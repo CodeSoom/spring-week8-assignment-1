@@ -62,10 +62,10 @@ public class AuthenticationService {
     }
 
     /**
-     * 유저의 권한을 반환합니다.
+     * 유저의 권한 목록을 반환합니다.
      *
      * @param userId 유저 식별자
-     * @return 유저의 권한
+     * @return 유저의 권한 목록
      */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
