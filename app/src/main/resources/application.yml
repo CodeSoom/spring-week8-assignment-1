@@ -7,3 +7,18 @@ spring:
 
 jwt:
   secret: "12345678901234567890123456789010"
+
+--- # 구분자
+
+spring:
+  profiles: mariadb
+  datasource:
+      url: jdbc:mariadb://mariadb:3306/test
+      username: root
+      password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret: "12345678901234567890123456789010"
