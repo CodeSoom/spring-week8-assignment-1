@@ -73,7 +73,7 @@ public class ProductService {
     }
 
     /**
-     * 식별자를 가진 상품을 삭제합니다.
+     * 상품을 삭제합니다.
      *
      * @param id 상품 식별자
      * @return 삭제된 상품
