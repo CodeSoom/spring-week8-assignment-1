@@ -57,7 +57,7 @@ public class UserController {
     }
 
     /**
-     * 식별자를 가진 유저를 삭제합니다.
+     * 유저를 삭제합니다.
      *
      * @param id 삭제될 유저의 식별자
      */

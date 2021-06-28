@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     /**
-     * 식별자를 가진 상품 하나의 정보를 반환합니다.
+     * 상품 하나의 정보를 반환합니다.
      *
      * @param id 상품 식별자
      * @return 상품
@@ -58,7 +58,7 @@ public class ProductService {
     }
 
     /**
-     * 식별자를 가진 상품의 정보를 수정하고 반환합니다.
+     * 상품의 정보를 수정하고 반환합니다.
      *
      * @param id 상품 식별자
      * @param productData 상품의 정보
