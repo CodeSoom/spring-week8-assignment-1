@@ -7,7 +7,9 @@ v1.0, June 27, 2021, with Asciidoctor 2.4
 :source-highlighter: highlightjs
 :stylesheet: asciidoctor.css
 
-== GET /
+== API 가동 인사
+
+=== GET /
 
 고양이 장난감 가게 API 서버가 가동되고 있음을 알려주는 인사말을 반환합니다.
 
@@ -16,7 +18,9 @@ v1.0, June 27, 2021, with Asciidoctor 2.4
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== POST /session
+== 인증
+
+=== POST /session
 
 로그인 결과에 따라 인증 토큰을 발급합니다. 로그인 성공한 경우 인증 토큰을 JSON 형태로 반환합니다.
 
@@ -39,7 +43,9 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== GET /products
+== 제품
+
+=== GET /products
 
 상품 목록을 JSON 형태로 돌려준다.
 
@@ -48,7 +54,7 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== GET /products/{id}
+=== GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
@@ -64,7 +70,7 @@ id에 해당하는 상품이 없다면 에러를 돌려둔다.
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== POST /products
+=== POST /products
 
 새로운 상품을 생성하고 생성된 상품을 JSON 형태로 돌려준다.
 상품을 생성하기 위해서는 로그인하여 얻은 토큰이 필요하다.
@@ -95,7 +101,7 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== PATCH /products/{id}
+=== PATCH /products/{id}
 
 제품 정보를 수정하고 수정된 제품을 JSON 형태로 돌려준다.
 제품 정보를 수정하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
@@ -133,7 +139,7 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== DELETE /products/{id}
+=== DELETE /products/{id}
 
 특정 제품 삭제한다. 제품을 삭제하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
 
@@ -163,7 +169,9 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== POST /users
+== 회원
+
+=== POST /users
 
 회원을 신규 등록하고 등록된 회원을 JSON 형태로 돌려준다.
 
@@ -179,7 +187,7 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== PATCH /users/{id}
+=== PATCH /users/{id}
 
 회원 정보를 갱신하고 갱신된 회원을 JSON 형태로 돌려준다.
 본인의 정보를 갱신하기 위해서는 로그인하여 얻은 토큰이 필요하며 본인이 아닌 회원에 대해서는 접근할 수 없다.
@@ -217,7 +225,7 @@ include::{path}/http-response.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
-== DELETE /users/{id}
+=== DELETE /users/{id}
 
 회원을 삭제 처리하고 삭제 처리된 회원을 JSON 형태로 돌려준다.
 회원 삭제는 관리자 계정으로 로그인하여 얻은 토큰이 필요하다. 관리자가 아닌 회원은 삭제 권한이 없다.
