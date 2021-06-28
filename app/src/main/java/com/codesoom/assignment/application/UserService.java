@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 유저를 관리합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 유저를 생성하고 반환합니다.
+     *
+     * @param registrationData 생성할 유저의 정보
+     * @return 생성된 유저
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +58,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 유저의 정보를 수정하고 반환합니다.
+     *
+     * @param id 유저 식별자
+     * @param modificationData 수정할 유저의 정보
+     * @param userId 요청을 보낸 유저의 식별자
+     * @return 수정된 유저
+     * @throws AccessDeniedException 요청을 보낸 유저와 수정될 유저가 다른 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +81,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 유저를 삭제하고 반환합니다.
+     *
+     * @param id 유저 식별자
+     * @return 삭제된 유저
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
