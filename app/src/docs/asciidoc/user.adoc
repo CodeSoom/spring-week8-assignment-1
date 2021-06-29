@@ -1,0 +1,90 @@
+= 사용자 정보 API
+
+== POST /users
+사용자에 대한 정보를 등록하고 JSON 형태로 돌려준다.
+
+=== - Request
+==== - Http Request
+include::{snippets}/register-user/http-request.adoc[]
+
+==== - Http Request Header
+include::{snippets}/register-user/request-headers.adoc[]
+
+=== - Response
+==== - Http Response
+include::{snippets}/register-user/http-response.adoc[]
+
+==== - Http Response Header
+include::{snippets}/register-user/response-headers.adoc[]
+
+==== - Response Field
+include::{snippets}/register-user/response-fields.adoc[]
+
+=== - Sample
+Request : 사용자를 등록한다.
+
+==== - curl
+include::{snippets}/register-user/curl-request.adoc[]
+
+==== - httpie
+include::{snippets}/register-user/httpie-request.adoc[]
+
+
+== PATCH /users/{id}
+사용자에 대한 정보를 수정하고 JSON 형태로 돌려준다.
+
+=== - Request
+==== - Http Request
+include::{snippets}/update-user/http-request.adoc[]
+
+==== - Http Request Header
+include::{snippets}/update-user/request-headers.adoc[]
+
+=== - Response
+==== - Http Response
+include::{snippets}/update-user/http-response.adoc[]
+
+==== - Http Response Header
+include::{snippets}/update-user/response-headers.adoc[]
+
+==== - Response Field
+include::{snippets}/update-user/response-fields.adoc[]
+
+=== - Sample
+Request : 사용자를 수정한다.
+
+==== - curl
+include::{snippets}/update-user/curl-request.adoc[]
+
+==== - httpie
+include::{snippets}/update-user/httpie-request.adoc[]
+
+
+== DELETE /users/{id}
+사용자아이디에 해당하는 사용자를 삭제한다.
+
+=== - Request
+==== - Http Request
+include::{snippets}/delete-user/http-request.adoc[]
+
+==== - Http Request Header
+include::{snippets}/delete-user/request-headers.adoc[]
+
+=== - Response
+==== - Http Response
+include::{snippets}/delete-user/http-response.adoc[]
+
+==== - Http Response Header
+include::{snippets}/delete-user/response-headers.adoc[]
+
+==== - Response Field
+없음
+
+=== - Sample
+Request : 사용자를 삭제한다.
+
+==== - curl
+include::{snippets}/delete-user/curl-request.adoc[]
+
+==== - httpie
+include::{snippets}/update-user/httpie-request.adoc[]

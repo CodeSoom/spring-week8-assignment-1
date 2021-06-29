@@ -10,9 +10,12 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +26,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -128,7 +139,34 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+            .andDo(document("register-user", requestFields(
+                    fieldWithPath("email")
+                            .type(JsonFieldType.STRING)
+                            .description("User Email")
+                    ,fieldWithPath("name")
+                            .type(JsonFieldType.STRING)
+                            .description("User Name")
+                    ,fieldWithPath("password")
+                            .type(JsonFieldType.STRING)
+                            .description("User Password")
+            )
+                    ,responseHeaders(
+                            headerWithName(HttpHeaders.CONTENT_TYPE)
+                                    .description("Content Type Header")
+                    )
+                    ,responseFields(
+                            fieldWithPath("id")
+                                    .type(JsonFieldType.NUMBER)
+                                    .description("User ID")
+                            ,fieldWithPath("email")
+                                    .type(JsonFieldType.STRING)
+                                    .description("User Email")
+                            ,fieldWithPath("name")
+                                    .type(JsonFieldType.STRING)
+                                    .description("User Name")
+                    )
+            ));
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -157,6 +195,34 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
+                ))
+                .andDo(document("update-user", requestFields(
+                        fieldWithPath("name")
+                                .type(JsonFieldType.STRING)
+                                .description("User Name")
+                        ,fieldWithPath("password")
+                                .type(JsonFieldType.STRING)
+                                .description("User Password")
+                        )
+                        ,requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Authorization Access Token")
+                        )
+                        ,responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE)
+                                        .description("Content Type Header")
+                        )
+                        ,responseFields(
+                                fieldWithPath("id")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("User ID")
+                                ,fieldWithPath("email")
+                                        .type(JsonFieldType.STRING)
+                                        .description("User Email")
+                                ,fieldWithPath("name")
+                                        .type(JsonFieldType.STRING)
+                                        .description("User Name")
+                        )
                 ));
 
         verify(userService)
@@ -220,7 +286,13 @@ class UserControllerTest {
                 delete("/users/1")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-user"
+                        ,requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Authorization Access Token")
+                        )
+                ));
 
         verify(userService).deleteUser(1L);
     }

@@ -10,9 +10,12 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -23,11 +26,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -50,6 +63,7 @@ class ProductControllerTest {
                 .name("쥐돌이")
                 .maker("냥이월드")
                 .price(5000)
+                .imageUrl("http://localhost/image")
                 .build();
 
         given(productService.getProducts()).willReturn(List.of(product));
@@ -71,6 +85,7 @@ class ProductControllerTest {
                             .name(productData.getName())
                             .maker(productData.getMaker())
                             .price(productData.getPrice())
+                            .imageUrl(productData.getImageUrl())
                             .build();
                 });
 
@@ -91,12 +106,37 @@ class ProductControllerTest {
 
     @Test
     void list() throws Exception {
+
         mockMvc.perform(
                 get("/products")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+        .andDo(document("get-products",
+                requestHeaders( //요청 헤더 문서화
+                        headerWithName(HttpHeaders.ACCEPT).description("Accept Header")
+                ),
+                responseHeaders( //요청 헤더 문서화
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content Type Header")
+                ),
+                responseFields(
+                        fieldWithPath("[]").description("사용자 리스트")
+                        ,fieldWithPath("[].id")
+                                .type(JsonFieldType.NUMBER)
+                                .description("아이디")
+                        ,fieldWithPath("[].name")
+                                .type(JsonFieldType.STRING)
+                                .description("이름")
+                        , fieldWithPath("[].maker")
+                                .type(JsonFieldType.STRING)
+                                .description("제조사")
+                        ,fieldWithPath("[].price")
+                                .type(JsonFieldType.NUMBER)
+                                .description("가격")
+                        ,fieldWithPath("[].imageUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("이미지 URL 주소"))));
     }
 
     @Test
@@ -106,7 +146,29 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+            .andDo(document("get-product",
+                    requestHeaders( //요청 헤더 문서화
+                            headerWithName(HttpHeaders.ACCEPT).description("Accept Header")
+                    ),
+                    responseHeaders( //요청 헤더 문서화
+                            headerWithName(HttpHeaders.CONTENT_TYPE).description("Content Type Header")
+                    ),
+                    responseFields(fieldWithPath("id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("아이디")
+                    ,fieldWithPath("name")
+                            .type(JsonFieldType.STRING)
+                            .description("이름")
+                    , fieldWithPath("maker")
+                            .type(JsonFieldType.STRING)
+                            .description("제조사")
+                    ,fieldWithPath("price")
+                            .type(JsonFieldType.NUMBER)
+                            .description("가격")
+                    ,fieldWithPath("imageUrl")
+                            .type(JsonFieldType.STRING)
+                            .description("이미지 URL 주소"))));
     }
 
     @Test
@@ -122,11 +184,48 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
-                                "\"price\":5000}")
+                                "\"price\":5000,\"imageUrl\":\"http://localhost/image\"}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("create-product",
+                        requestHeaders( //요청 헤더 문서화
+                                headerWithName(HttpHeaders.ACCEPT).description("Accept Header"),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token")
+                        ),
+                        responseHeaders( //요청 헤더 문서화
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("Content Type Header")
+                        ),
+                        requestFields(fieldWithPath("name")
+                                .type(JsonFieldType.STRING)
+                                .description("이름")
+                                , fieldWithPath("maker")
+                        .type(JsonFieldType.STRING)
+                        .description("제조사")
+                        ,fieldWithPath("price")
+                        .type(JsonFieldType.NUMBER)
+                        .description("가격")
+                                ,fieldWithPath("imageUrl")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이미지 URL 주소")
+                        )
+                        ,responseFields(fieldWithPath("id")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("아이디")
+                                ,fieldWithPath("name")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이름")
+                                , fieldWithPath("maker")
+                                        .type(JsonFieldType.STRING)
+                                        .description("제조사")
+                                ,fieldWithPath("price")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("가격")
+                                ,fieldWithPath("imageUrl")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이미지 URL 주소"))
+                        ));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -176,11 +275,48 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
-                                "\"price\":5000}")
+                                "\"price\":5000,\"imageUrl\":\"http://localhost/image\"}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product",
+                        requestHeaders( //요청 헤더 문서화
+                                headerWithName(HttpHeaders.ACCEPT).description("Accept Header"),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token")
+                        ),
+                        responseHeaders( //요청 헤더 문서화
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("Content Type Header")
+                        ),
+                        requestFields(fieldWithPath("name")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이름")
+                                , fieldWithPath("maker")
+                                        .type(JsonFieldType.STRING)
+                                        .description("제조사")
+                                , fieldWithPath("price")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("가격")
+                                , fieldWithPath("imageUrl")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이미지 URL 주소")
+                        )
+                        , responseFields(fieldWithPath("id")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("아이디")
+                                , fieldWithPath("name")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이름")
+                                , fieldWithPath("maker")
+                                        .type(JsonFieldType.STRING)
+                                        .description("제조사")
+                                , fieldWithPath("price")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("가격")
+                                , fieldWithPath("imageUrl")
+                                        .type(JsonFieldType.STRING)
+                                        .description("이미지 URL 주소"))
+                ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -243,7 +379,11 @@ class ProductControllerTest {
                 delete("/products/1")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product",
+                        requestHeaders( //요청 헤더 문서화
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token")
+                        )));
 
         verify(productService).deleteProduct(1L);
     }
