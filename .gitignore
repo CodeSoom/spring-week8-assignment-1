@@ -6,3 +6,8 @@ build
 
 # IDE
 .idea
+
+# memo
+memo.md
+
+app/src/main/resources/application.yml

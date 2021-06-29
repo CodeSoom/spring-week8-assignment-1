@@ -1,0 +1,130 @@
+= 고양이 장난감 가게 API
+
+== GET /products
+
+상품 목록을 JSON 형태로 돌려준다.
+include::{snippets}/get-products/http-request.adoc[]
+
+include::{snippets}/get-products/http-response.adoc[]
+
+== GET /product/{id}
+
+상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/get-product/http-request.adoc[]
+
+include::{snippets}/get-product/http-response.adoc[]
+
+
+== GET /product/{id}
+
+상품이 존재하지 않을 때 예외를 던진다.
+
+include::{snippets}/non-existed-product/http-request.adoc[]
+include::{snippets}/non-existed-product/http-response.adoc[]
+
+
+== POST /products/
+
+상품을 새로 등록한다.
+
+include::{snippets}/create-product/http-request.adoc[]
+include::{snippets}/create-product/http-response.adoc[]
+
+
+== POST /products/
+
+상품의 정보가 유효하지 않기 때문에 등록할 수 없다.
+
+include::{snippets}/create-invalid-product/http-request.adoc[]
+include::{snippets}/create-invalid-product/http-response.adoc[]
+
+
+== POST /products/
+
+로그인 하지 않으면, 상품을 등록할 수 없다.
+
+include::{snippets}/create-need-login/http-request.adoc[]
+include::{snippets}/create-need-login/http-response.adoc[]
+
+
+
+== POST /products/
+
+등록된 회원이 아닐 시, 상품을 등록할 수 없다.
+
+include::{snippets}/create-need-proper-login/http-request.adoc[]
+include::{snippets}/create-need-proper-login/http-response.adoc[]
+
+
+== UPDATE /products/{id}
+
+기존 상품의 정보를 수정한다.
+
+include::{snippets}/update-product/http-request.adoc[]
+include::{snippets}/update-product/http-response.adoc[]
+
+
+== UPDATE /products/{id}
+
+존재하지 않은 상품은 수정할 수 없다.
+
+include::{snippets}/update-non-existed-product/http-request.adoc[]
+include::{snippets}/update-non-existed-product/http-response.adoc[]
+
+
+== UPDATE /products/{id}
+
+유효하지 않은 정보로 상품을 수정할 수 없다.
+
+include::{snippets}/update-invalid-product/http-request.adoc[]
+include::{snippets}/update-invalid-product/http-response.adoc[]
+
+
+== UPDATE /products/{id}
+
+로그인 하지 않으면 상품을 수정할 수 없다.
+
+include::{snippets}/update-need-login/http-request.adoc[]
+include::{snippets}/update-need-login/http-response.adoc[]
+
+
+== UPDATE /products/{id}
+
+등록되지 않은 회원은 상품을 수정할 수 없다.
+
+include::{snippets}/update-invalid-token/http-request.adoc[]
+include::{snippets}/update-invalid-token/http-response.adoc[]
+
+
+
+== DELETE /products/{id}
+
+상품을 삭제한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+include::{snippets}/delete-product/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+존재하지 않은 상품은 삭제할 수 없다.
+
+include::{snippets}/delete-non-existed-product/http-request.adoc[]
+include::{snippets}/delete-non-existed-product/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+상품을 삭제하려면 로그인 해야한다.
+
+include::{snippets}/delete-need-login/http-request.adoc[]
+include::{snippets}/delete-need-login/http-response.adoc[]
+
+
+== DELETE /products/{id}
+
+등록되지 않은 회원은 상품을 삭제할 수 없다.
+
+include::{snippets}/delete-invalid-token/http-request.adoc[]
+include::{snippets}/delete-invalid-token/http-response.adoc[]
