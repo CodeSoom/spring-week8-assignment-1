@@ -1,17 +1,257 @@
 = 고양이 장난감 가게 API
+TaeWoong Kim <ktaewoong46@gmail.com>
+v1.0, June 27, 2021, with Asciidoctor 2.4
+:toc: left
+:toclevels: 4
+:sectnums:
+:source-highlighter: highlightjs
+:stylesheet: asciidoctor.css
 
-== GET /products
+== API 가동 인사
+
+=== GET /
+
+고양이 장난감 가게 API 서버가 가동되고 있음을 알려주는 인사말을 반환합니다.
+
+:path: {snippets}/app-say-hello
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== 인증
+
+=== POST /session
+
+로그인 결과에 따라 인증 토큰을 발급합니다. 로그인 성공한 경우 인증 토큰을 JSON 형태로 반환합니다.
+
+:path: {snippets}/login
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+이메일을 잘못 입력한 경우 BAD REQUEST 응답합니다.
+
+:path: {snippets}/login-wrong-email
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+패스워드를 잘못 입력한 경우 BAD REQUEST 응답합니다.
+
+:path: {snippets}/login-wrong-password
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== 제품
+
+=== GET /products
 
 상품 목록을 JSON 형태로 돌려준다.
 
-include::{snippets}/get-products/http-request.adoc[]
+:path: {snippets}/get-all-products
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
 
-== GET /product/{id}
+=== GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
-include::{snippets}/get-product/http-request.adoc[]
+:path: {snippets}/get-product
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+id에 해당하는 상품이 없다면 에러를 돌려둔다.
+
+:path: {snippets}/get-product-not-exist
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== POST /products
+
+새로운 상품을 생성하고 생성된 상품을 JSON 형태로 돌려준다.
+상품을 생성하기 위해서는 로그인하여 얻은 토큰이 필요하다.
+
+:path: {snippets}/create-product
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+만약 생성하려는 상품의 정보가 잘못되었다면 에러를 돌려준다.
+
+:path: {snippets}/create-product-invalid
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+토큰없이 상품을 생성하려는 경우 에러를 돌려준다.
+
+:path: {snippets}/create-product-without-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 토큰을 사용하는 경우 에러를 돌려준다.
+
+:path: {snippets}/create-product-with-invalid-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== PATCH /products/{id}
+
+제품 정보를 수정하고 수정된 제품을 JSON 형태로 돌려준다.
+제품 정보를 수정하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
+
+:path: {snippets}/update-product
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+존재하지 않는 제품에 대한 정보를 수정하려는 경우 Not Found를 응답한다.
+
+:path: {snippets}/update-product-with-unknown-product
+
+include::{path}/http-response.adoc[]
+include::{path}/http-request.adoc[]
+
+제품 정보를 수정하기 위해 잘못된 요청 데이터를 보낸 경우 Bad Request를 응답한다.
+
+:path: {snippets}/update-product-with-invalid-attribute
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+토큰 없이 제품 정보를 수정하려는 경우 Unauthorized를 응답한다.
+
+:path: {snippets}/update-product-without-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 토큰으로 제품 정보를 수정하려는 경우 Unauthorized를 응답한다.
+
+:path: {snippets}/update-product-with-invalid-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== DELETE /products/{id}
+
+특정 제품 삭제한다. 제품을 삭제하기 위해서는 로그인을 통해 얻은 토큰이 필요하다.
+
+:path: {snippets}/delete-product
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+존재하지 않는 제품을 삭제하려는 경우 Not Found를 응답한다.
+
+:path: {snippets}/delete-product-with-unknown-product
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+토큰 없이 제품을 삭제하려는 경우 Unauthorized를 응답한다.
+
+:path: {snippets}/delete-product-without-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 토큰으로 제품을 삭제하려는 경우 Unauthorized를 응답한다.
+
+:path: {snippets}/delete-product-with-invalid-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== 회원
+
+=== POST /users
+
+회원을 신규 등록하고 등록된 회원을 JSON 형태로 돌려준다.
+
+:path: {snippets}/register-user
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 요청 데이터로 회원을 등록하려는 경우 Bad Request를 응답한다.
+
+:path: {snippets}/register-user-invalid-attribute
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== PATCH /users/{id}
+
+회원 정보를 갱신하고 갱신된 회원을 JSON 형태로 돌려준다.
+본인의 정보를 갱신하기 위해서는 로그인하여 얻은 토큰이 필요하며 본인이 아닌 회원에 대해서는 접근할 수 없다.
+
+:path: {snippets}/update-user
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+잘못된 요청 데이터로 회원을 갱싱하려는 경우 Bad Request를 응답한다.
+
+:path: {snippets}/update-user-with-invalid-attribute
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+존재하지 않는 회원 정보를 갱신하려는 경우 Bad Request를 응답한다
+
+:path: {snippets}/update-user-with-unknown-id
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+토큰 없이 회원 정보를 갱신하려는 경우 Unauthorized를 응답한다
+
+:path: {snippets}/update-user-without-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+본인이 아닌 회원 정보를 갱신하려는 경우 Forbidden을 응답한다.
+
+:path: {snippets}/update-user-with-other-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== DELETE /users/{id}
+
+회원을 삭제 처리하고 삭제 처리된 회원을 JSON 형태로 돌려준다.
+회원 삭제는 관리자 계정으로 로그인하여 얻은 토큰이 필요하다. 관리자가 아닌 회원은 삭제 권한이 없다.
+
+:path: {snippets}/delete-user
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+존재하지 않는 회원을 삭제하려는 경우 Not Found를 응답한다
+
+:path: {snippets}/delete-user-with-unknown-id
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+토큰 없이 회원을 삭제하려는 경우 Unauthorized를 응답한다
+
+:path: {snippets}/delete-user-without-token
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+관리자가 아닌 계정으로 회원을 삭제하려는 경우 Forbidden을 응답한다
+
+:path: {snippets}/delete-user-without-admin-role
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]

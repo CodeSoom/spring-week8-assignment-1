@@ -1,5 +1,6 @@
 package com.codesoom.assignment.controllers;
 
+import com.codesoom.assignment.UTF8EncodingFilter;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.UserService;
 import com.codesoom.assignment.domain.Role;
@@ -8,16 +9,20 @@ import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
 import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static com.codesoom.assignment.helper.ApiDocumentUtils.defaultApiDocumentForm;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
+@UTF8EncodingFilter
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -112,10 +119,12 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("정상적인 요청인 경우 신규 회원을 등록한다")
     void registerUserWithValidAttributes() throws Exception {
         mockMvc.perform(
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"email\":\"tester@example.com\"," +
                                 "\"name\":\"Tester\",\"password\":\"test\"}")
         )
@@ -128,26 +137,36 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+                .andDo(
+                        defaultApiDocumentForm("register-user")
+                );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
 
     @Test
+    @DisplayName("잘못된 요청 데이터로 회원을 등록하려는 경우 Bad Request를 응답한다")
     void registerUserWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{}")
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(
+                        defaultApiDocumentForm("register-user-invalid-attribute")
+                );
     }
 
     @Test
+    @DisplayName("정상적인 요청인 경우 회원 정보를 갱신한다")
     void updateUserWithValidAttributes() throws Exception {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
@@ -157,32 +176,45 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(
+                        defaultApiDocumentForm("update-user")
+                );
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
     }
 
     @Test
+    @DisplayName("잘못된 요청 데이터로 회원을 갱싱하려는 경우 Bad Request를 응답한다")
     void updateUserWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"\",\"password\":\"\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-invalid-attribute")
+                );
     }
 
     @Test
+    @DisplayName("존재하지 않는 회원 정보를 갱신하려는 경우 Bad Request를 응답한다")
     void updateUserWithNotExsitedId() throws Exception {
         mockMvc.perform(
                 patch("/users/100")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-unknown-id")
+                );
 
         verify(userService).updateUser(
                 eq(100L),
@@ -191,63 +223,89 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("토큰 없이 회원 정보를 갱신하려는 경우 Unauthorized를 응답한다")
     void updateUserWithoutAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(
+                        defaultApiDocumentForm("update-user-without-token")
+                );
     }
 
     @Test
+    @DisplayName("본인이 아닌 회원 정보를 갱신하려는 경우 Forbidden을 응답한다")
     void updateUserWithOthersAccessToken() throws Exception {
         mockMvc.perform(
                 patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
                         .content("{\"name\":\"TEST\",\"password\":\"test\"}")
                         .header("Authorization", "Bearer " + OTHER_TOKEN)
         )
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andDo(
+                        defaultApiDocumentForm("update-user-with-other-token")
+                );
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(2L));
     }
 
     @Test
+    @DisplayName("정상적인 요청인 경우 회원를 삭제 처리한다")
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
                 delete("/users/1")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(
+                        defaultApiDocumentForm("delete-user")
+                );
 
         verify(userService).deleteUser(1L);
     }
 
     @Test
+    @DisplayName("존재하지 않는 회원을 삭제하려는 경우 Not Found를 응답한다")
     void destroyWithNotExistedId() throws Exception {
         mockMvc.perform(
                 delete("/users/100")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(
+                        defaultApiDocumentForm("delete-user-with-unknown-id")
+                );
 
         verify(userService).deleteUser(100L);
     }
 
     @Test
+    @DisplayName("토큰 없이 회원을 삭제하려는 경우 Unauthorized를 응답한다")
     void destroyWithoutAccessToken() throws Exception {
         mockMvc.perform(delete("/users/1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(
+                        defaultApiDocumentForm("delete-user-without-token")
+                );
     }
 
     @Test
+    @DisplayName("관리자 관한이 없이 회원을 삭제하려는 경우 Forbidden을 응답한다")
     void destroyWithoutAdminRole() throws Exception {
         mockMvc.perform(
                 delete("/users/1")
                         .header("Authorization", "Bearer " + MY_TOKEN)
         )
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andDo(
+                        defaultApiDocumentForm("delete-user-without-admin-role")
+                );
     }
 }
