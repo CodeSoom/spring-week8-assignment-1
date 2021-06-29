@@ -6,6 +6,9 @@ import com.codesoom.assignment.dto.SessionResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 인증에 대한 HTTP의 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/session")
 public class SessionController {
@@ -15,6 +18,12 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 로그인을 시도합니다.
+     *
+     * @param sessionRequestData 로그인 하려는 유저의 Email과 Password
+     * @return 로그인 하는 유저의 로그인 데이터
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(

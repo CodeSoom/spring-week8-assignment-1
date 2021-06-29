@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 회원의 인증 정보를 확인하고, 권한을 지정합니다.
+ */
 public class UserAuthentication extends AbstractAuthenticationToken {
     private final Long userId;
 
@@ -31,15 +34,21 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         return true;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
     @Override
     public String toString() {
         return "Authentication(" + userId + ")";
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * 회원의 권한을 목록을 리턴합니다.
+     *
+     * @param roles 회원의 권한
+     * @return 회원의 권한 목록
+     */
     private static List<GrantedAuthority> authorities(List<Role> roles) {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
