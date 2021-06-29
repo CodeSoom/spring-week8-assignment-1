@@ -1,0 +1,17 @@
+== 세션
+
+=== 토큰 받기
+
+사용자를 인증하고 토큰을 발급해서 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/session-post/http-request.adoc[]
+
+include::{snippets}/session-post/request-fields.adoc[]
+
+.Response
+
+include::{snippets}/session-post/http-response.adoc[]
+
+include::{snippets}/session-post/response-fields.adoc[]

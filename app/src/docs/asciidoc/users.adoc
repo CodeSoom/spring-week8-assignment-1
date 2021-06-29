@@ -1,0 +1,45 @@
+== 사용자
+
+=== 사용자 정보 저장하기
+
+사용자 정보를 저장하고 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/users-post/http-request.adoc[]
+
+include::{snippets}/users-post/request-fields.adoc[]
+
+.Response
+
+include::{snippets}/users-post/http-response.adoc[]
+
+include::{snippets}/users-post/response-fields.adoc[]
+
+=== 사용자 정보 수정하기
+
+사용자 정보를 수정하고 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/users-patch/http-request.adoc[]
+
+include::{snippets}/users-patch/request-fields.adoc[]
+
+.Response
+
+include::{snippets}/users-patch/http-response.adoc[]
+
+include::{snippets}/users-patch/response-fields.adoc[]
+
+=== 사용자 정보 삭제하기
+
+사용자 정보를 삭제합니다.
+
+.Request
+
+include::{snippets}/users-delete/http-request.adoc[]
+
+.Response
+
+include::{snippets}/users-delete/http-response.adoc[]

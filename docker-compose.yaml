@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mariadb:
+    container_name: catshop-db
+    image: mariadb:10.6.2-focal
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: codesoom
+      MYSQL_DATABASE: test
+      TZ: Asia/Seoul
+    restart: always
+    ports:
+      - "3306:3306"
+  spring:
+    container_name: catshop-apiserver
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: markruler/codesoom:latest
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    ports:
+      - "8080:8080"

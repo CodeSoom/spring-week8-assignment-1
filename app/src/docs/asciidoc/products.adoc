@@ -1,0 +1,77 @@
+== 상품
+
+=== 상품 목록 가져오기
+
+상품 목록을 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/products-list/http-request.adoc[]
+
+.Response
+
+include::{snippets}/products-list/http-response.adoc[]
+
+include::{snippets}/products-list/response-fields.adoc[]
+
+=== 상품 정보 가져오기
+
+상품 정보를 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/products-get/http-request.adoc[]
+
+.Response
+
+include::{snippets}/products-get/http-response.adoc[]
+
+include::{snippets}/products-get/response-fields.adoc[]
+
+=== 상품 정보 저장하기
+
+상품 정보를 저장하고 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/products-post/http-request.adoc[]
+
+include::{snippets}/products-post/request-fields.adoc[]
+
+.Response
+
+include::{snippets}/products-post/http-response.adoc[]
+
+include::{snippets}/products-post/response-fields.adoc[]
+
+=== 상품 정보 수정하기
+
+상품 정보를 수정하고 JSON 형태로 돌려줍니다.
+
+.Request
+
+include::{snippets}/products-patch/http-request.adoc[]
+
+include::{snippets}/products-patch/path-parameters.adoc[]
+
+include::{snippets}/products-patch/request-fields.adoc[]
+
+.Response
+
+include::{snippets}/products-patch/http-response.adoc[]
+
+include::{snippets}/products-patch/response-fields.adoc[]
+
+=== 상품 정보 삭제하기
+
+상품 정보를 삭제합니다.
+
+.Request
+
+include::{snippets}/products-delete/http-request.adoc[]
+
+include::{snippets}/products-delete/path-parameters.adoc[]
+
+.Response
+
+include::{snippets}/products-delete/http-response.adoc[]
