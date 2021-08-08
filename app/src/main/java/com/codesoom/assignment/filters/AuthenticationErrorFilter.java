@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 회원 인증 시 발생하는 에러처리 필터.
+ */
 public class AuthenticationErrorFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest request,

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * 회원에 대한 HTTP 요청 처리를 담당합니다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,6 +25,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 전달된 회원 정보로 회원을 생성한 뒤,
+     * 그 회원을 리턴합니다.
+     *
+     * @param registrationData 회원 정보
+     * @return 생성된 회원
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -29,6 +39,16 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 전달된 식별자에 해당하는 회원을 찾고,
+     * 주어진 회원 정보로 수정한 후 리턴합니다.
+     *
+     * @param id                회원 식별자
+     * @param modificationData  수정할 회원 정보
+     * @param authentication    회원 인증 정보
+     * @return 수정된 회원
+     * @throws AccessDeniedException 인가되지 않은 회원이 수정하려할 경우
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -41,6 +61,11 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 전달된 식별자에 해당하는 회원을 삭제합니다.
+     *
+     * @param id 회원 식별자
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
