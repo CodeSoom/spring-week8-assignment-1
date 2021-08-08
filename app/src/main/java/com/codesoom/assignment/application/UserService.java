@@ -13,8 +13,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 사용자 관련 비즈니스 로직을 처리합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 새 사용자를 등록하고 리턴합니다.
+     * @param registrationData 새로 등록할 사용자 정보
+     * @return 사용자
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +57,14 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 사용자를 수정하고 리턴합니다.
+     * @param id 수정 할 사용자 id
+     * @param modificationData 수정 할 사용자 정보
+     * @param userId 인증된 사용자 id
+     * @return 사용자
+     * @throws AccessDeniedException
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +79,11 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 사용자를 삭제하고 리턴합니다.
+     * @param id 삭제 할 사용자 id
+     * @return 사용자
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
