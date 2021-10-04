@@ -10,7 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 유저 인증 filter.
+ */
 public class AuthenticationErrorFilter extends HttpFilter {
+
+    /**
+     *  http 요청, 응답에 대해 filter chain을 통해 filtering 한다.
+     *
+     * @param request http 요청
+     * @param response http 응답
+     * @param chain
+     * @throws IOException 입출력에 오류가 있는 경우
+     * @throws ServletException 서블릿에 오류가 있는 경우
+     */
     @Override
     protected void doFilter(HttpServletRequest request,
                             HttpServletResponse response,

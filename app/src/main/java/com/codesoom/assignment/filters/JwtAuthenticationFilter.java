@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
