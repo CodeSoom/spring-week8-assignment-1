@@ -44,10 +44,10 @@ include::{snippets}/post-users/http-response.adoc[]
 회원의 정보를 수정 하고, 수정 된 회원에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 ==== Example Request
-include::{snippets}/patch-users/{id}/http-request.adoc[]
+include::{snippets}/patch-users/http-request.adoc[]
 
 ==== Example Response
-include::{snippets}/patch-users/{id}/http-response.adoc[]
+include::{snippets}/patch-users/http-response.adoc[]
 
 
 
@@ -56,7 +56,7 @@ include::{snippets}/patch-users/{id}/http-response.adoc[]
 회원 의 정보를 삭제 하고, 삭제 된 회원에 대한 정보를 JSON 형태로 돌려준다.
 
 ==== Example Request
-include::{snippets}/delete-users/{id}/http-request.adoc[]
+include::{snippets}/delete-users/http-request.adoc[]
 
 ==== Example Response
-include::{snippets}/delete-users/{id}/http-response.adoc[]
+include::{snippets}/delete-users/http-response.adoc[]

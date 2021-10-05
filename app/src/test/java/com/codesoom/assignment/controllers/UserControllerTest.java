@@ -162,7 +162,7 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
                 ))
-                .andDo(document("patch-users/{id}"));
+                .andDo(document("patch-users"));
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -226,7 +226,7 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-users/{id}"));
+                .andDo(document("delete-users"));
 
         verify(userService).deleteUser(1L);
     }

@@ -111,7 +111,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product/{id}"));
+                .andDo(document("get-product"));
     }
 
     @Test
@@ -187,7 +187,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
-                .andDo(document("patch-products/{id}"));
+                .andDo(document("patch-products"));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -251,7 +251,7 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-products/{id}"));
+                .andDo(document("delete-products"));
 
         verify(productService).deleteProduct(1L);
     }
