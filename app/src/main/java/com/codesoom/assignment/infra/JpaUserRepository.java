@@ -2,12 +2,15 @@ package com.codesoom.assignment.infra;
 
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
-
+/**
+ * JPA로 회원 데이터에 접근하는 역할을 합니다.
+ */
 public interface JpaUserRepository
-        extends UserRepository, CrudRepository<User, Long> {
+    extends UserRepository, CrudRepository<User, Long> {
+
     User save(User user);
 
     boolean existsByEmail(String email);
