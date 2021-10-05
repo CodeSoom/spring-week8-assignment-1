@@ -26,14 +26,35 @@ include::{snippets}/post-product/http-response.adoc[]
 
 == PATCH /product/{id}
 
-상품정보를 수정하고, 상품정보를 반환한다.
+상품 정보를 수정하고, 상품 정보를 반환한다.
 
 include::{snippets}/update-product/http-request.adoc[]
 include::{snippets}/update-product/http-response.adoc[]
 
 == DELETE /product/{id}
 
-상품정보를 삭제한다.
+상품 정보를 삭제한다.
 
 include::{snippets}/delete-product/http-request.adoc[]
 include::{snippets}/delete-product/http-response.adoc[]
+
+== POST /user
+
+유저를 생성하고, 유저 정보를 반환한다.
+
+include::{snippets}/post-user/http-request.adoc[]
+include::{snippets}/post-user/http-response.adoc[]
+
+== PATCH /user/{id}
+
+유저 정보를 수정하고, 유저 정보를 반환한다.
+
+include::{snippets}/update-user/http-request.adoc[]
+include::{snippets}/update-user/http-response.adoc[]
+
+== DELETE /user/{id}
+
+유저 정보를 삭제한다.
+
+include::{snippets}/delete-user/http-request.adoc[]
+include::{snippets}/delete-user/http-response.adoc[]
