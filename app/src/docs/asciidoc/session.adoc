@@ -12,12 +12,15 @@
 |회원 인증 토큰
 |===
 
-== POST /session
+[[Session]]
+= 세션 관리 API
 
+[[Session-POST]]
+== POST /session
 로그인 정보로 로그인을 한 뒤, 인증 토큰을 돌려준다.
 
-==== Example Request
-include::{snippets}/post-session/http-request.adoc[]
+=== Example Request
+include::{snippets}/session-controller-test/post-session/http-request.adoc[]
 
-==== Example Response
-include::{snippets}/post-session/http-response.adoc[]
+=== Example Response
+include::{snippets}/session-controller-test/post-session/http-response.adoc[]

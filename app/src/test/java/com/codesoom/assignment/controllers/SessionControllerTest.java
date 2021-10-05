@@ -49,7 +49,7 @@ class SessionControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(".")))
-                .andDo(document("post-session"));
+                .andDo(document("{class-name}/post-session"));
     }
 
     @Test

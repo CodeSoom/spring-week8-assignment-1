@@ -1,8 +1,8 @@
 = 고양이 장난감 가게 API
+:doctype: book
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectlinks:
-
 
 include::{docdir}/products.adoc[]
 

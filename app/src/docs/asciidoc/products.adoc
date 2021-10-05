@@ -34,61 +34,58 @@
 |상품 이미지 주소
 |===
 
+[[product]]
+= Product
+고양이 장난감 상품 관련 API
 
-=== GET /products
+[[products-get]]
+== GET /products
+상품 목록 조회
 
-상품 목록을 JSON 형태로 돌려준다.
+=== Example Request
+include::{snippets}/product-controller-test/get-products/http-request.adoc[]
 
-==== Example Request
-include::{snippets}/get-products/http-request.adoc[]
-
-==== Example Response
-include::{snippets}/get-products/http-response.adoc[]
+=== Example Response
+include::{snippets}/product-controller-test/get-products/http-response.adoc[]
 
 
-
+[[product-get]]
 == GET /product/{id}
+상품 상세 정보 조회
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+=== Example Request
+include::{snippets}/product-controller-test/get-product/http-request.adoc[]
 
-==== Example Request
-include::{snippets}/get-product/http-request.adoc[]
+=== Example Response
+include::{snippets}/product-controller-test/get-product/http-response.adoc[]
 
-==== Example Response
-include::{snippets}/get-product/http-response.adoc[]
+[[POST-products]]
+== POST-products
+상품 등록하기
 
+=== Example Request
+include::{snippets}/product-controller-test/post-products/http-request.adoc[]
 
+=== Example Response
+include::{snippets}/product-controller-test/post-products/http-response.adoc[]
 
-== POST /products
-
-새로운 상품을 등록 하고, 등록 된 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
-
-==== Example Request
-include::{snippets}/post-products/http-request.adoc[]
-
-==== Example Response
-include::{snippets}/post-products/http-response.adoc[]
-
-
-
+[[product-patch]]
 == PATCH /products/{id}
+상품 정보 수정하기
 
-상품의 정보를 수정 하고, 수정 된 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+=== Example Request
+include::{snippets}/product-controller-test/patch-products/http-request.adoc[]
 
-==== Example Request
-include::{snippets}/patch-products/http-request.adoc[]
-
-==== Example Response
-include::{snippets}/patch-products/http-response.adoc[]
-
+=== Example Response
+include::{snippets}/product-controller-test/patch-products/http-response.adoc[]
 
 
+[[product-delete]]
 == DELETE /products/{id}
+상품 정보 삭제하기
 
-상품 의 정보를 삭제 하고, 삭제 된 상품에 대한 정보를 JSON 형태로 돌려준다.
+=== Example Request
+include::{snippets}/product-controller-test/delete-products/http-request.adoc[]
 
-==== Example Request
-include::{snippets}/delete-products/http-request.adoc[]
-
-==== Example Response
-include::{snippets}/delete-products/http-response.adoc[]
+=== Example Response
+include::{snippets}/product-controller-test/delete-products/http-response.adoc[]

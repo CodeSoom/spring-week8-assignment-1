@@ -27,36 +27,38 @@
 |회원의 이메일 주소
 |===
 
-== POST /users
+[[Account]]
+= Account
+회원 정보 관리 API
 
+[[Account-post]]
+== POST /accounts
 새로운 회원을 등록 하고, 등록 된 회원에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
-==== Example Request
-include::{snippets}/post-users/http-request.adoc[]
+=== Example Request
+include::{snippets}/user-controller-test/post-users/http-request.adoc[]
 
-==== Example Response
-include::{snippets}/post-users/http-response.adoc[]
+=== Example Response
+include::{snippets}/user-controller-test/post-users/http-response.adoc[]
 
 
-
+[[Account-patch]]
 == PATCH /products/{id}
-
 회원의 정보를 수정 하고, 수정 된 회원에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
-==== Example Request
-include::{snippets}/patch-users/http-request.adoc[]
+=== Example Request
+include::{snippets}/user-controller-test/patch-users/http-request.adoc[]
 
-==== Example Response
-include::{snippets}/patch-users/http-response.adoc[]
+=== Example Response
+include::{snippets}/user-controller-test/patch-users/http-response.adoc[]
 
 
-
+[[Account-delete]]
 == DELETE /products/{id}
-
 회원 의 정보를 삭제 하고, 삭제 된 회원에 대한 정보를 JSON 형태로 돌려준다.
 
-==== Example Request
-include::{snippets}/delete-users/http-request.adoc[]
+=== Example Request
+include::{snippets}/user-controller-test/delete-users/http-request.adoc[]
 
-==== Example Response
-include::{snippets}/delete-users/http-response.adoc[]
+=== Example Response
+include::{snippets}/user-controller-test/delete-users/http-response.adoc[]
