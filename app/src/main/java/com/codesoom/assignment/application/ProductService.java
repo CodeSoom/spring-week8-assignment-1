@@ -24,6 +24,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Returns all products in this application.
+     *
+     * @return all products.
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
