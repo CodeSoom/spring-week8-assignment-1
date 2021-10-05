@@ -58,3 +58,10 @@ include::{snippets}/update-user/http-response.adoc[]
 
 include::{snippets}/delete-user/http-request.adoc[]
 include::{snippets}/delete-user/http-response.adoc[]
+
+== POST /session
+
+유저 인증 정보의 유효성을 확인하고, 인증 토큰을 반환한다.
+
+include::{snippets}/post-session/http-request.adoc[]
+include::{snippets}/post-session/http-response.adoc[]
