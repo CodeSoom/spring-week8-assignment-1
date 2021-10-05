@@ -8,10 +8,98 @@ include::{snippets}/get-products/http-request.adoc[]
 
 include::{snippets}/get-products/http-response.adoc[]
 
-== GET /product/{id}
+include::{snippets}/get-products/request-headers.adoc[]
+
+include::{snippets}/get-products/response-fields.adoc[]
+
+== GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+include::{snippets}/get-product/request-headers.adoc[]
+
+include::{snippets}/get-product/response-fields.adoc[]
+
+== POST /products
+
+상품을 등록하고 등록한 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/create-product/http-request.adoc[]
+
+include::{snippets}/create-product/http-response.adoc[]
+
+include::{snippets}/create-product/request-headers.adoc[]
+
+include::{snippets}/create-product/response-fields.adoc[]
+
+== PATCH /products/{id}
+
+상품을 수정하고 등록한 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/update-product/http-request.adoc[]
+
+include::{snippets}/update-product/http-response.adoc[]
+
+include::{snippets}/update-product/request-headers.adoc[]
+
+include::{snippets}/update-product/response-fields.adoc[]
+
+== DELETE /products/{id}
+
+상품을 삭제한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
+
+include::{snippets}/delete-product/request-headers.adoc[]
+
+== POST /users
+
+유저를 등록하고 등록한 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/create-user/http-request.adoc[]
+
+include::{snippets}/create-user/http-response.adoc[]
+
+include::{snippets}/create-user/request-headers.adoc[]
+
+include::{snippets}/create-user/response-fields.adoc[]
+
+== PATCH /users/{id}
+
+유저를 수정하고 수정한 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/update-user/http-request.adoc[]
+
+include::{snippets}/update-user/http-response.adoc[]
+
+include::{snippets}/update-user/request-headers.adoc[]
+
+include::{snippets}/update-user/response-fields.adoc[]
+
+== DELETE /users/{id}
+
+유저를 삭제한다.
+
+include::{snippets}/delete-user/http-request.adoc[]
+
+include::{snippets}/delete-user/http-response.adoc[]
+
+include::{snippets}/delete-user/request-headers.adoc[]
+
+== POST /session
+
+유저 정보를 통하여 로그인 한다.
+
+include::{snippets}/user-login/http-request.adoc[]
+
+include::{snippets}/user-login/http-response.adoc[]
+
+include::{snippets}/user-login/request-headers.adoc[]
+
+include::{snippets}/user-login/response-fields.adoc[]

@@ -10,9 +10,12 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +26,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -114,11 +123,11 @@ class UserControllerTest {
     @Test
     void registerUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"name\":\"Tester\",\"password\":\"test\"}")
-        )
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"name\":\"Tester\",\"password\":\"test\"}")
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(
                         containsString("\"id\":13")
@@ -128,7 +137,24 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+                .andDo(document("create-user",
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description("APPLICATION_JSON")
+                                ),
+                                requestFields(
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("name").description("이름"),
+                                        fieldWithPath("password").description("패스워드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").description("USER INDEX"),
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("name").description("이름")
+                                )
+                        )
+                )
+        ;
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -136,28 +162,45 @@ class UserControllerTest {
     @Test
     void registerUserWithInvalidAttributes() throws Exception {
         mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}")
-        )
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{}")
+                )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
+                        patch("/users/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"TEST\",\"password\":\"test\"}")
+                                .header("Authorization", "Bearer " + MY_TOKEN)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"id\":1")
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(document("update-user",
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description("APPLICATION_JSON"),
+                                        headerWithName("Authorization").description("AUTH TOKEN")
+                                ),
+                                requestFields(
+                                        fieldWithPath("name").description("이름"),
+                                        fieldWithPath("password").description("패스워드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").description("USER INDEX"),
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("name").description("이름")
+                                )
+                        )
+                )
+        ;
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -166,22 +209,22 @@ class UserControllerTest {
     @Test
     void updateUserWithInvalidAttributes() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\",\"password\":\"\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
+                        patch("/users/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"\",\"password\":\"\"}")
+                                .header("Authorization", "Bearer " + MY_TOKEN)
+                )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void updateUserWithNotExsitedId() throws Exception {
+    void updateUserWithNotExistedId() throws Exception {
         mockMvc.perform(
-                patch("/users/100")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
+                        patch("/users/100")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
+                                .header("Authorization", "Bearer " + MY_TOKEN)
+                )
                 .andExpect(status().isNotFound());
 
         verify(userService).updateUser(
@@ -193,21 +236,21 @@ class UserControllerTest {
     @Test
     void updateUserWithoutAccessToken() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-        )
+                        patch("/users/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"TEST\",\"password\":\"test\"}")
+                )
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void updateUserWithOthersAccessToken() throws Exception {
         mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + OTHER_TOKEN)
-        )
+                        patch("/users/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"TEST\",\"password\":\"test\"}")
+                                .header("Authorization", "Bearer " + OTHER_TOKEN)
+                )
                 .andExpect(status().isForbidden());
 
         verify(userService)
@@ -217,10 +260,17 @@ class UserControllerTest {
     @Test
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isOk());
+                        delete("/users/1")
+                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andDo(document("delete-user",
+                                requestHeaders(
+                                        headerWithName("Authorization").description("AUTH TOKEN")
+                                )
+                        )
+                )
+        ;
 
         verify(userService).deleteUser(1L);
     }
@@ -228,9 +278,9 @@ class UserControllerTest {
     @Test
     void destroyWithNotExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/100")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
+                        delete("/users/100")
+                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+                )
                 .andExpect(status().isNotFound());
 
         verify(userService).deleteUser(100L);
@@ -245,9 +295,9 @@ class UserControllerTest {
     @Test
     void destroyWithoutAdminRole() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
+                        delete("/users/1")
+                                .header("Authorization", "Bearer " + MY_TOKEN)
+                )
                 .andExpect(status().isForbidden());
     }
 }

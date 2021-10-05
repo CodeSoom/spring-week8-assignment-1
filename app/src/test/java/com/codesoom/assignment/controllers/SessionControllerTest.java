@@ -5,18 +5,26 @@ import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SessionController.class)
+@AutoConfigureRestDocs
 class SessionControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -39,34 +47,48 @@ class SessionControllerTest {
     @Test
     void loginWithRightEmailAndPassword() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(".")));
+                .andExpect(content().string(containsString(".")))
+                .andDo(document("user-login",
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description("APPLICATION_JSON")
+                                ),
+                                requestFields(
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("password").description("패스워드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("accessToken").description("LOGIN ACCESS TOKEN")
+                                )
+                        )
+                )
+        ;
     }
 
     @Test
     void loginWithWrongEmail() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"badguy@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"badguy@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void loginWithWrongPassword() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"xxx\"}")
-        )
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"xxx\"}")
+                )
                 .andExpect(status().isBadRequest());
     }
 }
