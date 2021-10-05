@@ -33,6 +33,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    /**
+     * Returns the product with given ID.
+     *
+     * @param id is identifier of the product.
+     * @return the product with given ID.
+     * @throws ProductNotFoundException in case of
+     * product's identifier is not existed.
+     */
+
     public Product getProduct(Long id) {
         return findProduct(id);
     }
