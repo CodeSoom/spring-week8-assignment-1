@@ -1,5 +1,9 @@
-== 회원 관리 API
----
+:path: {snippets}/user-controller-test
+
+[[Account]]
+= Account
+회원 정보 관리 API
+
 === 공통 사항
 
 회원 관련 API는 다음과 같은 공통 사항을 지켜야 한다.
@@ -27,19 +31,15 @@
 |회원의 이메일 주소
 |===
 
-[[Account]]
-= Account
-회원 정보 관리 API
-
 [[Account-post]]
 == POST /accounts
 새로운 회원을 등록 하고, 등록 된 회원에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 === Example Request
-include::{snippets}/user-controller-test/post-users/http-request.adoc[]
+include::{path}/post-users/http-request.adoc[]
 
 === Example Response
-include::{snippets}/user-controller-test/post-users/http-response.adoc[]
+include::{path}/post-users/http-response.adoc[]
 
 
 [[Account-patch]]
@@ -47,10 +47,10 @@ include::{snippets}/user-controller-test/post-users/http-response.adoc[]
 회원의 정보를 수정 하고, 수정 된 회원에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 === Example Request
-include::{snippets}/user-controller-test/patch-users/http-request.adoc[]
+include::{path}/patch-users/http-request.adoc[]
 
 === Example Response
-include::{snippets}/user-controller-test/patch-users/http-response.adoc[]
+include::{path}/patch-users/http-response.adoc[]
 
 
 [[Account-delete]]
@@ -58,7 +58,7 @@ include::{snippets}/user-controller-test/patch-users/http-response.adoc[]
 회원 의 정보를 삭제 하고, 삭제 된 회원에 대한 정보를 JSON 형태로 돌려준다.
 
 === Example Request
-include::{snippets}/user-controller-test/delete-users/http-request.adoc[]
+include::{path}/delete-users/http-request.adoc[]
 
 === Example Response
-include::{snippets}/user-controller-test/delete-users/http-response.adoc[]
+include::{path}/delete-users/http-response.adoc[]

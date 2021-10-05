@@ -1,4 +1,8 @@
-== 상품 관리 API
+:path: {snippets}/product-controller-test
+
+[[product]]
+= Product
+고양이 장난감 상품 관련 API
 
 === 공통 사항
 
@@ -34,19 +38,17 @@
 |상품 이미지 주소
 |===
 
-[[product]]
-= Product
-고양이 장난감 상품 관련 API
+
 
 [[products-get]]
 == GET /products
 상품 목록 조회
 
 === Example Request
-include::{snippets}/product-controller-test/get-products/http-request.adoc[]
+include::{path}/get-products/http-request.adoc[]
 
 === Example Response
-include::{snippets}/product-controller-test/get-products/http-response.adoc[]
+include::{path}/get-products/http-response.adoc[]
 
 
 [[product-get]]
@@ -54,30 +56,30 @@ include::{snippets}/product-controller-test/get-products/http-response.adoc[]
 상품 상세 정보 조회
 
 === Example Request
-include::{snippets}/product-controller-test/get-product/http-request.adoc[]
+include::{path}/get-product/http-request.adoc[]
 
 === Example Response
-include::{snippets}/product-controller-test/get-product/http-response.adoc[]
+include::{path}/get-product/http-response.adoc[]
 
 [[POST-products]]
 == POST-products
 상품 등록하기
 
 === Example Request
-include::{snippets}/product-controller-test/post-products/http-request.adoc[]
+include::{path}/post-products/http-request.adoc[]
 
 === Example Response
-include::{snippets}/product-controller-test/post-products/http-response.adoc[]
+include::{path}/post-products/http-response.adoc[]
 
 [[product-patch]]
 == PATCH /products/{id}
 상품 정보 수정하기
 
 === Example Request
-include::{snippets}/product-controller-test/patch-products/http-request.adoc[]
+include::{path}/patch-products/http-request.adoc[]
 
 === Example Response
-include::{snippets}/product-controller-test/patch-products/http-response.adoc[]
+include::{path}/patch-products/http-response.adoc[]
 
 
 [[product-delete]]
@@ -85,7 +87,7 @@ include::{snippets}/product-controller-test/patch-products/http-response.adoc[]
 상품 정보 삭제하기
 
 === Example Request
-include::{snippets}/product-controller-test/delete-products/http-request.adoc[]
+include::{path}/delete-products/http-request.adoc[]
 
 === Example Response
-include::{snippets}/product-controller-test/delete-products/http-response.adoc[]
+include::{path}/delete-products/http-response.adoc[]
