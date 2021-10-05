@@ -4,6 +4,7 @@ import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
+import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.LoginFailException;
 import com.codesoom.assignment.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -56,6 +57,7 @@ public class AuthenticationService {
      *
      * @param accessToken 액세스 토큰
      * @return 회원의 id
+     * @throws InvalidTokenException 액세스 토큰이 올바르지 않은 경우
      */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
