@@ -86,6 +86,9 @@ dependencies {
     // Spring REST Docs
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // Maria DB Driver
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 }
 
 application {
