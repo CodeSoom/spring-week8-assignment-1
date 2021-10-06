@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 실제 저장소에 쓰이는 상품 클래스
+ * 실제 저장소에 쓰이는 상품 도메인
  */
 @Entity
 @Getter

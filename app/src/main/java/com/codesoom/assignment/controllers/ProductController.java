@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     /**
-     * 모든 상품을 리턴합니다.
+     * 모든 상품목록을 리턴하고, 200 상태코드를 응답합니다.
      * @return 모든 상품의 목록
      */
     @GetMapping
@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     /**
-     * 상품 하나를 조회해 리턴합니다.
+     * 상품 하나를 조회해 리턴하고, 200 상태코드를 응답합니다.
      * @param id 조회할 상품의 id
      * @return 조회한 상품
      */
@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     /**
-     * 상품을 등록합니다.
+     * 상품을 등록하고, 201 상태코드를 응답합니다.
      * @param productData 등록할 상품의 내용
      * @return 등록한 상품
      */
@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     /**
-     * 상품의 내용을 수정해 수정한 상품을 리턴합니다.
+     * 상품의 내용을 수정해 수정한 상품을 리턴턴하고, 200 상태코드를 응답합니다.
      * @param id 수정할 상품의 id
      * @param productData 찾은 상품의 수정할 내용
      * @return 수정된 상품
@@ -74,7 +74,7 @@ public class ProductController {
     }
 
     /**
-     * 상품을 삭제합니다.
+     * 상품을 삭제하고, 204 상태코드를 응답합니다.
      * @param id 삭제할 상품의 id
      */
     @DeleteMapping("{id}")
