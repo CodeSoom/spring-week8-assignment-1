@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 실제 저장소에 쓰이는 사용자 도메인
+ */
 @Entity
 @Getter
 @Builder
