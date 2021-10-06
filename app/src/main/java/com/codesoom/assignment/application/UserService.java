@@ -100,7 +100,7 @@ public class UserService {
      * @param id 유저식별자
      * @return 식별자 해당 유저
      * @throws UserNotFoundException 유저 식별자에 해당하는 유저를 찾을 수 없을 때
- 때   */
+     */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
