@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 상품의 아이디, 이름, 만든 곳, 가격, 상품 이미지의 주소를 담고 있습니다.
+ */
 @Entity
 @Getter
 @Builder
@@ -23,10 +26,15 @@ public class Product {
 
     private String maker;
 
+
     private Integer price;
 
     private String imageUrl;
 
+    /**
+     * 상품의 데이터를 변경해주는 생성자 입니다.
+     * @param source 는
+     */
     public void changeWith(Product source) {
         this.name = source.name;
         this.maker = source.maker;
