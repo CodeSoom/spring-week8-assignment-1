@@ -1,6 +1,6 @@
 package com.codesoom.assignment.filters;
 
-import com.codesoom.assignment.errors.InvalidTokenException;
+import com.codesoom.assignment.session.exception.InvalidTokenException;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.FilterChain;
@@ -12,10 +12,7 @@ import java.io.IOException;
 
 public class AuthenticationErrorFilter extends HttpFilter {
     @Override
-    protected void doFilter(HttpServletRequest request,
-                            HttpServletResponse response,
-                            FilterChain chain)
-            throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             chain.doFilter(request, response);
         } catch (InvalidTokenException e) {
