@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -133,13 +134,7 @@ class ProductControllerTest {
                                 requestHeaders(
                                         headerWithName(HttpHeaders.ACCEPT).description("APPLICATION_JSON_UTF8")
                                 ),
-                                responseFields(
-                                        fieldWithPath("id").description("상품 ID"),
-                                        fieldWithPath("name").description("상품명"),
-                                        fieldWithPath("maker").description("상품 제조사"),
-                                        fieldWithPath("price").description("상품 가격"),
-                                        fieldWithPath("imageUrl").description("상품 이미지 URL")
-                                )
+                                responseFields(productModelFields)
                         )
                 )
         ;
@@ -174,13 +169,7 @@ class ProductControllerTest {
                                         fieldWithPath("price").description("상품 가격"),
                                         fieldWithPath("imageUrl").description("상품 이미지 URL").optional().type(JsonFieldType.STRING)
                                 ),
-                                responseFields(
-                                        fieldWithPath("id").description("상품 ID"),
-                                        fieldWithPath("name").description("상품명"),
-                                        fieldWithPath("maker").description("상품 제조사"),
-                                        fieldWithPath("price").description("상품 가격"),
-                                        fieldWithPath("imageUrl").description("상품 이미지 URL")
-                                )
+                                responseFields(productModelFields)
                         )
                 )
         ;
@@ -249,13 +238,7 @@ class ProductControllerTest {
                                         fieldWithPath("price").description("상품 가격"),
                                         fieldWithPath("imageUrl").description("상품 이미지 URL").optional().type(JsonFieldType.STRING)
                                 ),
-                                responseFields(
-                                        fieldWithPath("id").description("상품 ID"),
-                                        fieldWithPath("name").description("상품명"),
-                                        fieldWithPath("maker").description("상품 제조사"),
-                                        fieldWithPath("price").description("상품 가격"),
-                                        fieldWithPath("imageUrl").description("상품 이미지 URL")
-                                )
+                                responseFields(productModelFields)
                         )
                 )
         ;
@@ -368,4 +351,12 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isUnauthorized());
     }
+
+    private static FieldDescriptor[] productModelFields = new FieldDescriptor[] {
+            fieldWithPath("id").description("상품 ID"),
+            fieldWithPath("name").description("상품명"),
+            fieldWithPath("maker").description("상품 제조사"),
+            fieldWithPath("price").description("상품 가격"),
+            fieldWithPath("imageUrl").description("상품 이미지 URL")
+    };
 }
