@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.codesoom.assignment.controllers.RestDocsTexture.*;
+import static com.codesoom.assignment.controllers.RestDocsTexture.getUserResponseFieldsSnippet;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -132,7 +134,10 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
                 ))
-                .andDo(document("post-user"));
+                .andDo(document("post-user",
+                        getUserPostRequestFieldsSnippet(),
+                        getUserResponseFieldsSnippet())
+                        );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -162,7 +167,9 @@ class UserControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
                 ))
-                .andDo(document("update-user"));
+                .andDo(document("update-user",
+                        getUserPatchRequestFieldsSnippet(),
+                        getUserResponseFieldsSnippet()));
 
 
         verify(userService)
