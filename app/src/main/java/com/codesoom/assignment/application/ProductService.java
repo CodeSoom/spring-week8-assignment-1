@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * 상품을 찾고, 수정하고, 저장하고, 삭제하는 행위가 담겨져 있습니다.
+ * 상품을 찾고, 수정하고, 저장하고, 삭제합니다.
  */
 @Service
 @Transactional
@@ -46,8 +46,8 @@ public class ProductService {
     }
 
     /**
-     * 상품 데이터를 상품 목록에 저장합니다.
-     * @param productData 는 상품 데이터 입니다.
+     * 새로운 상품 데이터를 상품 목록에 저장합니다.
+     * @param productData 는 등록하려는 상품 데이터 입니다.
      */
 
     public Product createProduct(ProductData productData) {
@@ -56,10 +56,10 @@ public class ProductService {
     }
 
     /**
-     * 아이디로 수정할 상품을 찾아서 데이터를 수정합니다.
+     * 아이디로 수정할 상품을 찾아서 기존의 상품 데이터를 수정합니다.
      *
      * @param id 는 상품의 아이디 입니다.
-     * @param productData 는 상품 데이터 입니다.
+     * @param productData 는 등록하려는 상품 데이터 입니다.
      *
      */
 
