@@ -33,6 +33,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 유저를 생성하고 생성한 유저 정보를 리턴한다.
+     * @param registrationData
+     * @return 생성한 유저 Data
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +54,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * id에 해당하는 유저 정보를 찾아 정보를 수정한다.
+     * @param id
+     * @param modificationData
+     * @return 수정한 유저 정보
+     * @throws AccessDeniedException
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,12 +75,22 @@ public class UserService {
         return user;
     }
 
+    /**
+     * id에 해당하는 유저를 찾아 삭제한다 - 유저 탈퇴
+     * @param id
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
         return user;
     }
 
+    /**
+     * id에 해당하는 유저를 찾아 리턴한다.
+     * @param id
+     * @return id에 해당하는 유저
+     * @throws UserNotFoundException
+     */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));

@@ -22,6 +22,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 유저를 생성하고 생성한 유저 정보를 리턴한다.
+     * @param registrationData
+     * @return 생성한 유저 Data
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -29,6 +34,14 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * id에 해당하는 유저 정보를 찾아 정보를 수정한다.
+     * @param id
+     * @param modificationData
+     * @param authentication
+     * @return 수정한 유저 정보
+     * @throws AccessDeniedException
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -41,6 +54,10 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * id에 해당하는 유저를 찾아 삭제한다 - 유저 탈퇴
+     * @param id
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
