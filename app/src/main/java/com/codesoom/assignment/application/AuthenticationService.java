@@ -38,7 +38,8 @@ public class AuthenticationService {
      * @param email 유저 이메일
      * @param password 유저 비밀번호
      * @return 인증 토큰
-     * @throws LoginFailException 이메일로 유저를 찾을 수 없을 때, 유저 비밀번호와 받은 비밀번호가 일치하지 않을 때
+     * @throws LoginFailException 이메일로 유저를 찾을 수 없을 때,
+     *                              유저 비밀번호와 받은 비밀번호가 일치하지 않을 때
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
