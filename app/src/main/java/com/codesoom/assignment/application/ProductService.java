@@ -28,8 +28,6 @@ public class ProductService {
     }
 
     /**
-     * Returns all products in this application.
-     *
      * @return all products.
      */
     public List<Product> getProducts() {
@@ -41,13 +39,18 @@ public class ProductService {
      *
      * @param id is identifier of the product.
      * @return the product with given ID.
-     * @throws ProductNotFoundException in case of
-     * product's identifier is not existed.
+     * @throws ProductNotFoundException in case of given ID is not existed.
      */
 
     public Product getProduct(Long id) {
         return findProduct(id);
     }
+
+    /**
+     * Returns
+     * @param productData
+     * @return
+     */
 
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
