@@ -28,18 +28,17 @@ public class ProductService {
     }
 
     /**
-     * @return all products.
+     * 모든 상품 목록을 반환합니다.
      */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
     /**
-     * Returns the product with given ID.
+     * 상품의 아이디로 해당 상품을 반환합니다.
      *
-     * @param id is identifier of the product.
-     * @return the product with given ID.
-     * @throws ProductNotFoundException in case of given ID is not existed.
+     * @param id 는 상품의 아이디 입니다.
+     * @throws ProductNotFoundException 는 상품 아이디가 존재하지 않을 때 던집니다.
      */
 
     public Product getProduct(Long id) {
@@ -47,15 +46,22 @@ public class ProductService {
     }
 
     /**
-     * Returns
-     * @param productData
-     * @return
+     * 상품 데이터를 상품 목록에 저장합니다.
+     * @param productData 는 상품 데이터 입니다.
      */
 
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
+
+    /**
+     * 아이디로 상품을 조회하여, 상품의 데이터를 수정합니다.
+     *
+     * @param id 는 상품의 아이디 입니다.
+     * @param productData 는 상품 데이터 입니다.
+     *
+     */
 
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -65,6 +71,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * 아이디로 상품을 찾고 상품 목록에서 해당 상품을 삭제합니다.
+     *
+     * @param id 는 상품의 아이디 입니다.
+     */
+
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -72,6 +84,13 @@ public class ProductService {
 
         return product;
     }
+
+    /**
+     * 아이디로 상품을 찾아서 해당 상품을 반환합니다.
+     *
+     * @param id 는 상품의 아이디 입니다.
+     * @throws ProductNotFoundException 은 상품의 아이디를 찾지 못했을 때 던집니다.
+     */
 
     private Product findProduct(Long id) {
         return productRepository.findById(id)
