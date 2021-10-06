@@ -52,11 +52,14 @@ public class RestDocsTexture {
 
     static RequestFieldsSnippet getSessionRequestFieldsSnippet() {
         return requestFields(
-                fieldWithPath("email").type(STRING).description("이메일")
-                        .attributes(key("constraints").value("한 글자 이상 입력해야합니다.")),
+                fieldWithPath("email").type(STRING).description("이메일"),
                 fieldWithPath("password").type(STRING).description("비밀번호")
-                        .attributes(key("constraints").value("한 글자 이상 입력해야합니다."))
+        );
+    }
 
+    static ResponseFieldsSnippet getSessionResponseFieldsSnippet() {
+        return responseFields(
+                fieldWithPath("accessToken").type(STRING).description("인증 토큰")
         );
     }
 }
