@@ -62,16 +62,16 @@ public class RestDocsTexture {
 
     static RequestFieldsSnippet getUserPatchRequestFieldsSnippet() {
         return requestFields(
-                fieldWithPath("email").type(STRING).description("이메일")
-                        .attributes(key("constraints").value("3 글자 이상 입력해야 한다.")),
+                fieldWithPath("name").type(STRING).description("이름")
+                        .attributes(key("constraints").value("1 글자 이상 입력해야 한다.")),
                 fieldWithPath("password").type(STRING).description("비밀번호")
                         .attributes(key("constraints").value("4 글자 이상 입력해야 한다.")));
     }
 
     static ResponseFieldsSnippet getUserResponseFieldsSnippet() {
         return responseFields(
+                fieldWithPath("id").type(NUMBER).description("유저 식별자"),
                 fieldWithPath("email").type(STRING).description("이메일"),
-                fieldWithPath("password").type(STRING).description("패스워드"),
                 fieldWithPath("name").type(STRING).description("이름")
         );
     }
