@@ -24,19 +24,39 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * 상품 리스트를 가져와서 리턴한다.
+     * @return 상품 리스트
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * 상품 id로 상품을 찾아 리턴한다.
+     * @param id
+     * @return 찾은 상품 정보
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
 
+    /**
+     * 상품을 추가한다.
+     * @param productData
+     * @return 생성한 상품 정보
+     */
     public Product createProduct(ProductData productData) {
         Product product = mapper.map(productData, Product.class);
         return productRepository.save(product);
     }
 
+    /**
+     * id에 해당하는 상품을 찾아 수정한다.
+     * @param id
+     * @param productData
+     * @return 수정한 상품 정보
+     */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
@@ -45,6 +65,10 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * id에 해당하는 상품을 찾아 삭제한다.
+     * @param id
+     */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
 
@@ -53,6 +77,12 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * id에 해당하는 상품을 찾아 리턴한다.
+     * @param id
+     * @return 찾은 상품 정보
+     * @throws ProductNotFoundException
+     */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
