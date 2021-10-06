@@ -14,20 +14,19 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codesoom.assignment.controllers.RestDocsTexture.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,19 +103,10 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(document("get-products",
-                        requestFields(
-                                fieldWithPath("name")
-                                        .type(JsonFieldType.STRING)
-                                        .description("이름"),
-                                fieldWithPath("maker")
-                                        .type(JsonFieldType.STRING)
-                                        .description("제조사"),
-                                fieldWithPath("price")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("가격")
-                        )
+                        getProductListResponseFieldsSnippet()
                 ));
     }
+
 
     @Test
     void detailWithExsitedProduct() throws Exception {
@@ -126,7 +116,9 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product"));
+                .andDo(document("get-product",
+                        getProductResponseFieldsSnippet()
+                ));
     }
 
     @Test
@@ -147,7 +139,10 @@ class ProductControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("post-product"));
+                .andDo(document("post-product",
+                        getProductHeaderParameter(),
+                        getProductRequestFieldsSnippet(),
+                        getProductResponseFieldsSnippet()));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -202,7 +197,11 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
-                .andDo(document("update-product"));
+                .andDo(document("update-product",
+                        getProductHeaderParameter(),
+                        getProductRequestFieldsSnippet(),
+                        getProductResponseFieldsSnippet())
+                );
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -266,7 +265,8 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andDo(document("delete-product"));
+                .andDo(document("delete-product",
+                        getProductHeaderParameter()));
 
         verify(productService).deleteProduct(1L);
     }
