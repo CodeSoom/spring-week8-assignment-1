@@ -1,8 +1,10 @@
 = 고양이 장난감 가게 API
 :doctype: book
 :toc: left
-:toclevels: 3
-:sectlinks:
+:toc-title: REST API
+:toclevels: 1
+
+image::catToy_thumbnail.png[]
 
 include::{docdir}/products.adoc[]
 

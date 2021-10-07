@@ -1,0 +1,19 @@
+[cols="1,3,5,1a"]
+|===
+|Name |Type |Description |Required
+
+|id
+|Long
+|회원 식별자 정보
+|O
+
+|name
+|String
+|회원 이름
+|O
+
+|email
+|String
+|회원의 이메일 주소
+|O
+|===
