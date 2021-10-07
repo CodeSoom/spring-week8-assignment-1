@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 실제 저장소에 쓰이는 사용자 도메인
+ * 사용자의 모든 정보를 가지고있는 루트 도메인
  */
 @Entity
 @Getter

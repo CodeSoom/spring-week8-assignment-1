@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * HTTP 요청에 따른 예외처리 기능을 제공하는 클래스
+ * HTTP 요청에 따른 예외처리 응답을 제공하는 클래스
  */
 @ResponseBody
 @ControllerAdvice
 public class ControllerErrorAdvice {
 
     /**
-     * 상품을 찾지 못할경우 발생시킬 예외
+     * 상품을 찾지 못하는 예외가 발생할 경우, 404 상태코드를 반환합니다.
      * @return 상품을 찾지 못하는 응답 메시지
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -29,7 +29,7 @@ public class ControllerErrorAdvice {
     }
 
     /**
-     * 사용자를 찾지 못할경우 발생시킬 예외
+     * 사용자를 찾지 못하는 예외가 발생할 경우, 404 상태코드를 반환합니다.
      * @return 사용자를 찾지 못하는 응답 메시지
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -39,7 +39,7 @@ public class ControllerErrorAdvice {
     }
 
     /**
-     * 사용자 이메일이 중복일 경우 발생시킬 예외
+     * 사용자 이메일이 중복되어 예외가 발생할 경우, 400 상태코드를 반환합니다.
      * @return 입력한 이메일이 이미 존재한다는 응답 메시지
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,7 +49,7 @@ public class ControllerErrorAdvice {
     }
 
     /**
-     * 로그인에 실패할 경우 발생시킬 예외
+     * 로그인에 실패하여 예외가 발생할 경우, 400 상태코드를 반환합니다.
      * @return 로그인 실패 응답 메시지
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
