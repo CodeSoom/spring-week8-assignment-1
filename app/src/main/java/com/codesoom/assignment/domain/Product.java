@@ -32,8 +32,8 @@ public class Product {
     private String imageUrl;
 
     /**
-     * 상품의 데이터를 변경해주는 생성자 입니다.
-     * @param source 는
+     * 상품의 데이터를 변경해주는 생성자.
+     * @param source 상품 데이터
      */
     public void changeWith(Product source) {
         this.name = source.name;

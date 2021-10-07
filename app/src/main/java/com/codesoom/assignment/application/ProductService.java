@@ -59,7 +59,7 @@ public class ProductService {
      * 주어진 아이디에 해당하는 상품을 수정하고, 수정된 결과를 리턴합니다.
      *
      * @param id 상품의 아이디
-     * @param productData 상품 데이터
+     * @param productData 저장하려는 상품 데이터
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -70,9 +70,9 @@ public class ProductService {
     }
 
     /**
-     * 아이디로 삭제할 상품을 찾아서 해당 상품을 삭제합니다.
+     * 주어진 아이디로 삭제할 상품을 찾아서 삭제한 결과를 리턴합니다.
      *
-     * @param id 는 상품의 아이디 입니다.
+     * @param id 상품의 아이디
      */
 
     public Product deleteProduct(Long id) {
@@ -84,10 +84,10 @@ public class ProductService {
     }
 
     /**
-     * 아이디로 상품을 찾아서 해당 상품을 반환합니다.
+     * 주어진 아이디로 상품을 찾아서 해당 상품을 반환합니다.
      *
-     * @param id 는 상품의 아이디 입니다.
-     * @throws ProductNotFoundException 은 상품의 아이디를 찾지 못했을 때 던집니다.
+     * @param id 상품의 아이디
+     * @throws ProductNotFoundException 상품 아이디가 존재하지 않을 경우
      */
 
     private Product findProduct(Long id) {

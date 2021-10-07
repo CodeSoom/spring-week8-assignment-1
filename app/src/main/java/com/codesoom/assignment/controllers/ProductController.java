@@ -38,7 +38,7 @@ public class ProductController {
 
     /**
      * 상품의 세부 정보를 조회하는 요청을 받아서 서비스에서 해당 상품을 찾고 데이터를 반환합니다.
-     * @param id 는 상품의 아이디 입니다.
+     * @param id 는 상품의 아이디
      */
 
     @GetMapping("{id}")
@@ -48,7 +48,7 @@ public class ProductController {
 
     /**
      * 상품을 등록하라는 요청을 받아서 서비스에서 상품을 등록하고 반환합니다.
-     * @param productData 는 등록하려는 상품의 데이터 입니다.
+     * @param productData 등록하려는 상품의 데이터
      */
 
     @PostMapping
@@ -61,8 +61,8 @@ public class ProductController {
     /**
      * 상품의 정보를 업데이트 하라는 요청을 받고, 서비스에서 수정한 상품을 반환합니다.
      *
-     * @param id 는 상품의 아이디 입니다.
-     * @param productData 는 등록하려는 상품의 데이터 입니다.
+     * @param id 상품의 아이디
+     * @param productData 등록하려는 상품의 데이터
      */
 
     @PatchMapping("{id}")
@@ -76,7 +76,7 @@ public class ProductController {
 
     /**
      * 상품을 삭제하라는 요청을 받고, 서비스에서 상품을 삭제합니다.
-     * @param id 는 상품의 아이디 입니다.
+     * @param id 상품의 아이디
      */
 
     @DeleteMapping("{id}")
