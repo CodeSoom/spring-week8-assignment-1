@@ -21,13 +21,15 @@ public class RestDocsTexture {
     static RequestFieldsSnippet getProductRequestFieldsSnippet() {
         return requestFields(
                 fieldWithPath("name").type(STRING).description("상품 이름")
-                        .attributes(key("constraints").value("한 글자 이상")),
+                        .attributes(key("constraints").value("1 글자 이상")),
                 fieldWithPath("maker").type(STRING).description("상품 제조사")
-                        .attributes(key("constraints").value("한 글자 이상")),
+                        .attributes(key("constraints").value("1 글자 이상")),
                 fieldWithPath("price").type(NUMBER).description("상품 가격")
                         .attributes(key("constraints").value("빈 값을 입력 불가")),
                 fieldWithPath("imageUrl").type(STRING).description("상품 이미지").optional()
-        );
+                        .attributes(key("constraints").value(""))
+
+                );
     }
     static ResponseFieldsSnippet getProductResponseFieldsSnippet() {
         return responseFields(
@@ -77,8 +79,10 @@ public class RestDocsTexture {
 
     static RequestFieldsSnippet getSessionRequestFieldsSnippet() {
         return requestFields(
-                fieldWithPath("email").type(STRING).description("이메일"),
+                fieldWithPath("email").type(STRING).description("이메일")
+                        .attributes(key("constraints").value("")),
                 fieldWithPath("password").type(STRING).description("비밀번호")
+                        .attributes(key("constraints").value(""))
         );
     }
 
