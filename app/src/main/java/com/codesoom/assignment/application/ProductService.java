@@ -46,8 +46,8 @@ public class ProductService {
     }
 
     /**
-     * 새로운 상품 데이터를 상품 목록에 저장합니다.
-     * @param productData 는 등록하려는 상품 데이터 입니다.
+     * 새로운 상품 데이터를 저장하고, 저장된 상품 정보를 리턴합니다.
+     * @param productData 저장하려는 상품 데이터
      */
 
     public Product createProduct(ProductData productData) {
