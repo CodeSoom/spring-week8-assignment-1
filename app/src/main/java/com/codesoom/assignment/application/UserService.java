@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 회원을 찾고, 등록하고, 정보를 수정하고, 삭제합니다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 신규 회원을 등록하고 등록한 회원 정보를 리턴합니다.
+     * @param registrationData 등록하려는 회원 데이터
+     */
+
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +57,14 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 회원 정보를 변경하고 변경된 회원 정보를 리턴합니다.
+     *
+     * @param id 회원 아이디
+     * @param modificationData 변경하려는 회원 데이터
+     * @param userId 인증된 회원 아이디
+     * @throws AccessDeniedException 회원 인증이 실패했을 때
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,12 +79,22 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 아이디로 회원을 찾아서 삭제합니다.
+     * @param id 회원 아이디
+     */
+
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
         return user;
     }
 
+    /**
+     * 주어진 아이디로 회원을 조회합니다.
+     * @param id 회원 아이디
+     * @throws UserNotFoundException 아이디가 존재하지 않을 때
+     */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
