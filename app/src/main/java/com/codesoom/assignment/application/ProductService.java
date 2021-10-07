@@ -56,13 +56,11 @@ public class ProductService {
     }
 
     /**
-     * 아이디로 수정할 상품을 찾아서 기존의 상품 데이터를 수정합니다.
+     * 주어진 아이디에 해당하는 상품을 수정하고, 수정된 결과를 리턴합니다.
      *
-     * @param id 는 상품의 아이디 입니다.
-     * @param productData 는 등록하려는 상품 데이터 입니다.
-     *
+     * @param id 상품의 아이디
+     * @param productData 상품 데이터
      */
-
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
 
