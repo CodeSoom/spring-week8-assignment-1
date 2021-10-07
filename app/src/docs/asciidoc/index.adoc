@@ -30,6 +30,7 @@ include::{path}/http-response.adoc[]
 
 :path: {snippets}/post-product
 
+include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
@@ -41,6 +42,7 @@ include::{path}/http-response.adoc[]
 
 :path: {snippets}/update-product
 
+include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
@@ -60,6 +62,7 @@ include::{path}/http-response.adoc[]
 
 :path: {snippets}/post-user
 
+include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
@@ -69,6 +72,7 @@ include::{path}/http-response.adoc[]
 
 :path: {snippets}/update-user
 
+include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
 
@@ -88,5 +92,6 @@ include::{path}/http-response.adoc[]
 
 :path: {snippets}/post-session
 
+include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
