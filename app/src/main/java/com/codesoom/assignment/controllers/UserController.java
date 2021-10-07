@@ -7,6 +7,7 @@ import com.codesoom.assignment.dto.UserRegistrationData;
 import com.codesoom.assignment.dto.UserResultData;
 import com.codesoom.assignment.security.UserAuthentication;
 import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.errors.UserEmailDuplicationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,7 @@ public class UserController {
      *
      * @param registrationData 사용자 생성에 필요한 데이터
      * @return 생성한 사용자의 데이터
+     * @throws UserEmailDuplicationException 생성할 사용자의 이메일이 이미 존재하는 경우
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
