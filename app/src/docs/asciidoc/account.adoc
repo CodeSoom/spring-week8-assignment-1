@@ -1,51 +1,51 @@
 :path: {snippets}/user-controller-test
 
 [[Account]]
-= 회원 정보 관리하기
+== 회원 정보 관리하기
 
 NOTE: 이 섹션은 회원의 정보를 추가,수정,삭제하는 기능을 제공하는 API를 안내합니다.
 
 [[Account-post]]
-== 회원 등록하기
+=== 회원 등록하기
 새로운 회원 등록 기능을 제공하는 API입니다. 별도의 `인증 토큰` 은 필요로 하지 않으며,
 정상적으로 호출이 되었을 경우 등록된 회원의 상세 정보를 `JSON` 형태로 돌려줍니다.
 
-=== Request
-==== URL
+==== Request
+===== URL
 [source]
 POST /users HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080
 
-==== Response
-include::{docdir}/account-registration-data-table.adoc[]
+===== Response
+include::{docdir}/table/account-registration-data-table.adoc[]
 
-=== Sample
-==== Request
+==== Sample
+===== Request
 include::{path}/post-users/httpie-request.adoc[]
 
-==== Response
+===== Response
 include::{path}/post-users/http-response.adoc[]
 
 
 [[Account-patch]]
-== 회원 정보 수정하기
+=== 회원 정보 수정하기
 식별자로 회원을 찾아 정보를 수정할 수 있는 기능을 제공하는 API입니다. +
 해당 기능은 `관리자` 혹은 수정하려는 정보가 `자기 자신` 인 경우에만 사용이 가능합니다. +
 기능을 이용하기 위해서는 유효한 `인증 토큰` 이 필요합니다.
 
-=== Request
-==== URL
+==== Request
+===== URL
 [source]
 PATCH /users/{id} HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {Access-Token}
 Host: localhost:8080
 
-==== Header
-include::{docdir}/authorization-data-table.adoc[]
+===== Header
+include::{docdir}/table/authorization-data-table.adoc[]
 
-==== PathVariable
+===== PathVariable
 [cols="3,5,1a"]
 |===
 |Name |Description |Required
@@ -56,34 +56,34 @@ PATCH /users/{id}
 |O
 |===
 
-==== Response
-include::{docdir}/account-registration-data-table.adoc[]
+===== Response
+include::{docdir}/table/account-registration-data-table.adoc[]
 
-=== Sample
-==== Request
+==== Sample
+===== Request
 include::{path}/patch-users/httpie-request.adoc[]
 
-==== Response
+===== Response
 include::{path}/patch-users/http-response.adoc[]
 
 
 [[Account-delete]]
-== 회원 정보 삭제하기
+=== 회원 정보 삭제하기
 식별자로 회원을 찾아 정보를 삭제하는 기능을 제공하는 API입니다 +
 해당 기능은 `관리자` 혹은 수정하려는 정보가 `자기 자신` 인 경우에만 사용이 가능합니다. +
 기능을 이용하기 위해서는 유효한 `인증 토큰` 이 필요합니다.
 
-=== Request
-==== URL
+==== Request
+===== URL
 [source]
 DELETE /users/{id} HTTP/1.1
 Authorization: Bearer {Access-Token}
 Host: localhost:8080
 
-==== Header
-include::{docdir}/authorization-data-table.adoc[]
+===== Header
+include::{docdir}/table/authorization-data-table.adoc[]
 
-==== PathVariable
+===== PathVariable
 [cols="3,5,1a"]
 |===
 |Name |Description |Required
@@ -94,12 +94,12 @@ DELETE /users/{id}
 |O
 |===
 
-==== Response
-include::{docdir}/account-registration-data-table.adoc[]
+===== Response
+include::{docdir}/table/account-registration-data-table.adoc[]
 
-=== Sample
-==== Request
+==== Sample
+===== Request
 include::{path}/delete-users/httpie-request.adoc[]
 
-==== Response
+===== Response
 include::{path}/delete-users/http-response.adoc[]

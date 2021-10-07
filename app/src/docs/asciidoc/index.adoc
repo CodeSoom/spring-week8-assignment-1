@@ -2,9 +2,7 @@
 :doctype: book
 :toc: left
 :toc-title: REST API
-:toclevels: 1
-
-image::catToy_thumbnail.png[]
+:toclevels: 2
 
 include::{docdir}/products.adoc[]
 
