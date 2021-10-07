@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 사용자의 생성, 조회, 수정, 삭제를 담당한다.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +36,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 생성한 사용자를 리턴한다.
+     *
+     * @param registrationData 사용자 생성에 필요한 데이터
+     * @return 생성한 사용자
+     * @throws UserEmailDuplicationException 생성할 사용자의 이메일이 이미 존재하는 경우
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +59,16 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 수정한 사용자 정보를 리턴한다.
+     *
+     * @param id 수정할 사용자의 id
+     * @param modificationData 수정할 사용자 데이터
+     * @param userId 수정을 요청한 사용자의 id
+     * @return 수정한 사용자
+     * @throws UserNotFoundException 수정할 사용자를 찾지 못한 경우
+     * @throws AccessDeniedException 수정할 사용자와 수정을 요청한 사용자가 일치하지 않는 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +83,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 사용자를 삭제한다.
+     * @param id 삭제할 사용자의 id
+     * @return 삭제한 사용자
+     * @throws UserNotFoundException 삭제할 사용자를 찾지 못한 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
