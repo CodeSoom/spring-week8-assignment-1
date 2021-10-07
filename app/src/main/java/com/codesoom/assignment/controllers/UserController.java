@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * 회원 등록, 정보 변경, 삭제 HTTP 요청을 서비스 객체로 전달합니다.
+ */
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,12 +26,24 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 신규 회원 데이터를 서비스에 전달하여 등록된 회원 데이터를 리턴합니다.
+     * @param registrationData 등록하려는 회원 데이터
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
         User user = userService.registerUser(registrationData);
         return getUserResultData(user);
     }
+
+    /**
+     * 주어진 아이디로 변경하려는 회원 데이터를 서비스에 전달하여 변경된 회원 데이터를 리턴합니다.
+     * @param id 회원 아이디
+     * @param modificationData 변경하려는 회원 데이터
+     * @param authentication 사용자 인증
+     * @throws AccessDeniedException 회원 인증이 실패했을 때
+     */
 
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -40,6 +56,11 @@ public class UserController {
         User user = userService.updateUser(id, modificationData, userId);
         return getUserResultData(user);
     }
+
+    /**
+     * 주어진 아이디로 서비스에 삭제 요청을 전달합니다.
+     * @param id 회원 아이디
+     */
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
