@@ -5,21 +5,6 @@
 
 NOTE: 이 섹션은 회원의 정보를 추가,수정,삭제하는 기능을 제공하는 API를 안내합니다.
 
-
-=== Request
-==== URL
-[source]
-
-==== Header
-
-==== Response
-
-=== Sample
-==== Request
-
-==== Response
-
-
 [[Account-post]]
 == 회원 등록하기
 새로운 회원 등록 기능을 제공하는 API입니다. 별도의 `인증 토큰` 은 필요로 하지 않으며,
