@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 회원 데이터를 담고 있습니다.
+ */
 @Entity
 @Getter
 @Builder
