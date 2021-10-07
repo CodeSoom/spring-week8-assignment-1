@@ -38,7 +38,7 @@ public class ProductController {
 
     /**
      * 상품의 세부 정보를 조회하는 요청을 받아서 서비스에서 해당 상품을 찾고 데이터를 반환합니다.
-     * @param id 는 상품의 아이디
+     * @param id 상품의 아이디
      */
 
     @GetMapping("{id}")
