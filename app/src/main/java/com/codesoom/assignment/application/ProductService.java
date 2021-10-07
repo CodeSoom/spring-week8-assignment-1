@@ -38,7 +38,7 @@ public class ProductService {
      * 아이디로 상품을 찾아서 상품을 반환합니다.
      *
      * @param id 는 상품의 아이디 입니다.
-     * @throws ProductNotFoundException 는 상품 아이디가 존재하지 않을 때 던집니다.
+     * @throws ProductNotFoundException 상품 아이디가 존재하지 않을 경우
      */
 
     public Product getProduct(Long id) {
