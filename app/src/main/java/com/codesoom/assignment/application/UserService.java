@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * 회원을 찾고, 등록하고, 정보를 수정하고, 삭제합니다.
+ * 회원 관리 기능을 제공합니다.
  */
 @Service
 @Transactional
