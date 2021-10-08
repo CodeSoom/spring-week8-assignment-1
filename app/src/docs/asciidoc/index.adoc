@@ -67,3 +67,14 @@ include::{snippets}/patch-user/http-response.adoc[]
 include::{snippets}/delete-user/http-request.adoc[]
 
 include::{snippets}/delete-user/http-response.adoc[]
+
+== /session
+
+=== POST /session
+
+로그인을 수행한다.
+
+include::{snippets}/post-session/http-request.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]
+
