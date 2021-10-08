@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 
+/**
+ * Jwt와 관련된 기능을 제공한다.
+ */
 @Component
 public class JwtUtil {
     private final Key key;
@@ -18,6 +21,11 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    /**
+     * 사용자의 식별자를 인자로 받아 Jwt 인코딩된 결과를 반환한다.
+     * @param userId Jwt 발급 대상 식별자
+     * @return Jwt 인코드 결과물
+     */
     public String encode(Long userId) {
         return Jwts.builder()
                 .claim("userId", userId)
@@ -25,6 +33,11 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Jwt를 디코딩해서 Claim을 반환한다.
+     * @param token 디코딩할 문자열
+     * @return Jwt의 Claims를 반환한다.
+     */
     public Claims decode(String token) {
         if (token == null || token.isBlank()) {
             throw new InvalidTokenException(token);
