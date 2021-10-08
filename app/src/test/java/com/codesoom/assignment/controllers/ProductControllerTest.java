@@ -125,7 +125,8 @@ class ProductControllerTest {
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("NotExistedProducts"));
     }
 
     @Test
@@ -158,7 +159,8 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("WithInvalidAttributes"));
     }
 
     @Test
@@ -183,7 +185,8 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("WithInvalidAccessToken"));
     }
 
     @Test

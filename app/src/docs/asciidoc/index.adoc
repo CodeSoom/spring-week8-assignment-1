@@ -10,7 +10,6 @@
 :path: {snippets}/get-products
 
 include::{path}/http-request.adoc[]
-
 include::{path}/http-response.adoc[]
 
 === GET /product/{id}
@@ -95,3 +94,21 @@ include::{path}/http-response.adoc[]
 include::{path}/request-fields.adoc[]
 include::{path}/http-request.adoc[]
 include::{path}/http-response.adoc[]
+
+== Error
+Http header에 상태코드, body에 에러메세지를 전달합니다.
+실패 원인을 나타내는 msg는 요청하는 API에 따라 의미가 바뀌지 않는 범위에서 내용이 바뀔 수 있습니다
+
+=== Bad Request
+적절하지 않은 값으로 요청을 보내는 경우
+include::{snippets}/WrongEmail/http-response.adoc[]
+
+=== Unauthorized
+Access Token이 필요한 api에 잘못된 Access Token으로 접근하거나, Access Token없이 접근하는 경우
+include::{snippets}/WithoutAccesstoken/http-response.adoc[]
+
+
+=== Not Found
+없는 유저나 상품에 대해서 요청을 보내는 경우
+include::{snippets}/NotExistedProducts/http-response.adoc[]
+

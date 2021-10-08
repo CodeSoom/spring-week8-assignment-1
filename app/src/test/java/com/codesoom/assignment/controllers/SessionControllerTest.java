@@ -67,7 +67,8 @@ class SessionControllerTest {
                         .content("{\"email\":\"badguy@example.com\"," +
                                 "\"password\":\"test\"}")
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("WrongEmail"));
     }
 
     @Test
