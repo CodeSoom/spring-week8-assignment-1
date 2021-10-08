@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * User에 대한 HTTP 요청 처리를 담당한다.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -29,6 +32,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * 요청된 User를 추가하고 추가된 것을 반환한다.
+     * @param registrationData 추가 요청된 User 데이터.
+     * @return 추가된 User 데이터.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
@@ -36,6 +44,14 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 요청된 User를 수정한다.
+     * @param id 수정 요청 User 식별자
+     * @param modificationData 수정 User 정보
+     * @param authentication User 인증 정보
+     * @return 수정된 User 데이터
+     * @throws AccessDeniedException
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     UserResultData update(
@@ -48,6 +64,10 @@ public class UserController {
         return getUserResultData(user);
     }
 
+    /**
+     * 요청된 식별자와 일치하는 User를 삭제한다.
+     * @param id 삭제 요청 User 식별자
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
