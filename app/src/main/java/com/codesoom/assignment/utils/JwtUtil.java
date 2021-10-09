@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 
 /**
- * Jwt와 관련된 기능을 제공한다.
+ * Jwt의 인코딩과 디코딩 기능을 제공한다.
  */
 @Component
 public class JwtUtil {
@@ -34,9 +34,9 @@ public class JwtUtil {
     }
 
     /**
-     * Jwt를 디코딩해서 Claim을 반환한다.
+     * Jwt를 디코딩해서 내부 정보를 반환한다.
      * @param token 디코딩할 문자열
-     * @return Jwt의 Claims를 반환한다.
+     * @return Jwt의 내부 정보를 반환한다.
      */
     public Claims decode(String token) {
         if (token == null || token.isBlank()) {

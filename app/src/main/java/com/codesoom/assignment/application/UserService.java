@@ -37,8 +37,9 @@ public class UserService {
      * User를 등록한다. 만약 이메일이 중복되면 예외를 발생시킨다.
      * @param registrationData User의 데이터.
      * @return 등록된 User를 반환한다.
+     * @throws UserEmailDuplicationException 이메일이 중복되면 예외를 던집니다.
      */
-    public User registerUser(UserRegistrationData registrationData) {
+    public User registerUser(UserRegistrationData registrationData) throws UserEmailDuplicationException {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new UserEmailDuplicationException(email);
