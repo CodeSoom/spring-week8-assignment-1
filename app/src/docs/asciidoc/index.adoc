@@ -78,3 +78,16 @@ include::auth.adoc[]
 include::{snippets}/delete-product/http-request.adoc[]
 
 include::{snippets}/delete-product/http-response.adoc[]
+
+== POST /session
+
+로그인 요청을 받아들여 액세스 토큰을 돌려줍니다.
+
+include::{snippets}/login/http-request.adoc[]
+
+include::{snippets}/login/http-response.adoc[]
+
+=== request body
+
+- email - 로그인할 사용자 이메일
+- password - 로그인할 사용자 패스워드
