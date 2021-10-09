@@ -86,3 +86,62 @@ include::{snippets}/login/http-response.adoc[]
 
 - email - 로그인할 사용자 이메일
 - password - 로그인할 사용자 패스워드
+
+== POST /users
+
+회원을 생성하고 JSON 형태로 돌려줍니다.
+
+include::{snippets}/create-user/http-request.adoc[]
+
+=== request body
+
+- email - 사용할 회원 이메일
+- name - 사용할 회원 이름
+- password - 사용할 회원 패스워드
+
+include::{snippets}/create-user/http-response.adoc[]
+
+=== response body
+
+- id - 생성된 회원 아이디
+- email - 회원 생성 시 입력한 이메일
+- name - 회원 생성 시 입력한 이름
+
+== PATCH /users/{id}
+
+회원 정보를 수정하고 JSON 형태로 돌려줍니다.
+
+include::auth.adoc[]
+
+=== parameters
+
+- id - 수정할 회원의 id
+
+include::{snippets}/update-user/http-request.adoc[]
+
+=== request body
+
+- name - 수정할 회원 이름 (Optional)
+- password - 수정할 회원 패스워드 (Optional)
+
+include::{snippets}/update-user/http-response.adoc[]
+
+=== response body
+
+- id - 생성된 회원 아이디
+- email - 회원 생성 시 입력한 이메일
+- name - 회원 생성 시 입력한 이름
+
+== DELETE /users/{id}
+
+회원을 삭제합니다.
+
+include::auth.adoc[]
+
+=== parameters
+
+- id - 삭제할 회원의 id
+
+include::{snippets}/delete-user/http-request.adoc[]
+
+include::{snippets}/delete-user/http-response.adoc[]
