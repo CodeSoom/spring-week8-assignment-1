@@ -19,3 +19,62 @@ include::{snippets}/get-product/http-response.adoc[]
 === parameters
 
 id - 조회할 상품의 id입니다.
+
+== POST /products
+
+상품을 생성하고 JSON 형태로 돌려준다.
+
+include::auth.adoc[]
+
+include::{snippets}/create-product/http-request.adoc[]
+
+include::{snippets}/create-product/http-response.adoc[]
+
+=== request body
+
+name - 상품 이름
+
+maker - 상품
+
+price - 상품 가격
+
+imageUrl - 상품 이미지 URL 주소 (Optional)
+include::{snippets}/create-product/request-body.adoc[]
+
+== PATCH /products/{id}
+
+=== parameters
+
+id - 조회할 상품의 id입니다
+
+상품을 수정하고 JSON 형태로 돌려준다.
+
+include::auth.adoc[]
+
+include::{snippets}/update-product/http-request.adoc[]
+
+include::{snippets}/update-product/http-response.adoc[]
+
+=== request body
+
+name - 상품 이름 (Optional)
+
+maker - 상품 (Optional)
+
+price - 상품 가격 (Optional)
+
+imageUrl - 상품 이미지 URL 주소 (Optional)
+
+== DELETE /products/{id}
+
+상품을 삭제합니다.
+
+=== parameters
+
+id - 조회할 상품의 id입니다
+
+include::auth.adoc[]
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
