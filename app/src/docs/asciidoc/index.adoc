@@ -22,7 +22,7 @@ include::{snippets}/get-product/http-response.adoc[]
 
 == POST /products
 
-상품을 생성하고 JSON 형태로 돌려줍니다.
+상품을 생성하고, 생성한 상품을 JSON 형태로 돌려줍니다.
 
 include::auth.adoc[]
 
@@ -89,7 +89,7 @@ include::{snippets}/login/http-response.adoc[]
 
 == POST /users
 
-회원을 생성하고 JSON 형태로 돌려줍니다.
+회원을 생성하고, 생성된 회원 정보를 JSON 형태로 돌려줍니다.
 
 include::{snippets}/create-user/http-request.adoc[]
 
@@ -109,7 +109,7 @@ include::{snippets}/create-user/http-response.adoc[]
 
 == PATCH /users/{id}
 
-회원 정보를 수정하고 JSON 형태로 돌려줍니다.
+회원 정보를 수정하고, 수정된 회원 정보를 JSON 형태로 돌려줍니다.
 
 include::auth.adoc[]
 
