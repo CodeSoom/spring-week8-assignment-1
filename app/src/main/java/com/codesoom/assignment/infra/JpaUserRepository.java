@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * JPA로 회원 데이터에 접근하는 역할을 합니다.
+ * 회원 데이터에 접근하는 JPA 구현체 입니다.
  */
 public interface JpaUserRepository
     extends UserRepository, CrudRepository<User, Long> {

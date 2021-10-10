@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * JPA로 권한 데이터에 접근하는 역할을 합니다.
+ * 권한 데이터에 접근하는 JPA 구현체 입니다.
  */
 public interface JpaRoleRepository
     extends RoleRepository, CrudRepository<Role, Long> {

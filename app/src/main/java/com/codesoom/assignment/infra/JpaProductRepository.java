@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * JPA로 상품 데이터에 접근하는 역할을 합니다.
+ * 상품 데이터에 접근하는 JPA 구현체 입니다.
  */
 public interface JpaProductRepository
     extends ProductRepository, CrudRepository<Product, Long> {
