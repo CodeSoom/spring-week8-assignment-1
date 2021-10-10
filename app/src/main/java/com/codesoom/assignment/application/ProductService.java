@@ -81,7 +81,7 @@ public class ProductService {
      * id에 해당하는 상품을 찾아 리턴한다.
      * @param id
      * @return 찾은 상품 정보
-     * @throws ProductNotFoundException
+     * @throws id에 해당하는 상품을 찾지 못할 경우 ProductNotFoundException
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)

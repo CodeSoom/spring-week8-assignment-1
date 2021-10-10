@@ -59,7 +59,7 @@ public class UserService {
      * @param id
      * @param modificationData
      * @return 수정한 유저 정보
-     * @throws AccessDeniedException
+     * @throws id에 해당하는 상품을 찾지 못할 경우 AccessDeniedException
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
@@ -89,7 +89,7 @@ public class UserService {
      * id에 해당하는 유저를 찾아 리턴한다.
      * @param id
      * @return id에 해당하는 유저
-     * @throws UserNotFoundException
+     * @throws id에 해당하는 상품을 찾지 못할 경우 UserNotFoundException
      */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
