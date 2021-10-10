@@ -6,6 +6,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -135,7 +138,16 @@ class ProductControllerTest {
         )
             .andExpect(status().isCreated())
             .andExpect(content().string(containsString("쥐돌이")))
-            .andDo(document("create-product"));
+            .andDo(document("create-product", requestFields(
+                fieldWithPath("name").attributes(key("constraints").value("Required"))
+                    .description("상품 이름"),
+                fieldWithPath("maker").attributes(key("constraints").value("Required"))
+                    .description("상품 메이커"),
+                fieldWithPath("price").attributes(key("constraints").value("Required"))
+                    .description("상품 가격"),
+                fieldWithPath("imageUrl").optional().type("String")
+                    .description("상품 이미지 URL")
+            )));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -190,7 +202,16 @@ class ProductControllerTest {
         )
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("쥐순이")))
-            .andDo(document("update-product"));
+            .andDo(document("update-product", requestFields(
+                fieldWithPath("name").attributes(key("constraints").value("Optional"))
+                    .description("상품 이름"),
+                fieldWithPath("maker").attributes(key("constraints").value("Optional"))
+                    .description("상품 메이커"),
+                fieldWithPath("price").attributes(key("constraints").value("Optional"))
+                    .description("상품 가격"),
+                fieldWithPath("imageUrl").type("String").optional()
+                    .description("상품 이미지 URL")
+            )));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }

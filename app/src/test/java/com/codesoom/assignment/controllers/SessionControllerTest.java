@@ -3,6 +3,9 @@ package com.codesoom.assignment.controllers;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +53,12 @@ class SessionControllerTest {
         )
             .andExpect(status().isCreated())
             .andExpect(content().string(containsString(".")))
-            .andDo(document("login"));
+            .andDo(document("login", requestFields(
+                fieldWithPath("email").attributes(key("constraints").value("Required"))
+                    .description("회원 이메일"),
+                fieldWithPath("password").attributes(key("constraints").value("Required"))
+                    .description("회원 패스워드")
+            )));
     }
 
     @Test

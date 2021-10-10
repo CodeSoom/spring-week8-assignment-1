@@ -6,6 +6,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -132,7 +135,14 @@ class UserControllerTest {
             .andExpect(content().string(
                 containsString("\"name\":\"Tester\"")
             ))
-            .andDo(document("create-user"));
+            .andDo(document("create-user", requestFields(
+                fieldWithPath("email").attributes(key("constraints").value("Required"))
+                    .description("등록할 회원 이메일"),
+                fieldWithPath("name").attributes(key("constraints").value("Required"))
+                    .description("등록할 회원 이름"),
+                fieldWithPath("password").attributes(key("constraints").value("Required"))
+                    .description("등록할 회원 패스워드")
+            )));
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -162,7 +172,12 @@ class UserControllerTest {
             .andExpect(content().string(
                 containsString("\"name\":\"TEST\"")
             ))
-            .andDo(document("update-user"));
+            .andDo(document("update-user", requestFields(
+                fieldWithPath("name").attributes(key("constraints").value("Optional"))
+                    .description("변경할 회원 이름"),
+                fieldWithPath("password").attributes(key("constraints").value("Optional"))
+                    .description("변경할 회원 패스워드")
+            )));
 
         verify(userService)
             .updateUser(eq(1L), any(UserModificationData.class), eq(1L));

@@ -32,12 +32,7 @@ include::{snippets}/create-product/http-response.adoc[]
 
 === request body
 
-- name - 상품 이름
-- maker - 상품
-- price - 상품 가격
-- imageUrl - 상품 이미지 URL 주소 (Optional)
-
-include::{snippets}/create-product/request-body.adoc[]
+include::{snippets}/create-product/request-fields.adoc[]
 
 == PATCH /products/{id}
 
@@ -55,10 +50,7 @@ include::{snippets}/update-product/http-response.adoc[]
 
 === request body
 
-- name - 상품 이름 (Optional)
-- maker - 상품 (Optional)
-- price - 상품 가격 (Optional)
-- imageUrl - 상품 이미지 URL 주소 (Optional)
+include::{snippets}/update-product/request-fields.adoc[]
 
 == DELETE /products/{id}
 
@@ -84,8 +76,7 @@ include::{snippets}/login/http-response.adoc[]
 
 === request body
 
-- email - 로그인할 사용자 이메일
-- password - 로그인할 사용자 패스워드
+include::{snippets}/login/request-fields.adoc[]
 
 == POST /users
 
@@ -95,17 +86,13 @@ include::{snippets}/create-user/http-request.adoc[]
 
 === request body
 
-- email - 사용할 회원 이메일
-- name - 사용할 회원 이름
-- password - 사용할 회원 패스워드
+include::{snippets}/create-user/request-fields.adoc[]
 
 include::{snippets}/create-user/http-response.adoc[]
 
 === response body
 
-- id - 생성된 회원 아이디
-- email - 회원 생성 시 입력한 이메일
-- name - 회원 생성 시 입력한 이름
+include::{snippets}/create-user/request-fields.adoc[]
 
 == PATCH /users/{id}
 
@@ -121,16 +108,13 @@ include::{snippets}/update-user/http-request.adoc[]
 
 === request body
 
-- name - 수정할 회원 이름 (Optional)
-- password - 수정할 회원 패스워드 (Optional)
+include::{snippets}/update-user/request-fields.adoc[]
 
 include::{snippets}/update-user/http-response.adoc[]
 
 === response body
 
-- id - 생성된 회원 아이디
-- email - 회원 생성 시 입력한 이메일
-- name - 회원 생성 시 입력한 이름
+include::{snippets}/update-user/request-fields.adoc[]
 
 == DELETE /users/{id}
 
