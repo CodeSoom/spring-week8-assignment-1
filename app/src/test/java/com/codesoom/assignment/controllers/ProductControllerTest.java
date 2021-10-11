@@ -169,7 +169,7 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("create-products",
+                .andDo(document("create-product",
                         requestFields(
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING).description("상품 이름"),
@@ -250,7 +250,7 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
-                .andDo(document("update-products",
+                .andDo(document("update-product",
                         pathParameters(parameterWithName("id").description("상품 아이디")),
                         requestFields(
                                 fieldWithPath("name")
@@ -340,7 +340,7 @@ class ProductControllerTest {
                                 .header("Authorization", "Bearer " + VALID_TOKEN)
                 )
                 .andExpect(status().isOk())
-                .andDo(document("delete-products",
+                .andDo(document("delete-product",
                         pathParameters(parameterWithName("id").description("상품 아이디"))
                         ));
 
