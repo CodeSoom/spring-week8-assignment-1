@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+
 public class ProductService {
     private final Mapper mapper;
     private final ProductRepository productRepository;
