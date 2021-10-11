@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * 상품을 찾고, 수정하고, 저장하고, 삭제합니다.
+ * 상품 관리 기능을 제공합니다.
  */
 @Service
 @Transactional
