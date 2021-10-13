@@ -1,0 +1,30 @@
+[cols="3,1,5,1a"]
+|===
+|Name |Type |Description |Required
+
+|id
+|Long
+|상품 식별자 정보
+|O
+
+|name
+|String
+|상품명
+|O
+
+|maker
+|String
+|상품 제조사
+|O
+
+|price
+|String
+|상품 가격
+|O
+
+|imageUrl
+|String
+|상품 이미지 주소를 나타내며 +
+필수 값이 아니기에 경로가 없을 경우 null을 반환합니다.
+|X
+|===

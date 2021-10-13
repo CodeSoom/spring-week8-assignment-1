@@ -1,0 +1,20 @@
+[cols="3,1,5,1a"]
+|===
+|Name |Type |Description |Required
+
+|name
+|String
+|수정 할 상품명
+|X
+
+|maker
+|String
+|수정 할 상품 제조사
+|X
+
+|price
+|String
+|수정 할 상품 가격
+|X
+
+|===

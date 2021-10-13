@@ -1,0 +1,9 @@
+[cols="3,5,1a"]
+|===
+|Name |Description |Required
+
+|Authorization
+|API를 사용하기 위한 인증 토큰 +
+Authorization: Bearer {ACCESS_TOKEN}
+|O
+|===
