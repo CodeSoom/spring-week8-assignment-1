@@ -1,6 +1,8 @@
 = 고양이 장난감 가게 API
 
-== GET /products
+== /products
+
+=== GET /products
 
 상품 목록을 JSON 형태로 돌려준다.
 
@@ -8,10 +10,71 @@ include::{snippets}/get-products/http-request.adoc[]
 
 include::{snippets}/get-products/http-response.adoc[]
 
-== GET /product/{id}
+=== POST /products
+
+상품을 생성하고, 생성 결과를 JSON 형태로 돌려준다.
+
+include::{snippets}/post-product/http-request.adoc[]
+
+include::{snippets}/post-product/http-response.adoc[]
+
+=== GET /products/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+=== PATCH /products/{id}
+
+상품의 정보를 갱신하고, 갱신 결과를 JSON 형태로 돌려준다.
+
+include::{snippets}/patch-product/http-request.adoc[]
+
+include::{snippets}/patch-product/http-response.adoc[]
+
+=== DELETE /products/{id}
+
+상품을 삭제한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
+
+== /users
+
+=== POST /users
+
+사용자를 생성하고, 생성 결과를 JSON 형태로 돌려준다.
+
+include::{snippets}/post-user/http-request.adoc[]
+
+include::{snippets}/post-user/http-response.adoc[]
+
+=== PATCH /users/{id}
+
+사용자 정보를 갱신하고, 갱신 결과를 JSON 형태로 돌려준다.
+
+include::{snippets}/patch-user/http-request.adoc[]
+
+include::{snippets}/patch-user/http-response.adoc[]
+
+=== DELETE /users/{id}
+
+사용자를 삭제한다.
+
+include::{snippets}/delete-user/http-request.adoc[]
+
+include::{snippets}/delete-user/http-response.adoc[]
+
+== /session
+
+=== POST /session
+
+로그인을 수행한다.
+
+include::{snippets}/post-session/http-request.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]
+
