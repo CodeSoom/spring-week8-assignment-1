@@ -10,7 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 시큐리티 토큰 검증필터 예외를 처리하여 응답해주는 클래스
+ */
 public class AuthenticationErrorFilter extends HttpFilter {
+
+    /**
+     * 토큰 검증에 실패하여 예외가 발생할 경우, 410 상태코드를 반환합니다.
+     * @param request HTTP 요청정보
+     * @param response HTTP 응답정보
+     * @param chain 필터 정보
+     * @throws IOException 입출력에 문제가 있을 경우
+     * @throws ServletException 서블릿에 문제가 있을 경우
+     */
     @Override
     protected void doFilter(HttpServletRequest request,
                             HttpServletResponse response,

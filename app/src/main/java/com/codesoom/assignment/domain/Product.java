@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 상품의 모든 정보를 가지고있는 루트 도메인
+ */
 @Entity
 @Getter
 @Builder
