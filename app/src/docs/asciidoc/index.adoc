@@ -1,17 +1,135 @@
 = 고양이 장난감 가게 API
 
-== GET /products
+== 회원 로그인
 
-상품 목록을 JSON 형태로 돌려준다.
+==== HTTP request
+include::{snippets}/login/http-request.adoc[]
 
+==== Request fields
+include::{snippets}/login/request-fields.adoc[]
+
+==== Request body
+include::{snippets}/login/request-body.adoc[]
+
+==== Response fields
+include::{snippets}/login/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/login/response-body.adoc[]
+
+
+== 회원 등록
+
+==== HTTP request
+include::{snippets}/register-user/http-request.adoc[]
+
+==== Request fields
+include::{snippets}/register-user/request-fields.adoc[]
+
+==== Request body
+include::{snippets}/register-user/request-body.adoc[]
+
+==== Response fields
+include::{snippets}/register-user/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/register-user/response-body.adoc[]
+
+== 회원 수정
+
+==== HTTP request
+include::{snippets}/update-user/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/update-user/path-parameters.adoc[]
+
+==== Request fields
+include::{snippets}/update-user/request-fields.adoc[]
+
+==== Request body
+include::{snippets}/update-user/request-body.adoc[]
+
+==== Response fields
+include::{snippets}/update-user/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/update-user/response-body.adoc[]
+
+== 회원 삭제
+
+==== HTTP request
+include::{snippets}/delete-user/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/delete-user/path-parameters.adoc[]
+
+== 상품 목록 조회
+
+==== HTTP request
 include::{snippets}/get-products/http-request.adoc[]
 
-include::{snippets}/get-products/http-response.adoc[]
+==== Response fields
+include::{snippets}/get-products/response-fields.adoc[]
 
-== GET /product/{id}
+==== Response body
+include::{snippets}/get-products/response-body.adoc[]
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+== 상품 상세 조회
 
+==== HTTP request
 include::{snippets}/get-product/http-request.adoc[]
 
-include::{snippets}/get-product/http-response.adoc[]
+==== Path Parameters
+include::{snippets}/get-product/path-parameters.adoc[]
+
+==== Response fields
+include::{snippets}/get-product/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/get-product/response-body.adoc[]
+
+
+== 상품 생성
+
+==== HTTP request
+include::{snippets}/create-product/http-request.adoc[]
+
+==== Request fields
+include::{snippets}/create-product/request-fields.adoc[]
+
+==== Request body
+include::{snippets}/create-product/request-body.adoc[]
+
+==== Response fields
+include::{snippets}/create-product/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/create-product/response-body.adoc[]
+
+== 상품 수정
+
+==== HTTP request
+include::{snippets}/update-product/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/update-product/path-parameters.adoc[]
+
+==== Request fields
+include::{snippets}/update-product/request-fields.adoc[]
+
+==== Request body
+include::{snippets}/update-product/request-body.adoc[]
+
+==== Response fields
+include::{snippets}/update-product/response-fields.adoc[]
+
+==== Response body
+include::{snippets}/update-product/response-body.adoc[]
+
+== 상품 삭제
+
+==== HTTP request
+include::{snippets}/delete-product/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/delete-product/path-parameters.adoc[]
