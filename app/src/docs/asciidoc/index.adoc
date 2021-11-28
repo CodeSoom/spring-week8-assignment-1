@@ -1,17 +1,117 @@
 = 고양이 장난감 가게 API
+:toc: left
+:toclevels::3
 
-== GET /products
+== Product
+=== GET /products
 
-상품 목록을 JSON 형태로 돌려준다.
+상품 목록을 반환한다.
 
-include::{snippets}/get-products/http-request.adoc[]
+:path: {snippets}/get-products
 
-include::{snippets}/get-products/http-response.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
 
-== GET /product/{id}
+=== GET /product/{id}
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+상품에 대한 자세한 정보를 반환한다.
 
-include::{snippets}/get-product/http-request.adoc[]
+:path: {snippets}/get-product
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{path}/http-request.adoc[]
+
+include::{path}/http-response.adoc[]
+
+
+=== POST /product
+
+상품을 생성하고, 상품 정보를 반환한다.
+
+:path: {snippets}/post-product
+
+include::{path}/request-fields.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+
+
+=== PATCH /product/{id}
+
+상품 정보를 수정하고, 상품 정보를 반환한다.
+
+:path: {snippets}/update-product
+
+include::{path}/request-fields.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== DELETE /product/{id}
+
+상품 정보를 삭제한다.
+
+:path: {snippets}/delete-product
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== User
+=== POST /user
+
+유저를 생성하고, 유저 정보를 반환한다.
+
+:path: {snippets}/post-user
+
+include::{path}/request-fields.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== PATCH /user/{id}
+
+유저 정보를 수정하고, 유저 정보를 반환한다.
+
+:path: {snippets}/update-user
+
+include::{path}/request-fields.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+=== DELETE /user/{id}
+
+유저 정보를 삭제한다.
+
+:path: {snippets}/delete-user
+
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== Session
+=== POST /session
+
+유저 인증 정보의 유효성을 확인하고, 인증 토큰을 반환한다.
+
+:path: {snippets}/post-session
+
+include::{path}/request-fields.adoc[]
+include::{path}/http-request.adoc[]
+include::{path}/http-response.adoc[]
+
+== Error
+Http header에 상태코드, body에 에러메세지를 전달합니다.
+실패 원인을 나타내는 msg는 요청하는 API에 따라 의미가 바뀌지 않는 범위에서 내용이 바뀔 수 있습니다
+
+=== Bad Request
+적절하지 않은 값으로 요청을 보내는 경우
+ex) 잘못된 비밀번호로 로그인 요청하는 경우, 이미 등록된 이메일로 가입하려는 경우 등
+
+include::{snippets}/WrongEmail/http-response.adoc[]
+
+
+=== Unauthorized
+Access Token이 필요한 api에 잘못된 Access Token으로 접근하거나, Access Token없이 접근하는 경우
+include::{snippets}/WithoutAccesstoken/http-response.adoc[]
+
+
+=== Not Found
+없는 유저나 상품에 대해서 요청을 보내는 경우
+include::{snippets}/NotExistedProducts/http-response.adoc[]
+

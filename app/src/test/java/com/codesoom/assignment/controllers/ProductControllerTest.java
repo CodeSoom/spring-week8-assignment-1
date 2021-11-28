@@ -10,24 +10,30 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codesoom.assignment.controllers.RestDocsTexture.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -96,23 +102,31 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-products",
+                        getProductListResponseFieldsSnippet()
+                ));
     }
 
+
     @Test
-    void deatilWithExsitedProduct() throws Exception {
+    void detailWithExsitedProduct() throws Exception {
         mockMvc.perform(
                 get("/products/1")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-product",
+                        getProductResponseFieldsSnippet()
+                ));
     }
 
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("NotExistedProducts"));
     }
 
     @Test
@@ -126,7 +140,11 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("post-product",
+                        getProductHeaderParameter(),
+                        getProductRequestFieldsSnippet(),
+                        getProductResponseFieldsSnippet()));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -141,7 +159,8 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("WithInvalidAttributes"));
     }
 
     @Test
@@ -166,7 +185,8 @@ class ProductControllerTest {
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + INVALID_TOKEN)
         )
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(document("WithInvalidAccessToken"));
     }
 
     @Test
@@ -180,7 +200,12 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product",
+                        getProductHeaderParameter(),
+                        getProductRequestFieldsSnippet(),
+                        getProductResponseFieldsSnippet())
+                );
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -243,7 +268,9 @@ class ProductControllerTest {
                 delete("/products/1")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product",
+                        getProductHeaderParameter()));
 
         verify(productService).deleteProduct(1L);
     }

@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 상품 정보.
+ */
 @Entity
 @Getter
 @Builder
@@ -27,6 +30,11 @@ public class Product {
 
     private String imageUrl;
 
+    /**
+     * 상품 정보를 수정한다.
+     *
+     * @param source 상품 수정 정보
+     */
     public void changeWith(Product source) {
         this.name = source.name;
         this.maker = source.maker;

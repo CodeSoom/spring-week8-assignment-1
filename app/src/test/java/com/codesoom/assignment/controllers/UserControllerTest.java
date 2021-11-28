@@ -10,19 +10,24 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.codesoom.assignment.controllers.RestDocsTexture.*;
+import static com.codesoom.assignment.controllers.RestDocsTexture.getUserResponseFieldsSnippet;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -128,7 +135,11 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
-                ));
+                ))
+                .andDo(document("post-user",
+                        getUserPostRequestFieldsSnippet(),
+                        getUserResponseFieldsSnippet())
+                        );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
@@ -157,7 +168,11 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(document("update-user",
+                        getUserPatchRequestFieldsSnippet(),
+                        getUserResponseFieldsSnippet()));
+
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -220,7 +235,9 @@ class UserControllerTest {
                 delete("/users/1")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-user"));
+
 
         verify(userService).deleteUser(1L);
     }
