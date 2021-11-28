@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * 컨트롤러 예외 처리 담당.
+ */
 @ResponseBody
 @ControllerAdvice
 public class ControllerErrorAdvice {
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ProductNotFoundException.class)
     public ErrorResponse handleProductNotFound() {
