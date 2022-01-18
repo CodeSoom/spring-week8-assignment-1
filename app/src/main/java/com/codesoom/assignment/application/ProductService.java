@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * 상품을 관리한다.
- * @author kyuwon aka (kyuwoon369@gmail.com)
  */
 @Service
 @Transactional
@@ -40,7 +39,7 @@ public class ProductService {
      * 주어진 id에 해당하는 상품을 리턴합니다.
      * @param id 상품을 식별하는 고유 값
      * @return id에 해당하는 상품
-     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우.
+     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우
      */
     public Product getProduct(Long id) {
         return findProduct(id);
@@ -61,7 +60,7 @@ public class ProductService {
      * @param id 상품을 식별하는 고유 값
      * @param productData 수정된 상품 정보
      * @return 수정된 상품
-     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우.
+     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -75,7 +74,7 @@ public class ProductService {
      * 주어진 id에 해당하는 상품을 삭제하고 리턴합니다.
      * @param id 상품을 식별하는 고유 값
      * @return 삭제된 상품
-     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우.
+     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우
      */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
@@ -90,7 +89,7 @@ public class ProductService {
      * 없다면 상품을 찾을 수 없다는 예외를 던진다.
      * @param id 상품을 식별하는 고유 값
      * @return 해당 상품
-     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우 발생.
+     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우 발생
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
