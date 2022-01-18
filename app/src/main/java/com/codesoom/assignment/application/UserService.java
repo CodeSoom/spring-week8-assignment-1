@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * 사용자를 관리한다.
+ * @author kyuwon aka (kyuwoon369@gmail.com)
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +37,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 사용자 등록 정보를 받아 저장하고 리턴한다.
+     * 사용자의 이메일이 중복되면 사용자 이메일이 이미 있다는 예외를 던진다.
+     * 사용자의 비밀번호는 인코딩하여 저장되며 권한은 "USER"로 저장한다.
+     * @param registrationData 사용자 등록 정보
+     * @return 등록된 사용자
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +60,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 id의 사용자의 정보를 수정된 정보로 업데이트하고 리턴한다.
+     * 주어진 id와 수정 대상 사용자 id가 일치하지 않을 경우 접근 거부 예외를 던진다.
+     * @param id 요청 id
+     * @param modificationData 수정된 정보
+     * @param userId 수정 대상 사용자 id
+     * @return 수정된 사용자
+     * @throws AccessDeniedException 주어진 id와 대상 사용자 id가 일치하지 않을 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,12 +83,24 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 id의 사용자를 삭제하고 리턴한다.
+     * @param id 사용자 식별자
+     * @return 삭제된 사용자
+     * @throws UserNotFoundException id에 해당하는 사용자가 없는 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
         return user;
     }
 
+    /**
+     * 주어진 id의 사용자를 찾고 없다면 사용자를 찾을 수 없다는 예외를 던진다.
+     * @param id
+     * @return id에 해당하는 사용자
+     * @throws UserNotFoundException id에 맞는 사용자를 찾을 수 없는 경우
+     */
     private User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
