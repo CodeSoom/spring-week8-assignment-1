@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * 인증, 인가 처리한다.
- * @author kyuwon aka (kyuwoon369@gmail.com)
  */
 @Service
 public class AuthenticationService {
@@ -34,7 +33,6 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 이메일의 사용자가 없거나 비밀번호가 일치하지 않으면 로그인이 실패했다는 예외를 던진다.
      * 주어진 이메일에 일치하는 사용자의 비밀번호를 확인하고 일치하면 인코딩된 아이디를 리턴한다.
      * @param email 로그인시 입력한 이메일
      * @param password 로그인 시 입력한 비밀번호
