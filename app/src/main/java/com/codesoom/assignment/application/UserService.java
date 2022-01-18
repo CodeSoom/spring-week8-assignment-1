@@ -17,7 +17,6 @@ import javax.transaction.Transactional;
 
 /**
  * 사용자를 관리한다.
- * @author kyuwon aka (kyuwoon369@gmail.com)
  */
 @Service
 @Transactional
@@ -96,7 +95,7 @@ public class UserService {
     }
 
     /**
-     * 주어진 id의 사용자를 찾고 없다면 사용자를 찾을 수 없다는 예외를 던진다.
+     * 주어진 id의 사용자를 찾아서 리턴한다.
      * @param id
      * @return id에 해당하는 사용자
      * @throws UserNotFoundException id에 맞는 사용자를 찾을 수 없는 경우
