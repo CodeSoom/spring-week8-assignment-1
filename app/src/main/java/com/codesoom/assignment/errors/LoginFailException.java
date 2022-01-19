@@ -1,7 +1,7 @@
 package com.codesoom.assignment.errors;
 
 /**
- * 사용자가 로그인에 실패할 경우 발생되는 예외 클래스
+ * 사용자가 로그인에 실패할 경우 던집니다.
  */
 public class LoginFailException extends RuntimeException {
     public LoginFailException(String email) {
