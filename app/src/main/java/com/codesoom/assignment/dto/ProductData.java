@@ -10,6 +10,9 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 상품요청 처리에 사용하는 상품 데이터
+ */
 @Setter
 @Getter
 @Builder
