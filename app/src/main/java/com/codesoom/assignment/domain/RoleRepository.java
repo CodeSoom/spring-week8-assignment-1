@@ -9,7 +9,7 @@ public interface RoleRepository {
     /**
      * 주어진 id에 해당하는 권한 목록을 반환한다.
      *
-     * @param userId
+     * @param userId 사용자 id
      * @return 권한 목록
      */
     List<Role> findAllByUserId(Long userId);
