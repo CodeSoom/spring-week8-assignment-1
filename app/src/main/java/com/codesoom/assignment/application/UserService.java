@@ -38,10 +38,10 @@ public class UserService {
 
     /**
      * 사용자 등록 정보를 받아 저장하고 리턴한다.
-     * 사용자의 이메일이 중복되면 사용자 이메일이 이미 있다는 예외를 던진다.
      * 사용자의 비밀번호는 인코딩하여 저장되며 권한은 "USER"로 저장한다.
      * @param registrationData 사용자 등록 정보
      * @return 등록된 사용자
+     * @throws UserEmailDuplicationException 사용자 이메일이 중복될 경우
      */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
@@ -61,7 +61,6 @@ public class UserService {
 
     /**
      * 주어진 id의 사용자의 정보를 수정된 정보로 업데이트하고 리턴한다.
-     * 주어진 id와 수정 대상 사용자 id가 일치하지 않을 경우 접근 거부 예외를 던진다.
      * @param id 요청 id
      * @param modificationData 수정된 정보
      * @param userId 수정 대상 사용자 id
