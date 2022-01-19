@@ -9,13 +9,25 @@ import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.config.BeanIds;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
+import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,11 +37,15 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductController.class)
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -47,7 +63,21 @@ class ProductControllerTest {
     private AuthenticationService authenticationService;
 
     @BeforeEach
-    void setUp() {
+    void setUp(WebApplicationContext wac,
+               RestDocumentationContextProvider restDocumentationContextProvider) throws ServletException {
+        DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
+
+        delegatingFilterProxy.init(
+                new MockFilterConfig(wac.getServletContext(), BeanIds.SPRING_SECURITY_FILTER_CHAIN)
+        );
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(documentationConfiguration(restDocumentationContextProvider))
+                .addFilter(delegatingFilterProxy)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .alwaysDo(print())
+                .build();
+
         Product product = Product.builder()
                 .id(1L)
                 .name("쥐돌이")
