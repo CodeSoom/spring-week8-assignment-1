@@ -89,7 +89,7 @@ public class ProductService {
      * 없다면 상품을 찾을 수 없다는 예외를 던진다.
      * @param id 상품을 식별하는 고유 값
      * @return 해당 상품
-     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우 발생
+     * @throws ProductNotFoundException 상품을 찾을 수 없을 경우
      */
     private Product findProduct(Long id) {
         return productRepository.findById(id)
