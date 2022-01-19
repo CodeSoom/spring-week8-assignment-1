@@ -8,6 +8,9 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * 사용자 등록 요청 데이터
+ */
 @Getter
 @Builder
 @AllArgsConstructor
