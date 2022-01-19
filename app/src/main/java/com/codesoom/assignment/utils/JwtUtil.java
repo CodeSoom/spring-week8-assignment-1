@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 
 /**
- * JWT 토큰을 생성한다.
+ * 토큰의 인코딩, 디코딩을 담당한다.
  */
 @Component
 public class JwtUtil {
