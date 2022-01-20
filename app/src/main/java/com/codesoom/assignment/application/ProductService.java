@@ -58,7 +58,8 @@ public class ProductService {
     }
 
     /**
-     * 상품 목록 중 id가 일치하는 상품을 찾고, 이를 수정된 상품 정보로 업데이트 합니다.
+     * 상품 목록 중 id가 일치하는 상품을 찾고,
+     * 이를 수정된 정보로 업데이트 하여 수정된 정보를 리턴합니다.
      *
      * @param id 상품 id
      * @param productData 수정하려는 상품 정보

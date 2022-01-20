@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 사용자 로그인 http 요청에 대한 controller 입니다.
+ * 사용자 로그인 http 요청을 처리합니다.
  */
 @RestController
 @RequestMapping("/session")
