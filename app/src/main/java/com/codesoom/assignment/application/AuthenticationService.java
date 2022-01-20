@@ -5,7 +5,7 @@ import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.errors.LoginFailException;
-import com.codesoom.assignment.utils.JwtUtil;
+import com.codesoom.assignment.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,12 @@ import java.util.List;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
     public AuthenticationService(UserRepository userRepository,
                                  RoleRepository roleRepository,
-                                 JwtUtil jwtUtil,
+                                 JwtTokenUtil jwtUtil,
                                  PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
