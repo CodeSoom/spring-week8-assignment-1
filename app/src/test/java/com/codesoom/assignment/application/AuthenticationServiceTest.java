@@ -6,7 +6,7 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.LoginFailException;
-import com.codesoom.assignment.utils.JwtUtil;
+import com.codesoom.assignment.utils.JwtTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +37,7 @@ class AuthenticationServiceTest {
 
     @BeforeEach
     void setUp() {
-        JwtUtil jwtUtil = new JwtUtil(SECRET);
+        JwtTokenUtil jwtUtil = new JwtTokenUtil(SECRET);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         authenticationService = new AuthenticationService(
