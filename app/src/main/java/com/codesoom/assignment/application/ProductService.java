@@ -39,7 +39,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id를 가진 Product를 리턴합니다.
+     * 주어진 id를 가진 Product 찾고, 찾은 Product를 리턴합니다.
      *
      * @param id Product의 식별자
      * @return 주어진 id를 가진 Product
@@ -61,7 +61,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id에 만족하는 Product를 ProductData로 수정하고, 수정된 Product를 리턴합니다.
+     * 주어진 id를 가진 Product를 ProductData로 수정하고, 수정된 Product를 리턴합니다.
      *
      * @param id 수정될 Product의 식별자
      * @param productData 수정될 Product 데이터
@@ -77,7 +77,7 @@ public class ProductService {
     }
 
     /**
-     * 주어진 id에 만족하는 Product를 삭제합니다.
+     * 주어진 id를 가진 Product를 삭제합니다.
      *
      * @param id 삭제될 Product의 식별자
      * @return 삭제된 Product
