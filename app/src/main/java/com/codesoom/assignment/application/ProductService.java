@@ -43,7 +43,7 @@ public class ProductService {
      *
      * @param id Product의 식별자
      * @return 주어진 id를 가진 Product
-     * @throws ProductNotFoundException 주어진 id의 Product가 존재하지 않는 경우
+     * @throws ProductNotFoundException 주어진 id의 Product를 찾을 수 없는 경우
      */
     public Product getProduct(Long id) {
         return findProduct(id);
@@ -66,7 +66,7 @@ public class ProductService {
      * @param id 수정될 Product의 식별자
      * @param productData 수정될 Product 데이터
      * @return 수정된 Product
-     * @throws ProductNotFoundException 주어진 id의 Product가 존재하지 않는 경우
+     * @throws ProductNotFoundException 주어진 id의 Product를 찾을 수 없는 경우
      */
     public Product updateProduct(Long id, ProductData productData) {
         Product product = findProduct(id);
@@ -81,7 +81,7 @@ public class ProductService {
      *
      * @param id 삭제될 Product의 식별자
      * @return 삭제된 Product
-     * @throws ProductNotFoundException 주어진 id의 Product가 존재하지 않는 경우
+     * @throws ProductNotFoundException 주어진 id의 Product를 찾을 수 없는 경우
      */
     public Product deleteProduct(Long id) {
         Product product = findProduct(id);
