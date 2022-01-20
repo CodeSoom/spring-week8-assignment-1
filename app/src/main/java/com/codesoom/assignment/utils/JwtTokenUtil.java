@@ -14,10 +14,10 @@ import java.security.Key;
  * 토큰의 인코딩, 디코딩을 담당한다.
  */
 @Component
-public class JwtUtil {
+public class JwtTokenUtil {
     private final Key key;
 
-    public JwtUtil(@Value("${jwt.secret}") String secret) {
+    public JwtTokenUtil(@Value("${jwt.secret}") String secret) {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
