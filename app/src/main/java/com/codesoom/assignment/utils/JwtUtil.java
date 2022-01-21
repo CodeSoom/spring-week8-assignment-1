@@ -18,6 +18,12 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    /**
+     * id를 암호화하고 토큰을 생성 후 리턴한다.
+     *
+     * @param userId 사용자 id
+     * @return 생성된 토큰
+     */
     public String encode(Long userId) {
         return Jwts.builder()
                 .claim("userId", userId)
@@ -25,6 +31,13 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * 토큰을 복호화하여 리턴한다.
+     *
+     * @param token 사용자 토큰
+     * @return 복호화된 토큰
+     * @throws InvalidTokenException 토큰값이 올바르지 않은 경우
+     */
     public Claims decode(String token) {
         if (token == null || token.isBlank()) {
             throw new InvalidTokenException(token);

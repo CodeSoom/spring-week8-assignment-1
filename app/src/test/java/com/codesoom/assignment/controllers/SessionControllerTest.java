@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,34 +40,37 @@ class SessionControllerTest {
     @Test
     void loginWithRightEmailAndPassword() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(".")));
+                .andExpect(content().string(containsString(".")))
+                .andDo(document("post-session"));
     }
 
     @Test
     void loginWithWrongEmail() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"badguy@example.com\"," +
-                                "\"password\":\"test\"}")
-        )
-                .andExpect(status().isBadRequest());
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"badguy@example.com\"," +
+                                        "\"password\":\"test\"}")
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(document("post-session-wrong-email"));
     }
 
     @Test
     void loginWithWrongPassword() throws Exception {
         mockMvc.perform(
-                post("/session")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"password\":\"xxx\"}")
-        )
-                .andExpect(status().isBadRequest());
+                        post("/session")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"password\":\"xxx\"}")
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(document("post-session-wrong-password"));
     }
 }
