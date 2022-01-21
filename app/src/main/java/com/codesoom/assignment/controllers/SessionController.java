@@ -15,6 +15,12 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 로그인이 되면 토큰을 발급하고 리턴한다.
+     *
+     * @param sessionRequestData 로그인 요청 데이터
+     * @return 사용자의 토큰
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(

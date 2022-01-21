@@ -33,6 +33,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     *
+     *
+     * @param registrationData
+     * @return
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -63,6 +69,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 id의 사용자를 삭제하고 리턴한다.
+     *
+     * @param id 사용자 식별자
+     * @return 삭제된 사용자
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
