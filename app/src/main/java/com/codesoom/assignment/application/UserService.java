@@ -90,7 +90,7 @@ public class UserService {
      *
      * @param id 유저의 id
      * @return 삭제된 User
-     * @Throws UserNotFoundException 주어진 id의 User가 없을 경우
+     * @throws UserNotFoundException 주어진 id의 User가 없을 경우
      */
     public User deleteUser(Long id) {
         User user = findUser(id);
