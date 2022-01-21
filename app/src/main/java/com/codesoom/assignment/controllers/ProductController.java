@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id를 가진 상품을 찾습니다.
+     * 주어진 id를 가진 상품을 찾아서 반환합니다.
      *
      * @param id 찾을 상품의 id
      * @return 찾은 상품
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 productData로 상품을 생성합니다.
+     * 주어진 productData로 상품을 생성해서 반환합니다.
      *
      * @param productData 생상할 상품의 정보
      * @return 생성된 상품
@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     /**
-     * 주어진 id를 가진 상품의 정보를 주어진 productData로 수정합니다.
+     * 주어진 id를 가진 상품의 정보를 주어진 productData로 수정해서 반환합니다.
      *
      * @param id 수정할 상품의 id
      * @param productData 수정될 상품 정보
