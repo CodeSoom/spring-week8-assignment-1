@@ -23,8 +23,8 @@ public class SessionController {
     /**
      * 로그인 체크를 하고 token을 생성하여 반환합니다.
      *
-     * @param sessionRequestData
-     * @return
+     * @param sessionRequestData 로그인 인증 정보
+     * @return access token
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
