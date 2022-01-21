@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * User의 Service
+ *
+ * @author 혁 (pjh08190819@gmail.com)
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +38,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 주어진 registrationData로 User를 생성하고, 리턴합니다.
+     *
+     * @param registrationData 생성할 User의 데이터
+     * @return 생성된 User
+     * @throws UserEmailDuplicationException User의 email이 이미 존재하는 경우
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,6 +61,16 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 id를 가진 User를 찾아 주어진 modificationData로 변경하고, 리턴합니다.
+     *
+     * @param id 변경할 User의 Id
+     * @param modificationData 변경할 User의 데이터
+     * @param userId 인증할 User의 id
+     * @return 변경된 User
+     * @throws AccessDeniedException 주어진 userId의 접근 권한이 없는 경우
+     * @throws UserNotFoundException 주어진 id의 User가 없을 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -63,6 +85,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 주어진 id를 가진 User를 삭제하고, 리턴합니다.
+     *
+     * @param id 유저의 id
+     * @return 삭제된 User
+     * @Throws UserNotFoundException 주어진 id의 User가 없을 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
