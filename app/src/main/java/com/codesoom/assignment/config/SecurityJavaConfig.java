@@ -14,6 +14,11 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import javax.servlet.Filter;
 
+/**
+ * Security의 Config를 정의합니다.
+ *
+ * @author 혁 (pjh08190819@gmail.com)
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
