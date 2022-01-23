@@ -3,7 +3,7 @@ package com.codesoom.assignment.domain;
 import java.util.List;
 
 /**
- * 사용자 권한을 저장, 찾는 클래스
+ * 사용자 권한을 저장하고 찾는다.
  */
 public interface RoleRepository {
     /**
