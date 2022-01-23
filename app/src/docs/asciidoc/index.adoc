@@ -15,3 +15,19 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+== POST /products
+
+새로운 상품을 추가한다.
+
+Request fields:
+
+include::{snippets}/post-products/request-fields.adoc[]
+
+HTTP request:
+
+include::{snippets}/post-products/http-request.adoc[]
+
+HTTP response:
+
+include::{snippets}/post-products/http-response.adoc[]
