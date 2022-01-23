@@ -30,7 +30,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 이메일의 비밀번호가 일치한 경우 인코딩하여 리턴한다.
+     * 주어진 이메일의 비밀번호가 일치한 경우 jwt를 반환한다.
      *
      * @param email 주어진 이메일
      * @param password 주어진 비밀번호
@@ -49,7 +49,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 올바른 토큰일 경우 디코딩하여 리턴한다.
+     * 올바른 토큰일 경우 userId를 리턴한다.
      *
      * @param accessToken 올바른 토큰
      * @return 디코딩한 id
