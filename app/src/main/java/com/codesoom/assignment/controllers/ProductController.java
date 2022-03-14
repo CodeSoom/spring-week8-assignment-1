@@ -24,16 +24,32 @@ public class ProductController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 상품목록을 리턴합니다.
+     * @return 모든 상품
+     */
     @GetMapping
     public List<Product> list() {
         return productService.getProducts();
     }
 
+    /**
+     * id에 해당하는 상품을 조회해 리턴한다.
+     *
+     * @param id 상품의 id
+     * @return 찾는 상품
+     */
     @GetMapping("{id}")
     public Product detail(@PathVariable Long id) {
         return productService.getProduct(id);
     }
 
+    /**
+     * 상품을 등록한다.
+     *
+     * @param productData 등록할 상품 정보
+     * @return 등록한 상품
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
@@ -41,6 +57,13 @@ public class ProductController {
         return productService.createProduct(productData);
     }
 
+    /**
+     * id에 해당하는 상품의 내용을 수정하고 수정한 상품을 리턴한다.
+     *
+     * @param id 수정할 상품 id
+     * @param productData 수정한 상품 정보
+     * @return 수정된 상품
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public Product update(
@@ -50,6 +73,11 @@ public class ProductController {
         return productService.updateProduct(id, productData);
     }
 
+    /**
+     * id에 해당하는 상품을 삭제답한다.
+     *
+     * @param id 상품 id
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public void destroy(@PathVariable Long id) {
