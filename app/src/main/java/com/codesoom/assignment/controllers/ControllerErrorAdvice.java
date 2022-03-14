@@ -11,27 +11,50 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Http 요청에 따른 예외처리 응답을 제공한다.
+ */
 @ResponseBody
 @ControllerAdvice
 public class ControllerErrorAdvice {
+    /**
+     * 상품을 찾지 못하는 예외가 발생할 경우, 404 상태 코드를 응답한다.
+     *
+     * @return 상품을 찾지 못한다는 메세지
+     */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ProductNotFoundException.class)
     public ErrorResponse handleProductNotFound() {
         return new ErrorResponse("Product not found");
     }
 
+    /**
+     * 사용자를 찾지 못하는 예외가 발생할 경우, 404 상태 코드를 응답한다.
+     *
+     * @return 사용자를 찾지 못한다는 메세지
+     */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorResponse handleUserNotFound() {
         return new ErrorResponse("User not found");
     }
 
+    /**
+     * 사용자 이메일이 중복되어 예외가 발생할 경우, 400 상태 코드를 응답한다.
+     *
+     * @return 입력한 이메일이 이미 존재한다는 메세지
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserEmailDuplicationException.class)
     public ErrorResponse handleUserEmailIsAlreadyExisted() {
         return new ErrorResponse("User's email address is already existed");
     }
 
+    /**
+     * 로그인에 실패하여 예외가 발생할 경우, 400 상태 코드를 응답한다.
+     *
+     * @return 로그인 실패 메세지
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(LoginFailException.class)
     public ErrorResponse handleLoginFailException() {
