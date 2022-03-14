@@ -6,6 +6,9 @@ import com.codesoom.assignment.dto.SessionResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 사용자 로그인 http 요청을 처리합니다.
+ */
 @RestController
 @RequestMapping("/session")
 public class SessionController {
@@ -15,6 +18,12 @@ public class SessionController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 사용자의 로그인 요청에 대한 정보를 받아 jwt 토큰을 응답합니다.
+     *
+     * @param sessionRequestData 로그인 하려는 사용자의 데이터
+     * @return accessToken 이 담긴 응답 결과
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseData login(
