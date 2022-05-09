@@ -13,9 +13,10 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
     developmentOnly
@@ -68,6 +69,10 @@ dependencies {
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    // Spring REST Docs
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     // Spring Developer Tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -80,6 +85,10 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass = 'com.codesoom.assignment.App'
+}
+
+asciidoctor {
+    dependsOn test
 }
 
 tasks.named('test') {
