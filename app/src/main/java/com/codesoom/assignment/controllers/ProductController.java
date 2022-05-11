@@ -4,7 +4,7 @@ import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.common.CommonResponse;
 import com.codesoom.assignment.domain.Product;
-import com.codesoom.assignment.dto.ProductRequestData;
+import com.codesoom.assignment.dto.ProductData;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +62,7 @@ public class ProductController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    public Product create(@RequestBody @Valid ProductRequestData productData) {
+    public Product create(@RequestBody @Valid ProductData productData) {
         return productService.createProduct(productData);
     }
 
@@ -79,7 +79,7 @@ public class ProductController {
     @PreAuthorize("isAuthenticated()")
     public Product update(
             @PathVariable Long id,
-            @RequestBody @Valid ProductRequestData productData
+            @RequestBody @Valid ProductData productData
     ) {
         return productService.updateProduct(id, productData);
     }
