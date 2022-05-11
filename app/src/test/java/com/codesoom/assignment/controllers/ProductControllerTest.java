@@ -10,24 +10,30 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -52,7 +58,7 @@ class ProductControllerTest {
                 .price(5000)
                 .build();
 
-        given(productService.getProducts()).willReturn(List.of(product));
+        given(productService.getProducts()).willReturn(new ArrayList(Collections.singleton(product)));
 
         given(productService.getProduct(1L)).willReturn(product);
 
@@ -89,22 +95,49 @@ class ProductControllerTest {
                 .willReturn(Arrays.asList(new Role("USER")));
     }
 
+    private List<FieldDescriptor> commonFieldDescriptor() {
+        List<FieldDescriptor> commonFieldDescriptor = new ArrayList<>();
+        commonFieldDescriptor.add(fieldWithPath("result").type(JsonFieldType.STRING).description("응답 결과"));
+        commonFieldDescriptor.add(fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지").optional());
+        commonFieldDescriptor.add(subsectionWithPath("data").description("응답 Data").optional());
+        commonFieldDescriptor.add(subsectionWithPath("errorMessage").type(JsonFieldType.STRING).description("에러 메세지").optional());
+        return commonFieldDescriptor;
+    }
+
+    private List<FieldDescriptor> productFieldDescriptor() {
+        List<FieldDescriptor> productFieldDescriptor = new ArrayList<>();
+        productFieldDescriptor.add(fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 id"));
+        productFieldDescriptor.add(fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"));
+        productFieldDescriptor.add(fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"));
+        productFieldDescriptor.add(fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"));
+        productFieldDescriptor.add(fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 url").optional());
+        return productFieldDescriptor;
+    }
+
     @Test
     void list() throws Exception {
         mockMvc.perform(
-                get("/products")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-        )
+                        get("/products")
+                                .accept(MediaType.APPLICATION_JSON_UTF8)
+                )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andDo(document("/products",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                commonFieldDescriptor()
+                        )
+                                .andWithPrefix("data[].", productFieldDescriptor())
+                ));
     }
+
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
         mockMvc.perform(
-                get("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-        )
+                        get("/products/1")
+                                .accept(MediaType.APPLICATION_JSON_UTF8)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")));
     }
