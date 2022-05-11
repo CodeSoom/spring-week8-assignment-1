@@ -1,17 +1,84 @@
 = 고양이 장난감 가게 API
 
+== 참고
+Response
+
+|===
+|Path|Type|Description
+
+|`+result+`
+|`+String+`
+|응답 결과
+
+|`+message+`
+|`+String+`
+|응답 메세지
+
+|`+data+`
+|`+Array+`
+|응답 Data
+
+|`+errorMessage+`
+|`+String+`
+|에러 메세지
+
+|===
+
 == GET /products
 
-상품 목록을 JSON 형태로 돌려준다.
+=== Request
 
-include::{snippets}/get-products/http-request.adoc[]
+==== URL
+----
+GET /products HTTP/1.1
+Accept: application/json;charset=UTF-8
+Host: localhost:8080
+----
 
-include::{snippets}/get-products/http-response.adoc[]
+=== Response
+|===
+|Path|Type|Description
 
-== GET /product/{id}
+|`+id+`
+|`+Number+`
+|상품 id
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+|`+name+`
+|`+String+`
+|상품명
 
-include::{snippets}/get-product/http-request.adoc[]
+|`+maker+`
+|`+String+`
+|상품 제조사
 
-include::{snippets}/get-product/http-response.adoc[]
+|`+price+`
+|`+Number+`
+|상품 가격
+
+|`+imageUrl+`
+|`+String+`
+|상품 url
+
+|===
+
+=== Sample
+==== Request(상품 목록 요청)
+----
+$ curl 'http://localhost:8080/products' -i -X GET \
+    -H 'Accept: application/json;charset=UTF-8'
+----
+==== Response(상품 목록 응답)
+----
+{
+  "result" : "SUCCESS",
+  "data" : [ {
+    "id" : 1,
+    "name" : "쥐돌이",
+    "maker" : "냥이월드",
+    "price" : 5000,
+    "imageUrl" : null
+  } ],
+  "message" : null,
+  "errorMessage" : null
+}
+----
