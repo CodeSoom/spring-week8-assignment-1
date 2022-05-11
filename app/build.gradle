@@ -13,12 +13,16 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    // asciidoc파일을 변환해주고, Build폴더에 복사해주는 플러그
+    id "org.asciidoctor.jvm.convert" version '3.3.2'
 }
 
 sourceCompatibility = '1.8'
 
 configurations {
     developmentOnly
+    asciidoctorExt
     runtimeClasspath {
         extendsFrom developmentOnly
     }
@@ -78,6 +82,9 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Spring REST Docs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 application {
@@ -85,7 +92,23 @@ application {
     mainClass = 'com.codesoom.assignment.App'
 }
 
-tasks.named('test') {
-    // Use junit platform for unit tests.
+test {
     useJUnitPlatform()
+}
+
+ext {
+    // snippet 이 생성 될 위치
+    snippetsDir = file('build/generated-snippets')
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test // gradle build 시 test -> asciidoctor 순으로 수행
+}
+
+bootJar {
+    dependsOn asciidoctor    // gradle build 시 asciidoctor 순으로 수행
+    from("${asciidoctor.outputDir}/html5") {    // gradle build 시 ./build/asciidoc/html5/ 에 html 파일생성
+        into 'static/docs'                        // html 파일이 jar 안의 /static/docs/ 폴더로 복사됨
+    }
 }
