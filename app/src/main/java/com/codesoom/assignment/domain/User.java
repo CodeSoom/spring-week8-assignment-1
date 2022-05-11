@@ -1,52 +1,51 @@
 package com.codesoom.assignment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SequenceGenerator(
+        name = "USER_SEQ_GENERATOR",
+        sequenceName = "USER_SEQ", // 매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 1
+)
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Builder.Default
-    private String email = "";
+    private String username;
 
-    @Builder.Default
-    private String name = "";
+    private String email;
 
-    @Builder.Default
-    private String password = "";
+    private String password;
 
-    @Builder.Default
-    private boolean deleted = false;
-
-    public void changeWith(User source) {
-        name = source.name;
+    private User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
-    public void changePassword(String password,
-                               PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(password);
+    public static User of(String username, String email, String password) {
+        return new User(username, email, password);
     }
 
-    public void destroy() {
-        deleted = true;
+    public void change(
+            String username,
+            String password
+    ) {
+        this.username = username;
+        this.password = password;
     }
 
-    public boolean authenticate(String password,
-                                PasswordEncoder passwordEncoder) {
-        return !deleted && passwordEncoder.matches(password, this.password);
-    }
+
 }
