@@ -1,10 +1,10 @@
 package com.codesoom.assignment.application.user;
 
-import com.codesoom.assignment.UserNotFoundException;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.user.UserModificationDto;
 import com.codesoom.assignment.dto.user.UserRegistrationDto;
+import com.codesoom.assignment.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
