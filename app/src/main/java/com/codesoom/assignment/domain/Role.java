@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue
@@ -18,6 +17,9 @@ public class Role {
 
     @Getter
     private String name;
+
+    protected Role() {
+    }
 
     public Role(Long userId, String name) {
         this.userId = userId;

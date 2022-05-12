@@ -1,10 +1,8 @@
 package com.codesoom.assignment.dto;
 
 import com.github.dozermapper.core.Mapping;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -15,9 +13,6 @@ import javax.validation.constraints.NotNull;
  */
 @Setter
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductData {
     private Long id;
 
@@ -35,4 +30,16 @@ public class ProductData {
 
     @Mapping("imageUrl")
     private String imageUrl;
+
+    public ProductData() {
+    }
+
+    @Builder
+    public ProductData(Long id, String name, String maker, Integer price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.maker = maker;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 }
