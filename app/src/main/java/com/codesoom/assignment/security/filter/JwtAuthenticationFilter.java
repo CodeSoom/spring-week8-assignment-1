@@ -34,6 +34,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         this.authorizationService = authorizationService;
     }
 
+    /**
+     * HttpHeader에 인증 토큰이 있다면 토큰 검증 후 SecurityContextHolder에 인증 정보를 등록합니다.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
