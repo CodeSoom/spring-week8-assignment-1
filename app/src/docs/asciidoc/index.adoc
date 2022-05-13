@@ -55,3 +55,51 @@ include::{snippets}/create-product/http-request.adoc[]
 Response HTTP Example:
 
 include::{snippets}/create-product/http-response.adoc[]
+
+== PATCH /products/{id}
+
+상품의 정보를 수정하고 정보를 JSON 형태로 돌려준다.
+
+Request Header:
+
+include::{snippets}/update-product/request-headers.adoc[]
+
+Path Variables:
+
+include::{snippets}/update-product/path-parameters.adoc[]
+
+Request Fields:
+
+include::{snippets}/update-product/request-fields.adoc[]
+
+Response Fields:
+
+include::{snippets}/update-product/response-fields.adoc[]
+
+Request HTTP Example:
+
+include::{snippets}/update-product/http-request.adoc[]
+
+Response HTTP Example:
+
+include::{snippets}/update-product/http-response.adoc[]
+
+== DELETE /products/{id}
+
+상품을 삭제한다.
+
+Request Header:
+
+include::{snippets}/delete-product/request-headers.adoc[]
+
+Path Variables:
+
+include::{snippets}/delete-product/path-parameters.adoc[]
+
+Request HTTP Example:
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+Response HTTP Example:
+
+include::{snippets}/delete-product/http-response.adoc[]

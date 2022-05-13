@@ -207,7 +207,7 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
+                RestDocumentationRequestBuilders.patch("/products/{id}", 1L)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
@@ -215,7 +215,25 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product"
+                        , pathParameters(
+                                parameterWithName("id").description("상품 id")
+                        )
+                        , requestHeaders( headerWithName("Authorization").description( "jwt 토큰이 필요함"))
+                        , requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제작자"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                        )
+                        , responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 id"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제작자"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                        )));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -275,10 +293,16 @@ class ProductControllerTest {
     @Test
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
-                delete("/products/1")
+                RestDocumentationRequestBuilders.delete("/products/{id}", 1L)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product"
+                        , pathParameters(
+                                parameterWithName("id").description("상품 id")
+                        )
+                        , requestHeaders( headerWithName("Authorization").description( "jwt 토큰이 필요함"))
+                        ));
 
         verify(productService).deleteProduct(1L);
     }
