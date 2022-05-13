@@ -1,11 +1,8 @@
 package com.codesoom.assignment.controller.products;
 
-import com.codesoom.assignment.application.auth.AuthorizationService;
 import com.codesoom.assignment.application.products.ProductSaveRequest;
 import com.codesoom.assignment.application.products.ProductUpdateService;
-import com.codesoom.assignment.config.AccessToken;
 import com.codesoom.assignment.domain.products.Product;
-import com.codesoom.assignment.domain.products.ProductDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
