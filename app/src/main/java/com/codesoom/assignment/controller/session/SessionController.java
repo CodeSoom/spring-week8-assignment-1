@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/** 회원 로그인 요청을 처리합니다. */
 @CrossOrigin
 @RequestMapping("/session")
 @RestController
