@@ -12,21 +12,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static com.codesoom.assignment.ConstantsForTest.TOKEN_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("UserUpdateController 클래스")
 public class UserUpdateControllerMockMvcTest extends ControllerTest {
 
@@ -45,8 +59,15 @@ public class UserUpdateControllerMockMvcTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() {
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
     }
 
@@ -94,12 +115,27 @@ public class UserUpdateControllerMockMvcTest extends ControllerTest {
                 @DisplayName("회원 정보를 수정한 뒤, 수정 결과를 응답한다.")
                 @Test
                 void it_returns_updated_user() throws Exception {
-                    final MvcResult result = mockMvc.perform(patch("/users/" + EXIST_ID)
+                    final MvcResult result = mockMvc.perform(patch("/users/{id}", EXIST_ID)
                                     .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + TOKEN)
                             .accept(MediaType.APPLICATION_JSON_UTF8)
                             .content(objectMapper.writeValueAsString(UPDATE_TO_USER))
                             .contentType(MediaType.APPLICATION_JSON))
                             .andExpect(status().isOk())
+                            .andDo(document("patch-users"
+                                    , pathParameters(
+                                            parameterWithName("id").description("회원 식별자"))
+                                    , requestHeaders(
+                                            headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰"))
+                                    , requestFields(
+                                            fieldWithPath("name").type(JsonFieldType.STRING).description("회원 이름"),
+                                            fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
+                                            fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"))
+                                    , responseFields(
+                                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                            fieldWithPath("name").type(JsonFieldType.STRING).description("회원 이름"),
+                                            fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
+                                            fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"))
+                                    ))
                             .andReturn();
 
                     final UserResponseDto user
