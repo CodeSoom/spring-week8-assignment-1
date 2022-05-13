@@ -13,21 +13,33 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 
 import static com.codesoom.assignment.ConstantsForTest.INVALID_TOKENS;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("ProductSaveController 클래스")
 public class ProductSaveControllerMockMvcTest extends ControllerTest {
 
@@ -51,8 +63,15 @@ public class ProductSaveControllerMockMvcTest extends ControllerTest {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() {
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
     }
 
@@ -100,7 +119,24 @@ public class ProductSaveControllerMockMvcTest extends ControllerTest {
                         .content(objectMapper.writeValueAsString(VALID_PRODUCT_DTO))
                         .contentType(MediaType.APPLICATION_JSON ))
                         .andExpect(status().isCreated())
-                        .andExpect(content().string(containsString(VALID_PRODUCT_DTO.getName())));
+                        .andExpect(content().string(containsString(VALID_PRODUCT_DTO.getName())))
+                        .andDo(document("post-products"
+                                , requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰"))
+                                , requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                                .description("상품 이미지").optional()
+                                )
+                                , responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("제조사"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지")
+                                )));
             }
         }
 
