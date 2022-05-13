@@ -10,21 +10,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("SessionController 클래스")
 public class SessionControllerMockMvcTest extends ControllerTest {
 
-    private final String EMAIL = "abc@codesoom.com";
-    private final String PASSWORD = "abc123correct";
+    private final String EMAIL = "test@codesoom.com";
+    private final String PASSWORD = "password";
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,8 +48,14 @@ public class SessionControllerMockMvcTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() {
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
     }
 
@@ -87,6 +103,13 @@ public class SessionControllerMockMvcTest extends ControllerTest {
                             .content(objectMapper.writeValueAsString(CORRECT_LOGIN_REQUEST_DTO))
                             .contentType(MediaType.APPLICATION_JSON))
                             .andExpect(status().isCreated())
+                            .andDo(document("post-session"
+                                    , requestFields(
+                                            fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
+                                            fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                                    ), responseFields(
+                                            fieldWithPath("accessToken").type(JsonFieldType.STRING).description("인증 토큰")
+                                    )))
                             .andReturn();
                     final TokenResponse tokenResponse
                             = objectMapper.readValue(result.getResponse().getContentAsByteArray()
