@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/** 로그인 요청에서 발생하는 예외를 처리합니다. */
 @RestControllerAdvice(basePackages = "com.codesoom.assignment.controller.session")
 public class SessionControllerAdvice {
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
+/** 회원 수정 요청을 처리합니다. */
 @UserController
 public class UserUpdateController {
 

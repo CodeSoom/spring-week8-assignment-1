@@ -11,18 +11,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("UserSaveController 클래스")
 public class UserSaveControllerMockMvcTest extends ControllerTest {
 
@@ -38,8 +48,14 @@ public class UserSaveControllerMockMvcTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() {
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
     }
 
@@ -68,6 +84,18 @@ public class UserSaveControllerMockMvcTest extends ControllerTest {
                         .content(objectMapper.writeValueAsString(VALID_USER_SAVE_DTO))
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isCreated())
+                        .andDo(document("post-users"
+                                , requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("회원 이름"),
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                                )
+                                , responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("회원 이름"),
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                                )))
                         .andReturn();
 
                 final UserResponseDto userResponseDto

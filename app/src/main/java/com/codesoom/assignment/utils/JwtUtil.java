@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 
+/** JWT 생성, 검증 담당 */
 @Component
 public class JwtUtil {
 

@@ -12,18 +12,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
 import static com.codesoom.assignment.ConstantsForTest.TOKEN_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("UserDeleteController 클래스")
 public class UserDeleteControllerMockMvcTest extends ControllerTest {
 
@@ -43,8 +56,15 @@ public class UserDeleteControllerMockMvcTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() {
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
     }
 
@@ -99,9 +119,14 @@ public class UserDeleteControllerMockMvcTest extends ControllerTest {
                 @DisplayName("성공적으로 회원 정보를 삭제한다.")
                 @Test
                 void it_will_delete_user() throws Exception {
-                    mockMvc.perform(delete("/users/" + EXIST_USER_ID)
+                    mockMvc.perform(delete("/users/{id}", EXIST_USER_ID)
                                     .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + ADMIN_TOKEN))
-                            .andExpect(status().isNoContent());
+                            .andExpect(status().isNoContent())
+                            .andDo(document("delete-users"
+                                    , pathParameters(
+                                            parameterWithName("id").description("회원 식별자"))
+                                    , requestHeaders(
+                                            headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰"))));
 
                     assertThat(repository.findById(EXIST_USER_ID).get().isDeleted()).isTrue();
                 }
@@ -128,7 +153,6 @@ public class UserDeleteControllerMockMvcTest extends ControllerTest {
                             .andExpect(status().isNotFound());
                 }
             }
-
         }
 
         @DisplayName("ADMIN 권한이 없는 회원이 요청하면")
