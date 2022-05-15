@@ -10,6 +10,7 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -23,12 +24,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureRestDocs
 @WebMvcTest(UserController.class)
 class UserControllerTest {
     private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
@@ -114,11 +123,11 @@ class UserControllerTest {
     @Test
     void registerUserWithValidAttributes() throws Exception {
         mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"name\":\"Tester\",\"password\":\"test\"}")
-        )
+                        post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"tester@example.com\"," +
+                                        "\"name\":\"Tester\",\"password\":\"test\"}")
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(
                         containsString("\"id\":13")
@@ -128,8 +137,21 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
+                ))
+                .andDo(document("user-save",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").description("이메일"),
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("password").description("비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("회원 ID"),
+                                fieldWithPath("email").description("회원 이메일"),
+                                fieldWithPath("name").description("회원 이름")
+                        )
                 ));
-
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
 
