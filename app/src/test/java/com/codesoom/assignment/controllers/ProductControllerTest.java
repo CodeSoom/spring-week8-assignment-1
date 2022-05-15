@@ -36,6 +36,9 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -210,15 +213,38 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                patch("/products/1")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
-                                "\"price\":5000}")
-                        .header("Authorization", "Bearer " + VALID_TOKEN)
-        )
+                        patch("/products/{id}", 1)
+                                .accept(MediaType.APPLICATION_JSON_UTF8)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
+                                        "\"price\":5000, \"imageUrl\": \"https://img.codesoom.co.kr/test.jpg\"}")
+                                .header("Authorization", "Bearer " + VALID_TOKEN)
+                )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("product-update",
+                            preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            requestHeaders(
+                                    headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                            ),
+                            pathParameters(
+                                    parameterWithName("id").description("상품 ID")
+                            ),
+                            requestFields(
+                                    fieldWithPath("name").description("상품명"),
+                                    fieldWithPath("maker").description("메이커"),
+                                    fieldWithPath("price").description("가격"),
+                                    fieldWithPath("imageUrl").description("이미지 주소")
+                            ),
+                            responseFields(
+                                    fieldWithPath("id").description("상품 ID"),
+                                    fieldWithPath("name").description("상품명"),
+                                    fieldWithPath("maker").description("메이커"),
+                                    fieldWithPath("price").description("가격"),
+                                    fieldWithPath("imageUrl").description("이미지 주소")
+                            )
+                        ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
