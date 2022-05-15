@@ -1,17 +1,165 @@
 = 고양이 장난감 가게 API
 
-== GET /products
+== 상품
 
-상품 목록을 JSON 형태로 돌려준다.
+=== 상품 등록
+상품 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 상품을 등록합니다.
 
-include::{snippets}/get-products/http-request.adoc[]
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
 
-include::{snippets}/get-products/http-response.adoc[]
+==== 요청
+include::{snippets}/product-save/http-request.adoc[]
 
-== GET /product/{id}
+*Header*
+include::{snippets}/product-save/request-headers.adoc[]
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+*Parameter*
+include::{snippets}/product-save/request-fields.adoc[]
 
-include::{snippets}/get-product/http-request.adoc[]
+==== 응답
+include::{snippets}/product-save/http-response.adoc[]
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{snippets}/product-save/response-fields.adoc[]
+
+=== 상품 수정
+상품 수정에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `PATCH` 요청으로 상품을 수정합니다.
+
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
+
+
+==== 요청
+include::{snippets}/product-update/http-request.adoc[]
+
+*Header*
+include::{snippets}/product-update/request-headers.adoc[]
+
+*Parameter*
+
+include::{snippets}/product-update/path-parameters.adoc[]
+include::{snippets}/product-update/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/product-update/http-response.adoc[]
+
+include::{snippets}/product-update/response-fields.adoc[]
+
+=== 상품 삭제
+HTTP 메소드 `DELETE` 요청으로 상품을 삭제합니다.
+
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
+
+
+==== 요청
+include::{snippets}/product-delete/http-request.adoc[]
+
+*Header*
+include::{snippets}/product-delete/request-headers.adoc[]
+
+*Parameter*
+
+include::{snippets}/product-delete/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/product-delete/http-response.adoc[]
+
+=== 상품 리스트
+HTTP 메소드 `GET` 요청으로 상품 리스트를 조회합니다.
+
+==== 요청
+include::{snippets}/product-list/http-request.adoc[]
+
+==== 응답
+include::{snippets}/product-list/http-response.adoc[]
+
+=== 단일 상품 조회
+HTTP 메소드 `GET` 요청으로 단일 상품을 조회합니다.
+
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
+
+==== 요청
+include::{snippets}/product-get/http-request.adoc[]
+
+*Parameter*
+
+include::{snippets}/product-get/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/product-get/http-response.adoc[]
+
+include::{snippets}/product-get/response-fields.adoc[]
+
+== 회원
+
+=== 회원 등록
+회원 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 회원을 등록합니다.
+
+==== 요청
+include::{snippets}/user-save/http-request.adoc[]
+
+*Parameter*
+include::{snippets}/user-save/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/user-save/http-response.adoc[]
+
+include::{snippets}/user-save/response-fields.adoc[]
+
+
+=== 회원 수정
+회원 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `PATCH` 요청으로 회원을 등록합니다.
+
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
+- 상품 식별자를 설정합니다.  ( /users/<회원 ID> )
+
+==== 요청
+include::{snippets}/user-update/http-request.adoc[]
+
+*Header*
+include::{snippets}/user-update/request-headers.adoc[]
+
+*Parameter*
+
+include::{snippets}/user-update/path-parameters.adoc[]
+
+include::{snippets}/user-update/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/user-update/http-response.adoc[]
+
+include::{snippets}/user-update/response-fields.adoc[]
+
+=== 회원 삭제
+
+HTTP 메소드 `DELETE` 요청으로 회원을 삭제합니다.
+
+- 회원 식별자를 설정합니다.  ( /users/<회원 ID> )
+
+==== 요청
+include::{snippets}/user-delete/http-request.adoc[]
+
+*Header*
+include::{snippets}/user-delete/request-headers.adoc[]
+
+*Parameter*
+
+include::{snippets}/user-delete/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/user-delete/http-response.adoc[]
+
+== 인증
+
+=== JWT 생성
+로그인에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 인증 토큰을 생성합니다.
+
+==== 요청
+include::{snippets}/authentication/http-request.adoc[]
+
+*Parameter*
+include::{snippets}/authentication/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/authentication/http-response.adoc[]
+
+include::{snippets}/authentication/response-fields.adoc[]
