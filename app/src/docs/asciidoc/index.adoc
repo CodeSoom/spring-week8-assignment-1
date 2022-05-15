@@ -113,3 +113,18 @@ include::{snippets}/user-update/request-fields.adoc[]
 include::{snippets}/user-update/http-response.adoc[]
 
 include::{snippets}/user-update/response-fields.adoc[]
+
+=== 회원 삭제
+
+==== 요청
+include::{snippets}/user-delete/http-request.adoc[]
+
+*Header*
+include::{snippets}/user-delete/request-headers.adoc[]
+
+*Parameter*
+
+include::{snippets}/user-delete/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/user-delete/http-response.adoc[]

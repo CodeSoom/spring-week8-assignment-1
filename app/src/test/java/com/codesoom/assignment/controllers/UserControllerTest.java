@@ -37,7 +37,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -263,10 +263,20 @@ class UserControllerTest {
     @Test
     void destroyWithExistedId() throws Exception {
         mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isOk());
+                        delete("/users/{userId}", 1)
+                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andDo(document("user-delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("회원 ID")
+                        )
+                ));
 
         verify(userService).deleteUser(1L);
     }
