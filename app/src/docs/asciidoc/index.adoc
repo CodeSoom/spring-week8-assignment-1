@@ -1,7 +1,24 @@
 = 고양이 장난감 가게 API
 
-
 == 상품
+
+=== 상품 등록
+`POST` 요청으로 상품을 등록합니다.
+
+*Request*
+include::{snippets}/product-save/http-request.adoc[]
+
+*Header*
+include::{snippets}/product-save/request-headers.adoc[]
+
+*Parameter*
+include::{snippets}/product-save/request-fields.adoc[]
+
+*Response*
+include::{snippets}/product-save/http-response.adoc[]
+
+include::{snippets}/product-save/response-fields.adoc[]
+
 === 상품 리스트
 `GET` 요청으로 상품 리스트를 조회합니다.
 
