@@ -128,3 +128,18 @@ include::{snippets}/user-delete/path-parameters.adoc[]
 
 ==== 응답
 include::{snippets}/user-delete/http-response.adoc[]
+
+== 인증
+
+=== JWT 생성
+
+==== 요청
+include::{snippets}/authentication/http-request.adoc[]
+
+*Parameter*
+include::{snippets}/authentication/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/authentication/http-response.adoc[]
+
+include::{snippets}/authentication/response-fields.adoc[]
