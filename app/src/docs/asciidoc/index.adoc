@@ -3,7 +3,9 @@
 == 상품
 
 === 상품 등록
-`POST` 요청으로 상품을 등록합니다.
+상품 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 상품을 등록합니다.
+
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
 
 ==== 요청
 include::{snippets}/product-save/http-request.adoc[]
@@ -20,7 +22,11 @@ include::{snippets}/product-save/http-response.adoc[]
 include::{snippets}/product-save/response-fields.adoc[]
 
 === 상품 수정
-`PATCH` 요청으로 상품을 수정 합니다.
+상품 수정에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `PATCH` 요청으로 상품을 수정합니다.
+
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
+
 
 ==== 요청
 include::{snippets}/product-update/http-request.adoc[]
@@ -39,7 +45,10 @@ include::{snippets}/product-update/http-response.adoc[]
 include::{snippets}/product-update/response-fields.adoc[]
 
 === 상품 삭제
-`DELETE` 요청으로 상품을 삭제 합니다.
+HTTP 메소드 `DELETE` 요청으로 상품을 삭제합니다.
+
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
+
 
 ==== 요청
 include::{snippets}/product-delete/http-request.adoc[]
@@ -55,7 +64,7 @@ include::{snippets}/product-delete/path-parameters.adoc[]
 include::{snippets}/product-delete/http-response.adoc[]
 
 === 상품 리스트
-`GET` 요청으로 상품 리스트를 조회합니다.
+HTTP 메소드 `GET` 요청으로 상품 리스트를 조회합니다.
 
 ==== 요청
 include::{snippets}/product-list/http-request.adoc[]
@@ -64,7 +73,9 @@ include::{snippets}/product-list/http-request.adoc[]
 include::{snippets}/product-list/http-response.adoc[]
 
 === 단일 상품 조회
-`GET` 요청으로 단일 상품을 조회합니다.
+HTTP 메소드 `GET` 요청으로 단일 상품을 조회합니다.
+
+- 상품 식별자를 설정합니다.  ( /products/<상품 ID> )
 
 ==== 요청
 include::{snippets}/product-get/http-request.adoc[]
@@ -81,7 +92,7 @@ include::{snippets}/product-get/response-fields.adoc[]
 == 회원
 
 === 회원 등록
-`POST` 요청으로 회원을 등록합니다.
+회원 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 회원을 등록합니다.
 
 ==== 요청
 include::{snippets}/user-save/http-request.adoc[]
@@ -96,6 +107,10 @@ include::{snippets}/user-save/response-fields.adoc[]
 
 
 === 회원 수정
+회원 등록에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `PATCH` 요청으로 회원을 등록합니다.
+
+- 인증 토큰을 `Header` 에 담습니다. ( Authorization: Bearer <인증 토큰> )
+- 상품 식별자를 설정합니다.  ( /users/<회원 ID> )
 
 ==== 요청
 include::{snippets}/user-update/http-request.adoc[]
@@ -116,6 +131,10 @@ include::{snippets}/user-update/response-fields.adoc[]
 
 === 회원 삭제
 
+HTTP 메소드 `DELETE` 요청으로 회원을 삭제합니다.
+
+- 회원 식별자를 설정합니다.  ( /users/<회원 ID> )
+
 ==== 요청
 include::{snippets}/user-delete/http-request.adoc[]
 
@@ -132,6 +151,7 @@ include::{snippets}/user-delete/http-response.adoc[]
 == 인증
 
 === JWT 생성
+로그인에 필요한 데이터 `JSON` 객체를 HTTP 메소드 `POST` 요청으로 인증 토큰을 생성합니다.
 
 ==== 요청
 include::{snippets}/authentication/http-request.adoc[]
