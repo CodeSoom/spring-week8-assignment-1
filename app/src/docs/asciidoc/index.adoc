@@ -5,7 +5,7 @@
 === 상품 등록
 `POST` 요청으로 상품을 등록합니다.
 
-*Request*
+==== 요청
 include::{snippets}/product-save/http-request.adoc[]
 
 *Header*
@@ -14,7 +14,7 @@ include::{snippets}/product-save/request-headers.adoc[]
 *Parameter*
 include::{snippets}/product-save/request-fields.adoc[]
 
-*Response*
+==== 응답
 include::{snippets}/product-save/http-response.adoc[]
 
 include::{snippets}/product-save/response-fields.adoc[]
@@ -22,20 +22,18 @@ include::{snippets}/product-save/response-fields.adoc[]
 === 상품 수정
 `PATCH` 요청으로 상품을 수정 합니다.
 
-*Request*
+==== 요청
 include::{snippets}/product-update/http-request.adoc[]
 
 *Header*
 include::{snippets}/product-update/request-headers.adoc[]
 
-*PathParameter*
+*Parameter*
 
 include::{snippets}/product-update/path-parameters.adoc[]
-
-*Field*
 include::{snippets}/product-update/request-fields.adoc[]
 
-*Response*
+==== 응답
 include::{snippets}/product-update/http-response.adoc[]
 
 include::{snippets}/product-update/response-fields.adoc[]
@@ -43,39 +41,39 @@ include::{snippets}/product-update/response-fields.adoc[]
 === 상품 삭제
 `DELETE` 요청으로 상품을 삭제 합니다.
 
-*Request*
+==== 요청
 include::{snippets}/product-delete/http-request.adoc[]
 
 *Header*
 include::{snippets}/product-delete/request-headers.adoc[]
 
-*PathParameter*
+*Parameter*
 
 include::{snippets}/product-delete/path-parameters.adoc[]
 
-*응답*
+==== 응답
 include::{snippets}/product-delete/http-response.adoc[]
 
 === 상품 리스트
 `GET` 요청으로 상품 리스트를 조회합니다.
 
-*요청*
+==== 요청
 include::{snippets}/product-list/http-request.adoc[]
 
-*응답*
+==== 응답
 include::{snippets}/product-list/http-response.adoc[]
 
 === 단일 상품 조회
 `GET` 요청으로 단일 상품을 조회합니다.
 
-*Request*
+==== 요청
 include::{snippets}/product-get/http-request.adoc[]
 
-*PathParameter*
+*Parameter*
 
 include::{snippets}/product-get/path-parameters.adoc[]
 
-*Response*
+==== 응답
 include::{snippets}/product-get/http-response.adoc[]
 
 include::{snippets}/product-get/response-fields.adoc[]
