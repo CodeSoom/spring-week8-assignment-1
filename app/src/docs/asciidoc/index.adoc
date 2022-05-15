@@ -64,3 +64,18 @@ include::{snippets}/product-list/http-request.adoc[]
 
 *응답*
 include::{snippets}/product-list/http-response.adoc[]
+
+=== 단일 상품 조회
+`GET` 요청으로 단일 상품을 조회합니다.
+
+*Request*
+include::{snippets}/product-get/http-request.adoc[]
+
+*PathParameter*
+
+include::{snippets}/product-get/path-parameters.adoc[]
+
+*Response*
+include::{snippets}/product-get/http-response.adoc[]
+
+include::{snippets}/product-get/response-fields.adoc[]
