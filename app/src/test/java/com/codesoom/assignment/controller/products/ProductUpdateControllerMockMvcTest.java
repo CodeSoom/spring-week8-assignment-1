@@ -2,6 +2,7 @@ package com.codesoom.assignment.controller.products;
 
 import com.codesoom.assignment.TokenGenerator;
 import com.codesoom.assignment.controller.ControllerTest;
+import com.codesoom.assignment.controller.Item;
 import com.codesoom.assignment.domain.products.Product;
 import com.codesoom.assignment.domain.products.ProductDto;
 import com.codesoom.assignment.domain.products.ProductRepository;
@@ -13,23 +14,39 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 
 import static com.codesoom.assignment.ConstantsForTest.INVALID_TOKENS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("ProductUpdateController 클래스")
 public class ProductUpdateControllerMockMvcTest extends ControllerTest {
 
@@ -54,8 +71,15 @@ public class ProductUpdateControllerMockMvcTest extends ControllerTest {
     private static final String TOKEN_PREFIX = "Bearer ";
     private String TOKEN;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
     @BeforeEach
-    void setup() throws Exception {
+    void setup(RestDocumentationContextProvider restDocumentation) throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
         cleanup();
         saveUser();
         this.TOKEN = TokenGenerator.generateToken(mockMvc, EMAIL, PASSWORD);
@@ -95,11 +119,27 @@ public class ProductUpdateControllerMockMvcTest extends ControllerTest {
             @DisplayName("수정된 상품을 반환한다.")
             @Test
             void will_return_updated_product() throws Exception {
-                final MvcResult result = mockMvc.perform(patch("/products/" + EXIST_ID)
+                final MvcResult result = mockMvc.perform(patch("/products/{id}", EXIST_ID)
                                 .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + TOKEN)
                                 .content(objectMapper.writeValueAsString(productToUpdate))
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
+                        .andDo(document("patch-products", pathParameters(
+                                parameterWithName("id").description("상품 식별자")
+                        ), requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ), requestFields(
+                                Item.of("name", STRING, "상품명").toField(),
+                                Item.of("maker", STRING, "제조사").toField(),
+                                Item.of("price", NUMBER, "가격").toField(),
+                                Item.of("imageUrl", STRING, "상품 이미지 URL").toField()
+                        ), responseFields(
+                                Item.of("id", NUMBER, "상품 식별자").toField(),
+                                Item.of("name", STRING, "상품명").toField(),
+                                Item.of("maker", STRING, "제조사").toField(),
+                                Item.of("price", NUMBER, "가격").toField(),
+                                Item.of("imageUrl", STRING, "상품 이미지 URL").toField()
+                        )))
                         .andReturn();
 
                 final Product product

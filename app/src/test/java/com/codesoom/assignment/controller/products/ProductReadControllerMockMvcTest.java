@@ -1,6 +1,7 @@
 package com.codesoom.assignment.controller.products;
 
 import com.codesoom.assignment.controller.ControllerTest;
+import com.codesoom.assignment.controller.Item;
 import com.codesoom.assignment.domain.products.Product;
 import com.codesoom.assignment.domain.products.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,17 +10,33 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("ProductReadController 클래스")
 public class ProductReadControllerMockMvcTest extends ControllerTest {
 
@@ -31,6 +48,17 @@ public class ProductReadControllerMockMvcTest extends ControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @BeforeEach
+    void setup(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation).operationPreprocessors()
+                        .withResponseDefaults(prettyPrint()))
+                .build();
+    }
 
     @DisplayName("getProducts 메서드는")
     @Nested
@@ -52,8 +80,18 @@ public class ProductReadControllerMockMvcTest extends ControllerTest {
         @DisplayName("저장된 모든 상품을 반환한다.")
         @Test
         void will_return_all_products() throws Exception {
+
+            Item responseItems = Item.of("[]", JsonFieldType.ARRAY, "상품 목록 배열",
+                    Item.of("id", NUMBER, "상품 식별자"),
+                    Item.of("name", STRING, "상품명"),
+                    Item.of("maker", STRING, "제조사"),
+                    Item.of("price", NUMBER, "가격"),
+                    Item.of("imageUrl", STRING, "상품 이미지 URL"));
+
             final MvcResult result = mockMvc.perform(get("/products"))
                     .andExpect(status().isOk())
+                    .andDo(document("get-products-all"
+                            , responseFields(responseItems.build())))
                     .andReturn();
 
             final List<Product> products
@@ -87,8 +125,21 @@ public class ProductReadControllerMockMvcTest extends ControllerTest {
             @DisplayName("찾은 상품을 반환한다.")
             @Test
             void will_return_found_product() throws Exception {
-                final MvcResult result = mockMvc.perform(get("/products/" + EXIST_ID))
+
+
+
+                final MvcResult result = mockMvc.perform(get("/products/{id}", EXIST_ID))
                         .andExpect(status().isOk())
+                        .andDo(document("get-products"
+                                , pathParameters(
+                                        parameterWithName("id").description("상품 식별자")
+                                ), responseFields(
+                                        Item.of("id", NUMBER, "상품 식별자").toField(),
+                                        Item.of("name", STRING, "상품명").toField(),
+                                        Item.of("maker", STRING, "제조사").toField(),
+                                        Item.of("price", NUMBER, "가격").toField(),
+                                        Item.of("imageUrl", STRING, "상품 이미지 URL").toField()
+                                )))
                         .andReturn();
                 final Product product = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Product.class);
                 assertThat(product.getId()).isEqualTo(EXIST_ID);
@@ -111,7 +162,7 @@ public class ProductReadControllerMockMvcTest extends ControllerTest {
             @DisplayName("404 not found를 응답한다.")
             @Test
             void will_response_404_not_found() throws Exception {
-                mockMvc.perform(get("/products/" + NOT_EXIST_ID))
+                mockMvc.perform(get("/products/{id}", NOT_EXIST_ID))
                         .andExpect(status().isNotFound());
             }
         }
