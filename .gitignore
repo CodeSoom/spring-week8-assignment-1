@@ -6,3 +6,6 @@ build
 
 # IDE
 .idea
+
+# Build
+out
