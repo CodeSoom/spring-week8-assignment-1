@@ -15,3 +15,27 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+== POST /product
+
+상품을 등록한다.
+
+include::{snippets}/post-product/http-request.adoc[]
+
+include::{snippets}/post-product/http-response.adoc[]
+
+== PATCH /product/{id}
+
+상품 정보를 수정한다.
+
+include::{snippets}/patch-product/http-request.adoc[]
+
+include::{snippets}/patch-product/http-response.adoc[]
+
+== DELETE /product/{id}
+
+상품을 삭제한다.
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+include::{snippets}/delete-product/http-response.adoc[]
