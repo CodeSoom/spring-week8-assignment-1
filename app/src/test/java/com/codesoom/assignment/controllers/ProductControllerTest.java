@@ -24,6 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -32,9 +34,11 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -159,12 +163,31 @@ class ProductControllerTest {
                                 .accept(MediaType.APPLICATION_JSON_UTF8)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
-                                        "\"price\":5000}")
+                                        "\"price\":5000, \"imageUrl\" : \"https://www.amuimages/images/123123q23\"}")
                                 .header("Authorization", "Bearer " + VALID_TOKEN)
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("post-product"));
+                .andDo(document("post-product",
+                        requestHeaders(
+                                headerWithName("Authorization")
+                                        .description("사용자 인증 수단, 액세스 토큰 값")
+                                        .attributes(key("example").value("Authorization: Bearer ${ACCESS_TOKEN}"))
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("maker").description("상품을 만든 브랜드(회사)"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("imageUrl").optional().description("썸네일 이미지 URL")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("아이디"),
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("maker").description("상품을 만든 브랜드(회사)"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("imageUrl").optional().description("썸네일 이미지 URL")
+                        )
+                ));
 
         verify(productService).createProduct(any(ProductData.class));
     }
