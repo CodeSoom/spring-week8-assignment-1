@@ -4,16 +4,38 @@
 
 === GET /products
 
-상품 목록을 가져옵니다.
+상품 목록을 조회합니다.
 
-==== 요청 예시
+==== HTTP 요청 예시
 
 include::{snippets}/get-products/http-request.adoc[]
 
-==== 응답
+==== HTTP 응답 예시
 
-include::{snippets}/get-products/response-body.adoc[]
+include::{snippets}/get-products/http-response.adoc[]
+
+==== 응답 정보 상세
 
 include::{snippets}/get-products/response-fields.adoc[]
+
+=== GET /products/{id}
+
+특정 아이디의 상품 한개를 조회합니다.
+
+==== HTTP 요청 예시
+
+include::{snippets}/get-product/http-request.adoc[]
+
+==== 요청 PATH 파라미터
+
+include::{snippets}/get-product/path-parameters.adoc[]
+
+==== HTTP 응답 예시
+
+include::{snippets}/get-product/http-response.adoc[]
+
+==== 응답 정보 상세
+
+include::{snippets}/get-product/response-fields.adoc[]
 
 
