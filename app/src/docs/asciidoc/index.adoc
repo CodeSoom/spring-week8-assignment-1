@@ -39,3 +39,11 @@ include::{snippets}/patch-product/http-response.adoc[]
 include::{snippets}/delete-product/http-request.adoc[]
 
 include::{snippets}/delete-product/http-response.adoc[]
+
+== POST /session
+
+로그인을 한다.
+
+include::{snippets}/post-session/http-request.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]
