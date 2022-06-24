@@ -1,4 +1,6 @@
 = 고양이 장난감 가게 API
+:toc: left
+:toc-title: 고양이 장난감 가게 API
 
 == 상품
 
