@@ -61,3 +61,28 @@ include::{snippets}/post-product/http-response.adoc[]
 ==== 응답 정보 상세
 
 include::{snippets}/post-product/response-fields.adoc[]
+
+=== PATCH /products/{id}
+
+상품을 수정합니다.
+
+==== HTTP 요청 예시
+
+include::{snippets}/patch-product/http-request.adoc[]
+
+==== 요청 헤더
+
+include::{snippets}/patch-product/request-headers.adoc[]
+
+==== 요청 정보 상세
+
+include::{snippets}/patch-product/request-fields.adoc[]
+
+==== HTTP 응답 예시
+
+include::{snippets}/patch-product/http-response.adoc[]
+
+==== 응답 정보 상세
+
+include::{snippets}/patch-product/response-fields.adoc[]
+
