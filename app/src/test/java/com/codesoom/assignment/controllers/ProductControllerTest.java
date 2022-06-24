@@ -330,11 +330,20 @@ class ProductControllerTest {
     @Test
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
-                        delete("/products/1")
+                        delete("/products/{id}", 1L)
                                 .header("Authorization", "Bearer " + VALID_TOKEN)
                 )
                 .andExpect(status().isOk())
-                .andDo(document("delete-product"));
+                .andDo(document("delete-product",
+                        pathParameters(
+                                parameterWithName("id").description("삭제할 상품 아이디")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization")
+                                        .description("사용자 인증 수단, 액세스 토큰 값")
+                                        .attributes(key("example").value("Authorization: Bearer ${ACCESS_TOKEN}"))
+                        )
+                ));
 
         verify(productService).deleteProduct(1L);
     }
