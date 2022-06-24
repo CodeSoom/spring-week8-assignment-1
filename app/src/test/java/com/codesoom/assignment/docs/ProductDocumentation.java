@@ -24,7 +24,6 @@ public class ProductDocumentation {
     private static final Item IMAGE_URL = Item.of("imageUrl", STRING, "상품 이미지", State.OPTIONAL);
 
     public static RestDocumentationResultHandler getProducts() {
-        // 여기에서 [].은 상위의 of("[]", of("id", NUMBER, "상품 식별자"), of("name", STRING, "상품 이름"), ... ) 처럼 한 단계 더 분리할 수 있습니다.
         ItemProvider itemProvider = new ItemProvider(
                 Item.of("[].id", NUMBER, "상품 식별자"),
                 Item.of("[].name", STRING, "상품 이름"),
