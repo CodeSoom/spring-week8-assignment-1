@@ -46,6 +46,10 @@ include::{snippets}/get-product/response-fields.adoc[]
 
 include::{snippets}/post-product/http-request.adoc[]
 
+==== 요청 PATH 파라미터
+
+include::{snippets}/patch-product/path-parameters.adoc[]
+
 ==== 요청 헤더
 
 include::{snippets}/post-product/request-headers.adoc[]
@@ -64,11 +68,15 @@ include::{snippets}/post-product/response-fields.adoc[]
 
 === PATCH /products/{id}
 
-상품을 수정합니다.
+특정 아이디의 상품을 수정합니다.
 
 ==== HTTP 요청 예시
 
 include::{snippets}/patch-product/http-request.adoc[]
+
+==== 요청 PATH 파라미터
+
+include::{snippets}/patch-product/path-parameters.adoc[]
 
 ==== 요청 헤더
 
@@ -85,4 +93,25 @@ include::{snippets}/patch-product/http-response.adoc[]
 ==== 응답 정보 상세
 
 include::{snippets}/patch-product/response-fields.adoc[]
+
+=== DELETE /products/{id}
+
+특정 아이디의 상품을 삭제 합니다.
+
+==== HTTP 요청 예시
+
+include::{snippets}/delete-product/http-request.adoc[]
+
+==== 요청 PATH 파라미터
+
+include::{snippets}/delete-product/path-parameters.adoc[]
+
+==== 요청 헤더
+
+include::{snippets}/delete-product/request-headers.adoc[]
+
+==== HTTP 응답 예시
+
+include::{snippets}/delete-product/http-response.adoc[]
+
 
