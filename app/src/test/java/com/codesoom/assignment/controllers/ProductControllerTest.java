@@ -31,6 +31,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -136,6 +137,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(document("get-product",
+                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("id").description("조회할 상품의 아이디")
@@ -169,6 +171,8 @@ class ProductControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(document("post-product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         requestHeaders(
                                 headerWithName("Authorization")
                                         .description("사용자 인증 수단, 액세스 토큰 값")
@@ -233,16 +237,40 @@ class ProductControllerTest {
     @Test
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
-                        patch("/products/1")
+                        patch("/products/{id}", 1L)
                                 .accept(MediaType.APPLICATION_JSON_UTF8)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"name\":\"쥐순이\",\"maker\":\"냥이월드\"," +
-                                        "\"price\":5000}")
+                                        "\"price\":5000, \"imageUrl\":\"https://www.amuimage/images/update12314\"}")
                                 .header("Authorization", "Bearer " + VALID_TOKEN)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐순이")))
-                .andDo(document("patch-product"));
+                .andDo(document("patch-product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("변경할 상품 아이디")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization")
+                                        .description("사용자 인증 수단, 액세스 토큰 값")
+                                        .attributes(key("example").value("Authorization: Bearer ${ACCESS_TOKEN}"))
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("maker").description("상품을 만든 브랜드(회사)"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("imageUrl").optional().description("썸네일 이미지 URL")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("아이디"),
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("maker").description("상품을 만든 브랜드(회사)"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("imageUrl").optional().description("썸네일 이미지 URL")
+                        )
+                ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
