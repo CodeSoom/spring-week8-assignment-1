@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -109,7 +110,7 @@ class ProductControllerTest {
     @Test
     void deatilWithExsitedProduct() throws Exception {
         mockMvc.perform(
-                        get("/products/1")
+                RestDocumentationRequestBuilders.get("/products/{id}", 1L)
                                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 )
                 .andExpect(status().isOk())
