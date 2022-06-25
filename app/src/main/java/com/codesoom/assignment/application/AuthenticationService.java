@@ -36,8 +36,8 @@ public class AuthenticationService {
     /**
      * 주어진 이메일과 비밀번호로 로그인하고 생성한 액세스 토큰을 리턴한다.
      *
-     * @param email    이메일
-     * @param password 비밀번호
+     * @param email    인자
+     * @param password 인자
      * @return 생성한 액세스 토큰
      * @throws LoginFailException 로그인에 실패한 경우
      */
