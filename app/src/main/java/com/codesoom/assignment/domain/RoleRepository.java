@@ -3,7 +3,7 @@ package com.codesoom.assignment.domain;
 import java.util.List;
 
 /**
- * User 권한을 저장하고 반환
+ * User 권한을 저장
  */
 public interface RoleRepository {
     /**
