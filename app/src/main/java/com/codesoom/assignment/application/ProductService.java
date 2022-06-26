@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 @Transactional
 public class ProductService {
+    private final Mapper mapper;
     /**
      * Product 데이터 저장소
      */
-    private final Mapper mapper;
     private final ProductRepository productRepository;
 
     public ProductService(
@@ -93,7 +93,7 @@ public class ProductService {
 
     /**
      * 주어진 id 와 일치하는 Product 를 찾을 수 있으면 반환하고,
-     * 찾을 수 없다면 Product 를 찾을 수 없다는 예외 처리 반환
+     * 찾을 수 없다면 Product 를 찾을 수 없다는 예외를 던진다.
      *
      * @param id Product 식별자
      * @return 예외 처리

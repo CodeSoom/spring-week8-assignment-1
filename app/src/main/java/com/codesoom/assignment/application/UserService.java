@@ -101,7 +101,7 @@ public class UserService {
 
     /**
      * 주어진 id 와 일치하는 User 를 찾을 수 있으면 반환하고,
-     * 찾을 수 없다면 User 를 찾을 수 없다는 예외 처리 반환
+     * 찾을 수 없다면 User 를 찾을 수 없다는 예외를 던진다.
      *
      * @param id User 식별자
      * @return 주어진 id 와 일치하는 User
