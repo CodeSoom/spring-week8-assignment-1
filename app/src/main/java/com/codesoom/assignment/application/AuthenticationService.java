@@ -33,7 +33,7 @@ public class AuthenticationService {
     }
 
     /**
-     * 주어진 email 과 일치하는 User 의 password 를 확인 후 일치하면 암호화된 id 반환
+     * 주어진 email 과 일치하는 User 의 password 를 확인 후 일치하면 JWT 반환
      *
      * @param email 로그인 시 입력한 email
      * @param password 로그인 시 입력한 password
