@@ -12,3 +12,4 @@ out
 
 # prod proerties
 application-prod.yml
+/.env
