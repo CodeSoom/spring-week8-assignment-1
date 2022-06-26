@@ -9,3 +9,6 @@ build
 
 # Build
 out
+
+# prod proerties
+application-prod.yml

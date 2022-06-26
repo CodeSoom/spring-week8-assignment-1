@@ -69,7 +69,13 @@ dependencies {
 
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Databases
+    // when dev env
     runtimeOnly 'com.h2database:h2'
+
+    // when prod env
+    runtimeOnly 'mysql:mysql-connector-java'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'

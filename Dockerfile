@@ -8,4 +8,4 @@ FROM openjdk:11
 
 COPY --from=builder /app/build/libs/app.jar .
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Dspring.profiles.active=prod" ,"-jar", "app.jar"]
