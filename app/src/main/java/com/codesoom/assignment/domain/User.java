@@ -32,19 +32,39 @@ public class User {
     @Builder.Default
     private boolean deleted = false;
 
+    /**
+     * 주어진 회원으로 현재 회원을 갱신한다.
+     *
+     * @param source 갱신할 회원
+     */
     public void changeWith(User source) {
         name = source.name;
     }
 
+    /**
+     * 주어진 비밀번호로 현재 비밀번호를 변경한다.
+     *
+     * @param password 변경할 비밀번호
+     * @param passwordEncoder 패스워드 인코더
+     */
     public void changePassword(String password,
                                PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
 
+    /**
+     * 회원을 삭제한다.
+     */
     public void destroy() {
         deleted = true;
     }
 
+    /**
+     * 주어진 정보가 삭제되지 않은 상태이면서 올바른 정보인지 검증한다.
+     *
+     * @param password 비밀번호
+     * @param passwordEncoder 패스워드 인코더
+     */
     public boolean authenticate(String password,
                                 PasswordEncoder passwordEncoder) {
         return !deleted && passwordEncoder.matches(password, this.password);
