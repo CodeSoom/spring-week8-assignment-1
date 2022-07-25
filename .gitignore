@@ -6,3 +6,10 @@ build
 
 # IDE
 .idea
+
+# Build
+out
+
+# prod proerties
+application-prod.yml
+/.env

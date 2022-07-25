@@ -1,0 +1,17 @@
+version: "3.7"
+
+# 실행 명령어 docker compose up -d
+# 실행전 루트에 .env MYSQL_PASSWORD 환경변수 설정하기
+
+services:
+  mysql:
+    image: mysql:8.0.22
+    environment:
+      MYSQL_DATABASE: cat_toy
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+  cat-toy:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
