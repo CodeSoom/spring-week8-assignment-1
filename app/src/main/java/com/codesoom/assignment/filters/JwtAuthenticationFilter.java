@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * security 보안 로직 실행
+ */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
@@ -26,6 +29,15 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 토큰을 가져와서 검증한 후 다음 필터를 호출
+     *
+     * @param request HTTP 요청 데이터
+     * @param response HTTP 응답 데이터
+     * @param chain 필터
+     * @throws IOException 입출력에 문제가 생긴 경우
+     * @throws ServletException 서블릿에 문제가 생긴 경우
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

@@ -15,3 +15,12 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+
+== POST /users
+
+사용자를 등록하고 해당 사용자 정보를 JSON 형태로 돌려준다.
+
+include::{snippets}/register-user/http-request.adoc[]
+
+include::{snippets}/register-user/http-response.adoc[]
