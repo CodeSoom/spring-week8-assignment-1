@@ -18,11 +18,19 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentRequest;
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -128,6 +136,20 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Tester\"")
+                ))
+                .andDo(document("register-user",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("유저 아이디"),
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("name").description("유저 이름")
+                        )
                 ));
 
         verify(userService).registerUser(any(UserRegistrationData.class));
@@ -157,6 +179,20 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
+                ))
+                .andDo(document("update-user",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("email").description("유저 이메일").optional(),
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("유저 아이디"),
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("name").description("유저 이름")
+                        )
                 ));
 
         verify(userService)
@@ -216,11 +252,24 @@ class UserControllerTest {
 
     @Test
     void destroyWithExistedId() throws Exception {
+        Long id = 1l;
         mockMvc.perform(
-                delete("/users/1")
+                delete("/users/{id}", id)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-user",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("id").description("아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("email").description("유저 이메일").optional(),
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        )
+                ));
 
         verify(userService).deleteUser(1L);
     }
