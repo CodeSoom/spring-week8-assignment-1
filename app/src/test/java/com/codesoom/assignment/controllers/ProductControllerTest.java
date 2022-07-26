@@ -34,6 +34,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -153,7 +154,10 @@ class ProductControllerTest {
                 .andExpect(status().isNotFound())
                 .andDo(document("get-product-with-id",
                         getDocumentRequest(),
-                        getDocumentResponse()
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("id").description("아이디")
+                        )
                 ));
     }
 
@@ -168,7 +172,22 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("create-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        )
+                ));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -183,7 +202,18 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("create-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        )
+                        // FIXME - 예외를 일으키는 테스트 케이스에도 responseFields를 추가해야할까?
+                        // FIXME - 또 예외 내용을 문서에 포함하기 위한 expectedException() 따위의 코드는 없을까?
+                ));
     }
 
     @Test
@@ -222,7 +252,22 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        )
+                ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -285,7 +330,16 @@ class ProductControllerTest {
                 delete("/products/1")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        )
+                ));
 
         verify(productService).deleteProduct(1L);
     }
