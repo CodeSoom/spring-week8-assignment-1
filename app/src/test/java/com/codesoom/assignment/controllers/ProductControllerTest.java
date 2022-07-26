@@ -33,6 +33,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -111,7 +113,13 @@ class ProductControllerTest {
                 .andExpect(content().string(containsString("쥐돌이")))
                 .andDo(document("get-products",
                         getDocumentRequest(),
-                        getDocumentResponse()
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("[].id").description("상품 아이디"),
+                                fieldWithPath("[].name").description("상품 이름"),
+                                fieldWithPath("[].maker").description("상품 제조사"),
+                                fieldWithPath("[].price").description("상품 가격")
+                        )
                 ));
     }
 
@@ -129,6 +137,12 @@ class ProductControllerTest {
                         getDocumentResponse(),
                         pathParameters(
                                 parameterWithName("id").description("아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
                         )
                 ));
     }
@@ -136,7 +150,11 @@ class ProductControllerTest {
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("get-product-with-id",
+                        getDocumentRequest(),
+                        getDocumentResponse()
+                ));
     }
 
     @Test
