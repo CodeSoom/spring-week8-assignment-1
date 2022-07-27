@@ -126,7 +126,7 @@ class ProductControllerTest {
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
-        Long id = 1L;
+        final Long id = 1L;
         mockMvc.perform(
                 get("/products/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -150,7 +150,8 @@ class ProductControllerTest {
 
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
-        mockMvc.perform(get("/products/1000"))
+        final Long id = 1000L;
+        mockMvc.perform(get("/products/{id}", id))
                 .andExpect(status().isNotFound())
                 .andDo(document("get-product-with-id",
                         getDocumentRequest(),
@@ -326,8 +327,9 @@ class ProductControllerTest {
 
     @Test
     void destroyWithExistedProduct() throws Exception {
+        final Long id = 1L;
         mockMvc.perform(
-                delete("/products/1")
+                delete("/products/{id}", id)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
