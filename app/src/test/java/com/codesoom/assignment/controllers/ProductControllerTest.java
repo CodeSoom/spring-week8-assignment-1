@@ -119,7 +119,8 @@ class ProductControllerTest {
                                 fieldWithPath("[].id").description("상품 아이디"),
                                 fieldWithPath("[].name").description("상품 이름"),
                                 fieldWithPath("[].maker").description("상품 제조사"),
-                                fieldWithPath("[].price").description("상품 가격")
+                                fieldWithPath("[].price").description("상품 가격"),
+                                fieldWithPath("[].imageUrl").description("상품 이미지 URL")
                         )
                 ));
     }
@@ -143,7 +144,8 @@ class ProductControllerTest {
                                 fieldWithPath("id").description("상품 아이디"),
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
-                                fieldWithPath("price").description("상품 가격")
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
                         )
                 ));
     }
@@ -186,7 +188,8 @@ class ProductControllerTest {
                                 fieldWithPath("id").description("상품 아이디"),
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
-                                fieldWithPath("price").description("상품 가격")
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
                         )
                 ));
 
@@ -266,7 +269,8 @@ class ProductControllerTest {
                                 fieldWithPath("id").description("상품 아이디"),
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
-                                fieldWithPath("price").description("상품 가격")
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
                         )
                 ));
 
@@ -336,10 +340,6 @@ class ProductControllerTest {
                 .andDo(document("delete-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        requestFields(
-                                fieldWithPath("name").description("상품 이름"),
-                                fieldWithPath("maker").description("상품 제조사"),
-                                fieldWithPath("price").description("상품 가격")
                         )
                 ));
 
