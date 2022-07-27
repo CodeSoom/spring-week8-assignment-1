@@ -134,7 +134,7 @@ class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product-with-id",
+                .andDo(document("get-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         pathParameters(
@@ -155,7 +155,7 @@ class ProductControllerTest {
         final Long id = 1000L;
         mockMvc.perform(get("/products/{id}", id))
                 .andExpect(status().isNotFound())
-                .andDo(document("get-product-with-id",
+                .andDo(document("get-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         pathParameters(
