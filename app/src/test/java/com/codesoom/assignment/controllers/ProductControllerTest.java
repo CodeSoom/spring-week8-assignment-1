@@ -28,6 +28,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -179,6 +181,9 @@ class ProductControllerTest {
                 .andDo(document("create-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
                         requestFields(
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
@@ -210,6 +215,9 @@ class ProductControllerTest {
                 .andDo(document("create-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
                         requestFields(
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
@@ -260,6 +268,9 @@ class ProductControllerTest {
                 .andDo(document("update-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
                         requestFields(
                                 fieldWithPath("name").description("상품 이름"),
                                 fieldWithPath("maker").description("상품 제조사"),
@@ -340,6 +351,8 @@ class ProductControllerTest {
                 .andDo(document("delete-product",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
                         )
                 ));
 
