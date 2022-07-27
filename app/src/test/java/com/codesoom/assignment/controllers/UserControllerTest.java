@@ -184,14 +184,14 @@ class UserControllerTest {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         requestFields(
-                                fieldWithPath("email").description("유저 이메일").optional(),
-                                fieldWithPath("name").description("유저 이름"),
-                                fieldWithPath("password").description("유저 패스워드")
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 이메일").optional(),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
+                                fieldWithPath("password").type(JsonFieldType.STRING).description("유저 패스워드")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("유저 아이디"),
-                                fieldWithPath("email").description("유저 이메일"),
-                                fieldWithPath("name").description("유저 이름")
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("유저 아이디"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 이메일"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
                         )
                 ));
 
@@ -252,7 +252,7 @@ class UserControllerTest {
 
     @Test
     void destroyWithExistedId() throws Exception {
-        Long id = 1l;
+        final Long id = 1l;
         mockMvc.perform(
                 delete("/users/{id}", id)
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
@@ -263,11 +263,6 @@ class UserControllerTest {
                         getDocumentResponse(),
                         pathParameters(
                                 parameterWithName("id").description("아이디")
-                        ),
-                        requestFields(
-                                fieldWithPath("email").description("유저 이메일").optional(),
-                                fieldWithPath("name").description("유저 이름"),
-                                fieldWithPath("password").description("유저 패스워드")
                         )
                 ));
 
