@@ -10,6 +10,7 @@ import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,16 +19,30 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentRequest;
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
 class ProductControllerTest {
     private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
             "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
@@ -96,23 +111,57 @@ class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-products",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("[].id").description("상품 아이디"),
+                                fieldWithPath("[].name").description("상품 이름"),
+                                fieldWithPath("[].maker").description("상품 제조사"),
+                                fieldWithPath("[].price").description("상품 가격"),
+                                fieldWithPath("[].imageUrl").description("상품 이미지 URL")
+                        )
+                ));
     }
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
+        final Long id = 1L;
         mockMvc.perform(
-                get("/products/1")
+                get("/products/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("get-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("id").description("아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
+                        )
+                ));
     }
 
     @Test
     void deatilWithNotExsitedProduct() throws Exception {
-        mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+        final Long id = 1000L;
+        mockMvc.perform(get("/products/{id}", id))
+                .andExpect(status().isNotFound())
+                .andDo(document("get-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("id").description("아이디")
+                        )
+                ));
     }
 
     @Test
@@ -126,7 +175,26 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("쥐돌이")));
+                .andExpect(content().string(containsString("쥐돌이")))
+                .andDo(document("create-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
+                        )
+                ));
 
         verify(productService).createProduct(any(ProductData.class));
     }
@@ -141,7 +209,21 @@ class ProductControllerTest {
                                 "\"price\":0}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("create-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        )
+                        // FIXME - 예외를 일으키는 테스트 케이스에도 responseFields를 추가해야할까?
+                        // FIXME - 또 예외 내용을 문서에 포함하기 위한 expectedException() 따위의 코드는 없을까?
+                ));
     }
 
     @Test
@@ -180,7 +262,26 @@ class ProductControllerTest {
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("쥐순이")));
+                .andExpect(content().string(containsString("쥐순이")))
+                .andDo(document("update-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 아이디"),
+                                fieldWithPath("name").description("상품 이름"),
+                                fieldWithPath("maker").description("상품 제조사"),
+                                fieldWithPath("price").description("상품 가격"),
+                                fieldWithPath("imageUrl").description("상품 이미지 URL")
+                        )
+                ));
 
         verify(productService).updateProduct(eq(1L), any(ProductData.class));
     }
@@ -239,11 +340,19 @@ class ProductControllerTest {
 
     @Test
     void destroyWithExistedProduct() throws Exception {
+        final Long id = 1L;
         mockMvc.perform(
-                delete("/products/1")
+                delete("/products/{id}", id)
                         .header("Authorization", "Bearer " + VALID_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete-product",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer 토큰")
+                        )
+                ));
 
         verify(productService).deleteProduct(1L);
     }

@@ -1,2 +1,7 @@
 README.md
 .github
+.gradle
+.idea
+.dockerignore
+.gitignore
+.gitattributes

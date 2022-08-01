@@ -5,18 +5,27 @@ import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentRequest;
+import static com.codesoom.assignment.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @WebMvcTest(SessionController.class)
+@AutoConfigureRestDocs
 class SessionControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -45,7 +54,19 @@ class SessionControllerTest {
                                 "\"password\":\"test\"}")
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(".")));
+                .andExpect(content().string(containsString(".")))
+                .andDo(document("login",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").description("JWT 토큰")
+                        )
+
+                ));
     }
 
     @Test
