@@ -1,114 +1,75 @@
 package com.codesoom.assignment.application;
 
-import com.codesoom.assignment.domain.Role;
-import com.codesoom.assignment.domain.RoleRepository;
+import com.codesoom.assignment.Fixture;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
-import com.codesoom.assignment.errors.InvalidTokenException;
-import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.dto.SessionRequestData;
+import com.codesoom.assignment.dto.SessionResponseData;
 import com.codesoom.assignment.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@DisplayName("AuthenticationService 클래스의")
 class AuthenticationServiceTest {
     private static final String SECRET = "12345678901234567890123456789012";
-
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
-    private static final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaD0";
+    public static final User USER = User.builder()
+            .id(1L)
+            .email(Fixture.EMAIL)
+            .name(Fixture.USER_NAME)
+            .password(Fixture.PASSWORD)
+            .build();
 
     private AuthenticationService authenticationService;
-
-    private UserRepository userRepository = mock(UserRepository.class);
-    private RoleRepository roleRepository = mock(RoleRepository.class);
+    private UserRepository userRepository;
+    private JwtUtil jwtUtil;
 
     @BeforeEach
     void setUp() {
-        JwtUtil jwtUtil = new JwtUtil(SECRET);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        authenticationService = new AuthenticationService(
-                userRepository, roleRepository, jwtUtil, passwordEncoder);
-
-        User user = User.builder().id(1L).build();
-        user.changePassword("test", passwordEncoder);
-
-        given(userRepository.findByEmail("tester@example.com"))
-                .willReturn(Optional.of(user));
-
-        given(roleRepository.findAllByUserId(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(roleRepository.findAllByUserId(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+        jwtUtil = new JwtUtil(SECRET);
+        userRepository = mock(UserRepository.class);
+        authenticationService = new AuthenticationService(userRepository, jwtUtil);
     }
 
-    @Test
-    void loginWithRightEmailAndPassword() {
-        String accessToken = authenticationService.login(
-                "tester@example.com", "test");
+    @Nested
+    @DisplayName("login 메서드는")
+    class Describe_login {
+        @Nested
+        @DisplayName("입력한 로그인 정보와 일치하는 유저가 있다면")
+        class Context_with_validLoginData {
+            private SessionRequestData requestData;
 
-        assertThat(accessToken).isEqualTo(VALID_TOKEN);
+            @BeforeEach
+            void prepare() {
+                requestData = new SessionRequestData(Fixture.EMAIL, Fixture.PASSWORD);
 
-        verify(userRepository).findByEmail("tester@example.com");
-    }
+                given(userRepository.findByEmail(Fixture.EMAIL))
+                        .willReturn(Optional.of(USER));
+            }
 
-    @Test
-    void loginWithWrongEmail() {
-        assertThatThrownBy(
-                () -> authenticationService.login("badguy@example.com", "test")
-        ).isInstanceOf(LoginFailException.class);
+            @Test
+            @DisplayName("토큰을 생성하고 리턴한다")
+            void It_returns_createdToken() {
+                SessionResponseData token = authenticationService.login(requestData);
 
-        verify(userRepository).findByEmail("badguy@example.com");
-    }
+                Claims decode = jwtUtil.decode(token.getAccessToken());
 
-    @Test
-    void loginWithWrongPassword() {
-        assertThatThrownBy(
-                () -> authenticationService.login("tester@example.com", "xxx")
-        ).isInstanceOf(LoginFailException.class);
+                assertThat(decode)
+                        .containsEntry("iss", "BJP")
+                        .containsEntry("userId", 1)
+                        .containsEntry("role", "USER");
 
-        verify(userRepository).findByEmail("tester@example.com");
-    }
-
-    @Test
-    void parseTokenWithValidToken() {
-        Long userId = authenticationService.parseToken(VALID_TOKEN);
-
-        assertThat(userId).isEqualTo(1L);
-    }
-
-    @Test
-    void parseTokenWithInvalidToken() {
-        assertThatThrownBy(
-                () -> authenticationService.parseToken(INVALID_TOKEN)
-        ).isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
-    void roles() {
-        assertThat(
-                authenticationService.roles(1L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER"));
-
-        assertThat(
-                authenticationService.roles(1004L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER", "ADMIN"));
+                verify(userRepository).findByEmail(Fixture.EMAIL);
+            }
+        }
     }
 }

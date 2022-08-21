@@ -1,5 +1,6 @@
 package com.codesoom.assignment.utils;
 
+import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,13 +19,29 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String encode(Long userId) {
+    /**
+     * 암호화한 토큰을 생성하고 리턴합니다.
+     *
+     * @param userId 식별자
+     * @param role 역할
+     * @return 토큰
+     */
+    public String encode(Long userId, Role role) {
         return Jwts.builder()
+                .setIssuer("BJP")
                 .claim("userId", userId)
+                .claim("role", role)
                 .signWith(key)
                 .compact();
     }
 
+    /**
+     * 복호화된 토큰의 정보를 추출해 리턴합니다.
+     *
+     * @param token 토큰
+     * @return 정보
+     * @throws InvalidTokenException 유효하지 않은 토큰
+    */
     public Claims decode(String token) {
         if (token == null || token.isBlank()) {
             throw new InvalidTokenException(token);

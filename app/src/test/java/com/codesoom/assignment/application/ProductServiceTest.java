@@ -1,143 +1,78 @@
 package com.codesoom.assignment.application;
 
-import com.codesoom.assignment.domain.Product;
+import com.codesoom.assignment.Fixture;
 import com.codesoom.assignment.domain.ProductRepository;
+import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.ProductData;
-import com.codesoom.assignment.errors.ProductNotFoundException;
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
+import com.codesoom.assignment.dto.ProductInquiryInfo;
+import com.codesoom.assignment.dto.UserInquiryInfo;
+import com.codesoom.assignment.dto.UserRegisterData;
+import com.codesoom.assignment.security.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ProductServiceTest {
+@SpringBootTest
+@DisplayName("ProductService 인터페이스의")
+public class ProductServiceTest {
+    @Autowired
+    private UserService userService;
+    @Autowired
     private ProductService productService;
-
-    private final ProductRepository productRepository =
-            mock(ProductRepository.class);
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
-        Mapper mapper = DozerBeanMapperBuilder.buildDefault();
-
-        productService = new ProductService(mapper, productRepository);
-
-        Product product = Product.builder()
-                .id(1L)
-                .name("쥐돌이")
-                .maker("냥이월드")
-                .price(5000)
-                .build();
-
-        given(productRepository.findAll()).willReturn(List.of(product));
-
-        given(productRepository.findById(1L)).willReturn(Optional.of(product));
-
-        given(productRepository.save(any(Product.class))).will(invocation -> {
-            Product source = invocation.getArgument(0);
-            return Product.builder()
-                    .id(2L)
-                    .name(source.getName())
-                    .maker(source.getMaker())
-                    .price(source.getPrice())
-                    .build();
-        });
+        productRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
-    @Test
-    void getProductsWithNoProduct() {
-        given(productRepository.findAll()).willReturn(List.of());
+    @Nested
+    @DisplayName("register 메서드는")
+    class Describe_register {
+        @Nested
+        @DisplayName("상품, 유저 정보가 주어지면")
+        class Context_with_productAndUserData {
+            private ProductData productData;
+            private Authentication authentication;
 
-        assertThat(productService.getProducts()).isEmpty();
-    }
+            @BeforeEach
+            void prepare() {
+                UserInquiryInfo info = userService.register(
+                        new UserRegisterData(Fixture.EMAIL, Fixture.PASSWORD, Fixture.USER_NAME));
 
-    @Test
-    void getProducts() {
-        List<Product> products = productService.getProducts();
+                authentication = new UserAuthentication(info.getId(), info.getRole());
 
-        assertThat(products).isNotEmpty();
+                productData = ProductData.builder()
+                        .name(Fixture.PRODUCT_NAME)
+                        .description(null)
+                        .quantity(Fixture.QUANTITY)
+                        .price(Fixture.PRICE)
+                        .build();
+            }
 
-        Product product = products.get(0);
+            @Test
+            @DisplayName("상품을 생성하고 상품 조회 정보를 리턴한다")
+            void It_returns_product() {
+                ProductInquiryInfo product = productService.register(productData, authentication);
 
-        assertThat(product.getName()).isEqualTo("쥐돌이");
-    }
-
-    @Test
-    void getProductWithExsitedId() {
-        Product product = productService.getProduct(1L);
-
-        assertThat(product).isNotNull();
-        assertThat(product.getName()).isEqualTo("쥐돌이");
-    }
-
-    @Test
-    void getProductWithNotExsitedId() {
-        assertThatThrownBy(() -> productService.getProduct(1000L))
-                .isInstanceOf(ProductNotFoundException.class);
-    }
-
-    @Test
-    void createProduct() {
-        ProductData productData = ProductData.builder()
-                .name("쥐돌이")
-                .maker("냥이월드")
-                .price(5000)
-                .build();
-
-        Product product = productService.createProduct(productData);
-
-        verify(productRepository).save(any(Product.class));
-
-        assertThat(product.getId()).isEqualTo(2L);
-        assertThat(product.getName()).isEqualTo("쥐돌이");
-        assertThat(product.getMaker()).isEqualTo("냥이월드");
-    }
-
-    @Test
-    void updateProductWithExistedId() {
-        ProductData productData = ProductData.builder()
-                .name("쥐순이")
-                .maker("냥이월드")
-                .price(5000)
-                .build();
-
-        Product product = productService.updateProduct(1L, productData);
-
-        assertThat(product.getId()).isEqualTo(1L);
-        assertThat(product.getName()).isEqualTo("쥐순이");
-    }
-
-    @Test
-    void updateProductWithNotExistedId() {
-        ProductData productData = ProductData.builder()
-                .name("쥐순이")
-                .maker("냥이월드")
-                .price(5000)
-                .build();
-
-        assertThatThrownBy(() -> productService.updateProduct(1000L, productData))
-                .isInstanceOf(ProductNotFoundException.class);
-    }
-
-    @Test
-    void deleteProductWithExistedId() {
-        productService.deleteProduct(1L);
-
-        verify(productRepository).delete(any(Product.class));
-    }
-
-    @Test
-    void deleteProductWithNotExistedId() {
-        assertThatThrownBy(() -> productService.deleteProduct(1000L))
-                .isInstanceOf(ProductNotFoundException.class);
+                assertAll(
+                        () -> assertThat(product.getName()).isEqualTo(Fixture.PRODUCT_NAME),
+                        () -> assertThat(product.getDescription()).isNull(),
+                        () -> assertThat(product.getQuantity()).isEqualTo(Fixture.QUANTITY),
+                        () -> assertThat(product.getPrice()).isEqualTo(Fixture.PRICE)
+                );
+            }
+        }
     }
 }

@@ -4,6 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class SessionRequestData {
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
+
+    public SessionRequestData(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
