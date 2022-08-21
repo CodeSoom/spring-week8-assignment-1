@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import javax.servlet.Filter;
@@ -26,11 +27,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         Filter authenticationErrorFilter = new AuthenticationErrorFilter();
 
-        http.csrf()
-                .disable()
-                .addFilter(authenticationFilter)
-                .addFilterBefore(authenticationErrorFilter, JwtAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+        http
+            .csrf().disable()
+            .headers()
+            .frameOptions().disable()
+            .and()
+            .addFilter(authenticationFilter)
+            .addFilterBefore(authenticationErrorFilter,
+                    JwtAuthenticationFilter.class)
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
 }

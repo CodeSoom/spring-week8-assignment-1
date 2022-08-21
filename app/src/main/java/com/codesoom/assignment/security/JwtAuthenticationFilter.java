@@ -28,28 +28,19 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String authorization = request.getHeader("Authorization");
 
-        String uri = request.getRequestURI();
-        if (uri.startsWith("/session") || (uri.startsWith("/users") && request.getMethod().equals("POST"))) {
-            chain.doFilter(request, response);
-            return;
+        if (authorization != null) {
+            String accessToken = authorization.substring("Bearer ".length());
+
+            Claims claims = authenticationService.parseToken(accessToken);
+
+            Role role = Role.valueOf(claims.get("role", String.class));
+            Long userId = claims.get("userId", Long.class);
+
+            Authentication authentication = new UserAuthentication(userId, role);
+
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(authentication);
         }
-
-        if (authorization == null) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value());
-            return;
-        }
-
-        String accessToken = authorization.substring("Bearer ".length());
-
-        Claims claims = authenticationService.parseToken(accessToken);
-
-        Role role = Role.valueOf(claims.get("role", String.class));
-        Long userId = claims.get("userId", Long.class);
-
-        Authentication authentication = new UserAuthentication(userId, role);
-
-        SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(authentication);
 
         chain.doFilter(request, response);
     }
