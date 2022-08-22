@@ -8,10 +8,10 @@ import com.codesoom.assignment.errors.DuplicatedEmailException;
 import org.springframework.stereotype.Service;
 
 @Service
-class NormalUserService implements UserService {
+class NormalUserCommandService implements UserCommandService {
     private final UserRepository userRepository;
 
-    public NormalUserService(UserRepository userRepository) {
+    public NormalUserCommandService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
