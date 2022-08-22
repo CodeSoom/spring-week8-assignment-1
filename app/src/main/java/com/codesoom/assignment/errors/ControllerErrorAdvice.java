@@ -15,8 +15,8 @@ import java.util.Set;
 public class ControllerErrorAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFound() {
-        return new ErrorResponse("User not found");
+    public ErrorResponse handleUserNotFound(UserNotFoundException e) {
+        return new ErrorResponse("유저 " + e.getMessage() + "을 찾을 수 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

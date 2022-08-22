@@ -21,6 +21,7 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,8 +94,8 @@ public class UserControllerTest {
     @DisplayName("select 메서드는")
     class Describe_select {
         @Nested
-        @DisplayName("식별자가 주어지면")
-        class Context_with_id {
+        @DisplayName("존재하는 유저의 식별자가 주어지면")
+        class Context_with_existUserId {
             private String id;
 
             @BeforeEach
@@ -110,6 +111,19 @@ public class UserControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.id").value(id))
                         .andExpect(jsonPath("$.name", Is.is(Fixture.USER_NAME)));
+            }
+        }
+
+        @Nested
+        @DisplayName("존재하지 않는 유저의 식별자가 주어지면")
+        class Context_with_notExistUserId {
+            @Test
+            @DisplayName("예외메시지와 404를 응답한다")
+            void It_returns_exceptionMessage() throws Exception {
+                mockMvc.perform(get(Fixture.USER_PATH + "/-1"))
+                        .andExpect(status().isNotFound())
+                        .andDo(print())
+                        .andExpect(jsonPath("$.message").isString());
             }
         }
     }
