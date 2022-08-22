@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,6 +85,31 @@ public class UserControllerTest {
                                 .content(objectMapper.writeValueAsString(Fixture.USER_DATA_MAP)))
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.message").isString());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("select 메서드는")
+    class Describe_select {
+        @Nested
+        @DisplayName("식별자가 주어지면")
+        class Context_with_id {
+            private String id;
+
+            @BeforeEach
+            void prepare() throws Exception {
+                Map<String, String> createdUser = postRequest(Fixture.USER_DATA_MAP, Fixture.USER_PATH);
+                id = createdUser.get("id");
+            }
+
+            @Test
+            @DisplayName("유저 정보와 200을 응답한다")
+            void It_returns_userInfo() throws Exception {
+                mockMvc.perform(get(Fixture.USER_PATH + "/" + id))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(id))
+                        .andExpect(jsonPath("$.name", Is.is(Fixture.USER_NAME)));
             }
         }
     }

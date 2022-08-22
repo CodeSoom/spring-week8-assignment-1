@@ -17,9 +17,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @DisplayName("UserService 인터페이스의")
-public class UserServiceTest {
+public class UserCommandServiceTest {
     @Autowired
-    private UserService userService;
+    private UserCommandService userCommandService;
     @Autowired
     private UserRepository userRepository;
 
@@ -43,7 +43,7 @@ public class UserServiceTest {
             @Test
             @DisplayName("유저 조회 정보를 리턴한다")
             void It_returns_userInquiryInfo() {
-                UserInquiryInfo inquiryInfo = userService.register(Fixture.USER_REGISTER_DATA);
+                UserInquiryInfo inquiryInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
                 assertThat(inquiryInfo)
                         .isEqualTo(expectInquiryInfo(inquiryInfo.getId()));
@@ -55,13 +55,13 @@ public class UserServiceTest {
         class Context_with_duplicationEmail {
             @BeforeEach
             void prepare() {
-                userService.register(Fixture.USER_REGISTER_DATA);
+                userCommandService.register(Fixture.USER_REGISTER_DATA);
             }
 
             @Test
             @DisplayName("예외를 던진다")
             void It_throws_exception() {
-                assertThatThrownBy(() -> userService.register(Fixture.USER_REGISTER_DATA))
+                assertThatThrownBy(() -> userCommandService.register(Fixture.USER_REGISTER_DATA))
                         .isExactlyInstanceOf(DuplicatedEmailException.class);
             }
         }
@@ -77,14 +77,14 @@ public class UserServiceTest {
 
             @BeforeEach
             void prepare() {
-                UserInquiryInfo userInquiryInfo = userService.register(Fixture.USER_REGISTER_DATA);
+                UserInquiryInfo userInquiryInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
                 idToDelete = userInquiryInfo.getId();
             }
 
             @Test
             @DisplayName("유저를 삭제한다")
             void It_delete_user() {
-                userService.delete(idToDelete);
+                userCommandService.delete(idToDelete);
 
                 assertThat(userRepository.existsById(idToDelete)).isFalse();
             }

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayName("ProductService 인터페이스의")
 public class ProductServiceTest {
     @Autowired
-    private UserService userService;
+    private UserCommandService userCommandService;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -48,7 +48,7 @@ public class ProductServiceTest {
 
             @BeforeEach
             void prepare() {
-                UserInquiryInfo info = userService.register(
+                UserInquiryInfo info = userCommandService.register(
                         new UserRegisterData(Fixture.EMAIL, Fixture.PASSWORD, Fixture.USER_NAME));
 
                 authentication = new UserAuthentication(info.getId(), info.getRole());
