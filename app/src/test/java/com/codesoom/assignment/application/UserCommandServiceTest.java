@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@DisplayName("UserService 인터페이스의")
+@DisplayName("UserService의")
 public class UserCommandServiceTest {
     @Autowired
     private UserCommandService userCommandService;
