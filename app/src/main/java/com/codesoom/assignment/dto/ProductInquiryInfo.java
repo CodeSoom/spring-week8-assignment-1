@@ -10,11 +10,11 @@ public class ProductInquiryInfo {
     private final Long userId;
     private final String name;
     private final String description;
-    private final Integer quantity;
+    private final int quantity;
     private final Integer price;
 
     @Builder
-    public ProductInquiryInfo(Long id, Long userId, String name, String description, Integer quantity, Integer price) {
+    public ProductInquiryInfo(Long id, Long userId, String name, String description, int quantity, Integer price) {
         this.id = id;
         this.userId = userId;
         this.name = name;

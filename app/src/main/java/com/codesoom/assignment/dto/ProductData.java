@@ -8,11 +8,11 @@ import lombok.Getter;
 public class ProductData {
     private final String name;
     private final String description;
-    private final Integer quantity;
+    private final int quantity;
     private final Integer price;
 
     @Builder
-    public ProductData(String name, String description, Integer quantity, Integer price) {
+    public ProductData(String name, String description, int quantity, Integer price) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;

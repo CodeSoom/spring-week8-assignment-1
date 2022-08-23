@@ -26,7 +26,7 @@ public class Product {
 
     private String description;
 
-    private Integer quantity;
+    private int quantity;
 
     private Integer price;
 
@@ -37,7 +37,7 @@ public class Product {
     public Product() {}
 
     @Builder
-    public Product(User owner, String name, String description, Integer quantity, Integer price) {
+    public Product(User owner, String name, String description, int quantity, Integer price) {
         this.owner = owner;
         this.name = name;
         this.description = description;

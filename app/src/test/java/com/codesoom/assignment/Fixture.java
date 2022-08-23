@@ -47,7 +47,7 @@ public class Fixture {
 
     public static final String PRODUCT_PATH = "/products";
     public static final String PRODUCT_NAME = "상품명";
-    public static final Integer QUANTITY = 10;
+    public static final int QUANTITY = 10;
     public static final Integer PRICE = 10000;
 
     private Fixture() {
