@@ -4,7 +4,7 @@ import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.dto.ProductInquiryInfo;
 import org.springframework.security.core.Authentication;
 
-public interface ProductService {
+public interface ProductCommandService {
     /**
      * 상품을 생성하고 리턴한다.
      *

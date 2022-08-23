@@ -11,11 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NormalProductService implements ProductService {
+public class NormalProductCommandService implements ProductCommandService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public NormalProductService(ProductRepository productRepository, UserRepository userRepository) {
+    public NormalProductCommandService(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }

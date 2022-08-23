@@ -21,11 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @DisplayName("ProductService 인터페이스의")
-public class ProductServiceTest {
+public class ProductCommandServiceTest {
     @Autowired
     private UserCommandService userCommandService;
     @Autowired
-    private ProductService productService;
+    private ProductCommandService productCommandService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -64,7 +64,7 @@ public class ProductServiceTest {
             @Test
             @DisplayName("상품을 생성하고 상품 조회 정보를 리턴한다")
             void It_returns_product() {
-                ProductInquiryInfo product = productService.register(productData, authentication);
+                ProductInquiryInfo product = productCommandService.register(productData, authentication);
 
                 assertAll(
                         () -> assertThat(product.getName()).isEqualTo(Fixture.PRODUCT_NAME),

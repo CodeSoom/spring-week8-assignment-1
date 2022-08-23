@@ -1,6 +1,6 @@
 package com.codesoom.assignment.controllers;
 
-import com.codesoom.assignment.application.ProductService;
+import com.codesoom.assignment.application.ProductCommandService;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.dto.ProductInquiryInfo;
 import com.codesoom.assignment.utils.SecurityUtil;
@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductService productService;
+    private final ProductCommandService productCommandService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductCommandService productCommandService) {
+        this.productCommandService = productCommandService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductInquiryInfo register(@RequestBody ProductData data) {
-        return productService.register(data, SecurityUtil.getInfo());
+        return productCommandService.register(data, SecurityUtil.getInfo());
     }
 }
