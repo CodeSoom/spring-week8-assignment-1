@@ -20,7 +20,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User owner;
 
     private String name;
 
@@ -30,15 +30,15 @@ public class Product {
 
     private Integer price;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public Product() {}
 
     @Builder
-    public Product(User user, String name, String description, Integer quantity, Integer price) {
-        this.user = user;
+    public Product(User owner, String name, String description, Integer quantity, Integer price) {
+        this.owner = owner;
         this.name = name;
         this.description = description;
         this.quantity = quantity;

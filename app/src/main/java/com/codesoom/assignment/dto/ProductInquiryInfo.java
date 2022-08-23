@@ -26,7 +26,7 @@ public class ProductInquiryInfo {
     public static ProductInquiryInfo from(Product product) {
         return ProductInquiryInfo.builder()
                 .id(product.getId())
-                .userId(product.getUser().getId())
+                .userId(product.getOwner().getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .quantity(product.getQuantity())

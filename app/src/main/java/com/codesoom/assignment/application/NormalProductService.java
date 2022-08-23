@@ -27,7 +27,7 @@ public class NormalProductService implements ProductService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         Product product = data.toProduct();
-        product.setUser(user);
+        product.setOwner(user);
 
         return ProductInquiryInfo.from(productRepository.save(product));
     }
