@@ -3,6 +3,7 @@ package com.codesoom.assignment.controllers;
 import com.codesoom.assignment.Fixture;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
@@ -143,6 +144,7 @@ public class UserControllerTest {
 
                 User admin = Fixture.ADMIN;
                 admin.giveAdminPrivileges();
+                admin.change(EncryptionUtil.encrypt(admin.getPassword()));
                 userRepository.save(admin);
 
                 adminToken = postRequest(Fixture.ADMIN_LOGIN_DATA_MAP, Fixture.SESSION_PATH)

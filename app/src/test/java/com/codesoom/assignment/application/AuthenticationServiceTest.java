@@ -5,6 +5,7 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.SessionRequestData;
 import com.codesoom.assignment.dto.SessionResponseData;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import com.codesoom.assignment.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,8 +53,10 @@ class AuthenticationServiceTest {
             void prepare() {
                 requestData = new SessionRequestData(Fixture.EMAIL, Fixture.PASSWORD);
 
+                User user = USER;
+                user.change(EncryptionUtil.encrypt(USER.getPassword()));
                 given(userRepository.findByEmail(Fixture.EMAIL))
-                        .willReturn(Optional.of(USER));
+                        .willReturn(Optional.of(user));
             }
 
             @Test

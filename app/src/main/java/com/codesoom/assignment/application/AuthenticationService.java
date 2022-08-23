@@ -5,6 +5,7 @@ import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.SessionRequestData;
 import com.codesoom.assignment.dto.SessionResponseData;
 import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import com.codesoom.assignment.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
 
-        if (!user.isMatchPassword(data.getPassword())) {
+        if (!EncryptionUtil.isMatchPassword(data.getPassword(), user.getPassword())) {
             throw new LoginFailException(email);
         }
 

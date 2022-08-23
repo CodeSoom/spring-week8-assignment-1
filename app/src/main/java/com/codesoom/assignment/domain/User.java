@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -49,14 +48,8 @@ public class User {
         this.name = name;
     }
 
-    /**
-     * 비밀번호를 비교한 결과를 리턴합니다.
-     *
-     * @param password 비밀번호
-     * @return 같으면 true, 같지 않거나 null 값이 있다면 false
-     */
-    public boolean isMatchPassword(String password) {
-        return Objects.equals(this.password, password);
+    public void change(String password) {
+        this.password = password;
     }
 
     /**

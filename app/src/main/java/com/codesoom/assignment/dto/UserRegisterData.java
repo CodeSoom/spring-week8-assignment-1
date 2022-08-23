@@ -1,6 +1,7 @@
 package com.codesoom.assignment.dto;
 
 import com.codesoom.assignment.domain.User;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import lombok.Getter;
 
 @Getter
@@ -18,7 +19,7 @@ public class UserRegisterData {
     public User toUser() {
         return User.builder()
                 .email(email)
-                .password(password)
+                .password(EncryptionUtil.encrypt(password))
                 .name(name)
                 .build();
     }
