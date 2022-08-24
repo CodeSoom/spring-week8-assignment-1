@@ -19,7 +19,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
     }
 
     private static List<GrantedAuthority> authorities(Role role) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
+        List<GrantedAuthority> authorities = new ArrayList<>(1);
         authorities.add(new SimpleGrantedAuthority(role.name()));
         return authorities;
     }
