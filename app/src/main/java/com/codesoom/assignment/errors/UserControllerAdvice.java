@@ -11,8 +11,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Set;
 
+/**
+ * 유저와 연관된 예외를 처리합니다.
+ */
 @RestControllerAdvice
-public class ControllerErrorAdvice {
+public class UserControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorResponse handleUserNotFound(UserNotFoundException e) {
@@ -23,18 +26,6 @@ public class ControllerErrorAdvice {
     @ExceptionHandler(DuplicatedEmailException.class)
     public ErrorResponse handleDuplicatedEmail(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(LoginFailException.class)
-    public ErrorResponse handleLoginFailException() {
-        return new ErrorResponse("Log-in failed");
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(InvalidTokenException.class)
-    public ErrorResponse handleInvalidAccessTokenException() {
-        return new ErrorResponse("Invalid access token");
     }
 
     @ResponseBody
