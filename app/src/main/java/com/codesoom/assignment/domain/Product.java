@@ -31,10 +31,14 @@ public class Product {
     @Embedded
     private Quantity quantity;
 
-    private Integer price;
+    @Embedded
+    private Price price;
 
     public int getQuantity() {
         return quantity.getQuantity();
+    }
+    public int getPrice() {
+        return price.getPrice();
     }
 
     public void setOwner(User owner) {
