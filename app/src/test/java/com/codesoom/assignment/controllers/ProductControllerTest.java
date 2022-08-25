@@ -131,7 +131,7 @@ public class ProductControllerTest {
             @Test
             @DisplayName("예외 메시지와 401을 응답한다")
             void It_respond_unAuthorization() throws Exception {
-                mockMvc.perform(put(Fixture.USER_PATH + "/" + productId)
+                mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA)))
                         .andExpect(status().isUnauthorized());
