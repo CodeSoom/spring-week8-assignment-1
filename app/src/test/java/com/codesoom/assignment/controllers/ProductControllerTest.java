@@ -7,6 +7,7 @@ import com.codesoom.assignment.domain.ProductRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.UserInquiryInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
@@ -193,10 +194,31 @@ public class ProductControllerTest {
         @Nested
         @DisplayName("유저, 상품, 토큰이 주어지고 유저가 상품의 판매자가 아니면서 관리자도 아니라면")
         class Context_with_userNotSellerAndNotAdmin {
+            Long productId;
+            String anotherUserToken;
+
+            @BeforeEach
+            void prepare() throws Exception {
+                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                User user = userRepository.findById(userInfo.getId()).get();
+
+                Product product = productRepository.save(Fixture.makeProduct(user));
+                productId = product.getId();
+
+                UserInquiryInfo anotherUserInfo = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
+                User anotherUser = userRepository.findById(anotherUserInfo.getId()).get();
+
+                anotherUserToken = postRequest(Fixture.ADMIN_LOGIN_DATA_MAP, Fixture.SESSION_PATH).get("accessToken");
+            }
+
             @Test
             @DisplayName("예외메시지와 403을 응답한다")
-            void It_returns_exceptionMessage() {
-
+            void It_returns_exceptionMessage() throws Exception {
+                mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA))
+                                .header("Authorization", "Bearer " + anotherUserToken))
+                        .andExpect(status().isForbidden());
             }
         }
 
