@@ -15,8 +15,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
-sourceCompatibility = '1.8'
-
 configurations {
     developmentOnly
     runtimeClasspath {
@@ -49,9 +47,6 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
-
-    // DozerMapper
-    implementation 'com.github.dozermapper:dozer-core:6.4.0'
 
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
