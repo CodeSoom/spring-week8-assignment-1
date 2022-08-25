@@ -1,5 +1,6 @@
 package com.codesoom.assignment.domain;
 
+import com.codesoom.assignment.dto.ProductData;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -55,5 +56,13 @@ public class Product {
         this.description = description;
         this.quantity = new Quantity(quantity);
         this.price = new Price(price);
+    }
+
+    public Product update(ProductData productData) {
+        this.name = productData.getName();
+        this.description = productData.getDescription();
+        this.quantity = new Quantity(productData.getQuantity());
+        this.price = new Price(productData.getPrice());
+        return this;
     }
 }

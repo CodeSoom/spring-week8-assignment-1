@@ -2,6 +2,7 @@ package com.codesoom.assignment;
 
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.User;
+import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.dto.UserRegisterData;
 
 import java.util.Map;
@@ -66,12 +67,23 @@ public class Fixture {
                 "price", Fixture.PRICE
         );
     }
+
+    public static final String MODIFIED_PRODUCT_NAME = "변경된 상품명";
+    public static final String MODIFIED_PRODUCT_DESCRIPTION = "변경된 설명";
+    public static final int MODIFIED_PRODUCT_QUANTITY = 5;
+    public static final int MODIFIED_PRODUCT_PRICE = 2550000;
     public static final Map<String, Object> PRODUCT_UPDATE_DATA = Map.of(
-            "name", "변경된 상품명",
-            "description", "변경된 설명",
-            "quantity", 5,
-            "price", 2550000
+            "name", MODIFIED_PRODUCT_NAME,
+            "description", MODIFIED_PRODUCT_DESCRIPTION,
+            "quantity", MODIFIED_PRODUCT_QUANTITY,
+            "price", MODIFIED_PRODUCT_PRICE
     );
+    public static final ProductData PRODUCT_DATA = ProductData.builder()
+            .name(MODIFIED_PRODUCT_NAME)
+            .description(MODIFIED_PRODUCT_DESCRIPTION)
+            .quantity(MODIFIED_PRODUCT_QUANTITY)
+            .price(MODIFIED_PRODUCT_PRICE)
+            .build();
 
     private Fixture() {
         throw new IllegalStateException("테스트 Util 클래스입니다.");

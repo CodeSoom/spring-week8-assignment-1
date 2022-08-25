@@ -1,7 +1,9 @@
 package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.Fixture;
+import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.ProductRepository;
+import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.dto.ProductInquiryInfo;
@@ -71,6 +73,42 @@ public class ProductCommandServiceTest {
                         () -> assertThat(product.getDescription()).isNull(),
                         () -> assertThat(product.getQuantity()).isEqualTo(Fixture.QUANTITY),
                         () -> assertThat(product.getPrice()).isEqualTo(Fixture.PRICE)
+                );
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메서드는")
+    class Describe_update {
+        @Nested
+        @DisplayName("상품, 유저 정보가 주어지고 유저가 상품의 주인이라면")
+        class Context_with_userIsTheOwnerOfTheProduct {
+            Long productId;
+            Authentication authentication;
+            User user;
+
+            @BeforeEach
+            void prepare() {
+                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                user = userRepository.findById(userInfo.getId()).get();
+
+                authentication = new UserAuthentication(userInfo.getId(), userInfo.getRole());
+
+                Product product = productRepository.save(Fixture.makeProduct(user));
+                productId = product.getId();
+            }
+
+            @Test
+            @DisplayName("상품을 수정하고 상품을 리턴한다")
+            void It_returns_modifiedProduct() {
+                Product modifiedProduct = productCommandService.update(productId, Fixture.PRODUCT_DATA, authentication);
+
+                assertAll(
+                        () -> assertThat(modifiedProduct.getId()).isEqualTo(productId),
+                        () -> assertThat(modifiedProduct.getOwner().getId()).isEqualTo(user.getId()),
+                        () -> assertThat(modifiedProduct.getQuantity()).isEqualTo(Fixture.MODIFIED_PRODUCT_QUANTITY),
+                        () -> assertThat(modifiedProduct.getPrice()).isEqualTo(Fixture.MODIFIED_PRODUCT_PRICE)
                 );
             }
         }

@@ -1,10 +1,12 @@
 package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.Fixture;
+import com.codesoom.assignment.application.UserCommandService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.ProductRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
+import com.codesoom.assignment.dto.UserInquiryInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
@@ -37,6 +39,8 @@ public class ProductControllerTest {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserCommandService userCommandService;
 
     private <T> Map<String, String> postRequest(Map<String, T> data, String path) throws Exception {
         return objectMapper.readValue(mockMvc.perform(post(path)
@@ -117,6 +121,38 @@ public class ProductControllerTest {
     @DisplayName("update 메서드는")
     class Describe_update {
         @Nested
+        @DisplayName("유저, 상품, 토큰이 주어지고 유저가 상품의 판매자라면")
+        class Context_with_token {
+            Long productId;
+            String accessToken;
+
+            @BeforeEach
+            void prepare() throws Exception {
+                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                User owner = userRepository.findById(userInfo.getId()).get();
+
+                accessToken = postRequest(Fixture.LOGIN_DATA_MAP, Fixture.SESSION_PATH).get("accessToken");
+
+                Product product = productRepository.save(Fixture.makeProduct(owner));
+                productId = product.getId();
+            }
+
+            @Test
+            @DisplayName("상품을 수정하고 상품 조회 정보와 200을 리턴한다")
+            void It_respond_modifiedProductInquiryInfo() throws Exception {
+                mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA))
+                        .header("Authorization", "Bearer " + accessToken))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.name", Is.is(Fixture.MODIFIED_PRODUCT_NAME)))
+                        .andExpect(jsonPath("$.description", Is.is(Fixture.MODIFIED_PRODUCT_DESCRIPTION)))
+                        .andExpect(jsonPath("$.quantity").value(Fixture.MODIFIED_PRODUCT_QUANTITY))
+                        .andExpect(jsonPath("$.price").value(Fixture.MODIFIED_PRODUCT_PRICE));
+            }
+        }
+
+        @Nested
         @DisplayName("토큰이 주어지지 않으면")
         class Context_without_authorization {
             Long productId;
@@ -124,6 +160,7 @@ public class ProductControllerTest {
             @BeforeEach
             void prepare() {
                 User user = userRepository.save(Fixture.USER);
+
                 Product product = productRepository.save(Fixture.makeProduct(user));
                 productId = product.getId();
             }
