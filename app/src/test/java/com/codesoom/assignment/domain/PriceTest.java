@@ -10,7 +10,7 @@ public class PriceTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, -100, -123892312})
     @NullSource
-    void priceCannotBeNegativeOrNull(int price) {
+    void priceCannotBeNegativeOrNull(Integer price) {
         assertThatThrownBy(() -> new Price(price))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
     }

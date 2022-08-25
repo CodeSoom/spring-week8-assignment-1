@@ -34,9 +34,12 @@ public class Product {
     @Embedded
     private Price price;
 
+    public Product() {}
+
     public int getQuantity() {
         return quantity.getQuantity();
     }
+
     public int getPrice() {
         return price.getPrice();
     }
@@ -45,14 +48,12 @@ public class Product {
         this.owner = owner;
     }
 
-    public Product() {}
-
     @Builder
     public Product(User owner, String name, String description, int quantity, Integer price) {
         this.owner = owner;
         this.name = name;
         this.description = description;
         this.quantity = new Quantity(quantity);
-        this.price = price;
+        this.price = new Price(price);
     }
 }
