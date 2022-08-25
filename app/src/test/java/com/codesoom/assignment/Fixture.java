@@ -41,6 +41,9 @@ public class Fixture {
             .password(PASSWORD)
             .name(USER_NAME)
             .build();
+    public static final UserRegisterData ADMIN_REGISTER_DATA = new UserRegisterData(
+            ADMIN_EMAIL, PASSWORD, ADMIN_NAME
+    );
     public static final User ADMIN = User.builder()
             .email(ADMIN_EMAIL)
             .password(PASSWORD)

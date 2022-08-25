@@ -2,6 +2,7 @@ package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.ProductRepository;
+import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.ProductData;
@@ -44,7 +45,7 @@ public class NormalProductCommandService implements ProductCommandService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        if (!userId.equals(product.getOwner().getId())) {
+        if (!userId.equals(product.getOwner().getId()) && authentication.getCredentials().equals(Role.USER)) {
             throw new AccessDeniedException("접근 권한이 없습니다.");
         }
 

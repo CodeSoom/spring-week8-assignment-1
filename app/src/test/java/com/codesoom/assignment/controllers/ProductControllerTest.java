@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -141,14 +142,61 @@ public class ProductControllerTest {
             @DisplayName("상품을 수정하고 상품 조회 정보와 200을 리턴한다")
             void It_respond_modifiedProductInquiryInfo() throws Exception {
                 mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA))
-                        .header("Authorization", "Bearer " + accessToken))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA))
+                                .header("Authorization", "Bearer " + accessToken))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.name", Is.is(Fixture.MODIFIED_PRODUCT_NAME)))
                         .andExpect(jsonPath("$.description", Is.is(Fixture.MODIFIED_PRODUCT_DESCRIPTION)))
                         .andExpect(jsonPath("$.quantity").value(Fixture.MODIFIED_PRODUCT_QUANTITY))
                         .andExpect(jsonPath("$.price").value(Fixture.MODIFIED_PRODUCT_PRICE));
+            }
+        }
+
+        @Nested
+        @DisplayName("유저, 상품, 토큰이 주어지고 유저가 상품의 판매자는 아니지만 관리자라면")
+        class Context_with_userNotSellerButAdmin {
+            Long productId;
+            String adminAccessToken;
+
+            @BeforeEach
+            void prepare() throws Exception {
+                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                User user = userRepository.findById(userInfo.getId()).get();
+
+                Product product = productRepository.save(Fixture.makeProduct(user));
+                productId = product.getId();
+
+                UserInquiryInfo adminInfo = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
+                User admin = userRepository.findById(adminInfo.getId()).get();
+                admin.giveAdminPrivileges();
+                userRepository.save(admin);
+
+                adminAccessToken = postRequest(Fixture.ADMIN_LOGIN_DATA_MAP, Fixture.SESSION_PATH).get("accessToken");
+            }
+
+            @Test
+            @DisplayName("상품을 수정하고 상품 조회 정보와 200을 리턴한다")
+            void It_returns_exceptionMessage() throws Exception {
+                mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA))
+                                .header("Authorization", "Bearer " + adminAccessToken))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.name", Is.is(Fixture.MODIFIED_PRODUCT_NAME)))
+                        .andExpect(jsonPath("$.description", Is.is(Fixture.MODIFIED_PRODUCT_DESCRIPTION)))
+                        .andExpect(jsonPath("$.quantity").value(Fixture.MODIFIED_PRODUCT_QUANTITY))
+                        .andExpect(jsonPath("$.price").value(Fixture.MODIFIED_PRODUCT_PRICE));
+            }
+        }
+
+        @Nested
+        @DisplayName("유저, 상품, 토큰이 주어지고 유저가 상품의 판매자가 아니면서 관리자도 아니라면")
+        class Context_with_userNotSellerAndNotAdmin {
+            @Test
+            @DisplayName("예외메시지와 403을 응답한다")
+            void It_returns_exceptionMessage() {
+
             }
         }
 
@@ -169,8 +217,8 @@ public class ProductControllerTest {
             @DisplayName("예외 메시지와 401을 응답한다")
             void It_respond_unAuthorization() throws Exception {
                 mockMvc.perform(put(Fixture.PRODUCT_PATH + "/" + productId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA)))
                         .andExpect(status().isUnauthorized());
             }
         }
