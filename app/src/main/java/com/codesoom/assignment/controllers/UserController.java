@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/users")
 @CrossOrigin
@@ -32,7 +30,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserInquiryInfo create(@RequestBody @Valid UserRegisterData data) {
+    public UserInquiryInfo create(@RequestBody UserRegisterData data) {
         return userCommandService.register(data);
     }
 

@@ -1,5 +1,7 @@
 package com.codesoom.assignment.domain;
 
+import com.codesoom.assignment.dto.UserRegisterRequest;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -46,6 +48,12 @@ public class User {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public User(UserRegisterRequest request) {
+        this.email = request.getEmail();
+        this.password = EncryptionUtil.encrypt(request.getPassword());
+        this.name = request.getName();
     }
 
     public void change(String password) {
