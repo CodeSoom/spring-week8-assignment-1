@@ -1,7 +1,9 @@
 package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.Fixture;
+import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.ProductRepository;
+import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,12 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("ProductController 클래스의")
+@DisplayName("ProductController 의")
 public class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -35,22 +38,13 @@ public class ProductControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private Map<String, Object> productData(String userId) {
-        return Map.of(
-                "userId", userId,
-                "name", Fixture.PRODUCT_NAME,
-                "quantity", Fixture.QUANTITY,
-                "price", Fixture.PRICE
-        );
-    }
-
-    private Map<String, String> postRequest(Map<String, String> data, String path) throws Exception {
+    private <T> Map<String, String> postRequest(Map<String, T> data, String path) throws Exception {
         return objectMapper.readValue(mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(data)))
                 .andReturn()
                 .getResponse()
-                .getContentAsString(), new TypeReference<Map<String, String>>() {
+                .getContentAsString(), new TypeReference<>() {
         });
     }
 
@@ -82,7 +76,7 @@ public class ProductControllerTest {
             void It_returns_productInfo() throws Exception {
                 mockMvc.perform(post(Fixture.PRODUCT_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(productData(userId)))
+                                .content(objectMapper.writeValueAsString(Fixture.productData(userId)))
                                 .header("Authorization", "Bearer " + accessToken))
                         .andExpect(status().isCreated())
                         .andExpect(jsonPath("$.userId").value(userId))
@@ -112,8 +106,34 @@ public class ProductControllerTest {
             void It_returns_productInfo() throws Exception {
                 mockMvc.perform(post(Fixture.PRODUCT_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(productData(userId)))
+                                .content(objectMapper.writeValueAsString(Fixture.productData(userId)))
                                 .header("Authorization", "Bearer " + invalidToken))
+                        .andExpect(status().isUnauthorized());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메서드는")
+    class Describe_update {
+        @Nested
+        @DisplayName("토큰이 주어지지 않으면")
+        class Context_without_authorization {
+            Long productId;
+
+            @BeforeEach
+            void prepare() {
+                User user = userRepository.save(Fixture.USER);
+                Product product = productRepository.save(Fixture.makeProduct(user));
+                productId = product.getId();
+            }
+
+            @Test
+            @DisplayName("예외 메시지와 401을 응답한다")
+            void It_respond_unAuthorization() throws Exception {
+                mockMvc.perform(put(Fixture.USER_PATH + "/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Fixture.PRODUCT_UPDATE_DATA)))
                         .andExpect(status().isUnauthorized());
             }
         }

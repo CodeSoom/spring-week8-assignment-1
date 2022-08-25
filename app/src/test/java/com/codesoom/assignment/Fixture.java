@@ -1,5 +1,6 @@
 package com.codesoom.assignment;
 
+import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserRegisterData;
 
@@ -49,6 +50,28 @@ public class Fixture {
     public static final String PRODUCT_NAME = "상품명";
     public static final int QUANTITY = 10;
     public static final Integer PRICE = 10000;
+    public static Product makeProduct(User user) {
+        return Product.builder()
+                .owner(user)
+                .name(PRODUCT_NAME)
+                .quantity(QUANTITY)
+                .price(PRICE)
+                .build();
+    }
+    public static Map<String, Object> productData(String userId) {
+        return Map.of(
+                "userId", userId,
+                "name", Fixture.PRODUCT_NAME,
+                "quantity", Fixture.QUANTITY,
+                "price", Fixture.PRICE
+        );
+    }
+    public static final Map<String, Object> PRODUCT_UPDATE_DATA = Map.of(
+            "name", "변경된 상품명",
+            "description", "변경된 설명",
+            "quantity", 5,
+            "price", 2550000
+    );
 
     private Fixture() {
         throw new IllegalStateException("테스트 Util 클래스입니다.");
