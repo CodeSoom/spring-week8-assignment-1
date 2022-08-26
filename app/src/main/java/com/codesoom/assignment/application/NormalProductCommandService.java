@@ -25,8 +25,8 @@ public class NormalProductCommandService implements ProductCommandService {
 
     @Override
     public ProductInquiryInfo register(ProductData data, Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        User user = userRepository.findById(userId)
+        final Long userId = (Long) authentication.getPrincipal();
+        final User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         Product product = data.toProduct();
@@ -37,12 +37,12 @@ public class NormalProductCommandService implements ProductCommandService {
 
     @Override
     public Product update(Long productId, ProductData productData, Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        final Long userId = (Long) authentication.getPrincipal();
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
 
-        Product product = productRepository.findById(productId)
+        final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
         if (!userId.equals(product.getOwner().getId()) && authentication.getCredentials().equals(Role.USER)) {
