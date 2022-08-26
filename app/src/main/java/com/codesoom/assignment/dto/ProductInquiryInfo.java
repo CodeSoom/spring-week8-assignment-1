@@ -1,7 +1,6 @@
 package com.codesoom.assignment.dto;
 
 import com.codesoom.assignment.domain.Product;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +12,6 @@ public class ProductInquiryInfo {
     private final int quantity;
     private final Integer price;
 
-    @Builder
     public ProductInquiryInfo(Long id, Long userId, String name, String description, int quantity, Integer price) {
         this.id = id;
         this.userId = userId;
@@ -23,14 +21,32 @@ public class ProductInquiryInfo {
         this.price = price;
     }
 
-    public static ProductInquiryInfo from(Product product) {
-        return ProductInquiryInfo.builder()
-                .id(product.getId())
-                .userId(product.getOwner().getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .quantity(product.getQuantity())
-                .price(product.getPrice())
-                .build();
+    public static ProductInquiryInfoBuilder builder() {
+        return new ProductInquiryInfoBuilder();
+    }
+
+    public static class ProductInquiryInfoBuilder {
+        private Long id;
+        private Long userId;
+        private String name;
+        private String description;
+        private int quantity;
+        private Integer price;
+
+        ProductInquiryInfoBuilder() {}
+
+        public ProductInquiryInfoBuilder product(final Product product) {
+            this.id = product.getId();
+            this.userId = product.getOwner().getId();
+            this.name = product.getName();
+            this.description = product.getDescription();
+            this.quantity = product.getQuantity();
+            this.price = product.getPrice();
+            return this;
+        }
+
+        public ProductInquiryInfo build() {
+            return new ProductInquiryInfo(this.id, this.userId, this.name, this.description, this.quantity, this.price);
+        }
     }
 }

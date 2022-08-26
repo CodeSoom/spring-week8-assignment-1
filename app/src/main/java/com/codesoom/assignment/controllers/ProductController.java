@@ -35,6 +35,8 @@ public class ProductController {
     public ProductInquiryInfo update(
             @PathVariable("productId") Long productId,
             @RequestBody ProductData data) {
-        return ProductInquiryInfo.from(productCommandService.update(productId, data, SecurityUtil.getInfo()));
+        return ProductInquiryInfo.builder()
+                .product(productCommandService.update(productId, data, SecurityUtil.getInfo()))
+                .build();
     }
 }

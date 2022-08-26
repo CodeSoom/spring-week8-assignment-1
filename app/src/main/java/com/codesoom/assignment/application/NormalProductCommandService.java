@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 @Service
 @Transactional
 public class NormalProductCommandService implements ProductCommandService {
@@ -36,7 +34,9 @@ public class NormalProductCommandService implements ProductCommandService {
         Product product = data.toProduct();
         product.setOwner(user);
 
-        return ProductInquiryInfo.from(productRepository.save(product));
+        return ProductInquiryInfo.builder()
+                .product(productRepository.save(product))
+                .build();
     }
 
     @Override
