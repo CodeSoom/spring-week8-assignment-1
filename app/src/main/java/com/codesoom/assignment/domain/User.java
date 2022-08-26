@@ -4,6 +4,7 @@ import com.codesoom.assignment.dto.UserRegisterRequest;
 import com.codesoom.assignment.utils.EncryptionUtil;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

@@ -31,13 +31,13 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserInquiryInfo create(@RequestBody UserRegisterData data) {
-        return userCommandService.register(data);
+        return UserInquiryInfo.from(userCommandService.register(data));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserInquiryInfo select(@PathVariable("id") Long id) {
-        return userQueryService.findById(id);
+        return UserInquiryInfo.from(userQueryService.findById(id));
     }
 
     @DeleteMapping("/{id}")

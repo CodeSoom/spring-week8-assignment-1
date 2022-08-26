@@ -29,15 +29,15 @@ public class UserQueryServiceTest {
     }
 
     @Test
-    @DisplayName("findById 메서드는 식별자가 주어지면 유저 정보를 리턴한다.")
+    @DisplayName("findById 메서드는 식별자가 주어지면 유저를 리턴한다.")
     void findByIdReturnsUserInfoGivenId() {
         // given
-        final UserInquiryInfo givenUserInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+        final User givenUser = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
         // when
-        final UserInquiryInfo userInfo = userQueryService.findById(givenUserInfo.getId());
+        final User user = userQueryService.findById(givenUser.getId());
 
         // then
-        assertThat(userInfo).isEqualTo(givenUserInfo);
+        assertThat(user.getId()).isEqualTo(givenUser.getId());
     }
 }

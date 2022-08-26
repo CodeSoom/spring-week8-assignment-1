@@ -6,8 +6,6 @@ import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.ProductRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
-import com.codesoom.assignment.dto.UserInquiryInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
@@ -25,7 +23,6 @@ import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -130,8 +127,7 @@ public class ProductControllerTest {
 
             @BeforeEach
             void prepare() throws Exception {
-                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
-                User owner = userRepository.findById(userInfo.getId()).get();
+                User owner = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
                 accessToken = postRequest(Fixture.LOGIN_DATA_MAP, Fixture.SESSION_PATH).get("accessToken");
 
@@ -162,14 +158,12 @@ public class ProductControllerTest {
 
             @BeforeEach
             void prepare() throws Exception {
-                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
-                User user = userRepository.findById(userInfo.getId()).get();
+                User user = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
                 Product product = productRepository.save(Fixture.makeProduct(user));
                 productId = product.getId();
 
-                UserInquiryInfo adminInfo = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
-                User admin = userRepository.findById(adminInfo.getId()).get();
+                User admin = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
                 admin.giveAdminPrivileges();
                 userRepository.save(admin);
 
@@ -199,14 +193,12 @@ public class ProductControllerTest {
 
             @BeforeEach
             void prepare() throws Exception {
-                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
-                User user = userRepository.findById(userInfo.getId()).get();
+                User user = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
                 Product product = productRepository.save(Fixture.makeProduct(user));
                 productId = product.getId();
 
-                UserInquiryInfo anotherUserInfo = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
-                User anotherUser = userRepository.findById(anotherUserInfo.getId()).get();
+                User anotherUser = userCommandService.register(Fixture.ADMIN_REGISTER_DATA);
 
                 anotherUserToken = postRequest(Fixture.ADMIN_LOGIN_DATA_MAP, Fixture.SESSION_PATH).get("accessToken");
             }

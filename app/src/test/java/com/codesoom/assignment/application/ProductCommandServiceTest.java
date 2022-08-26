@@ -7,7 +7,6 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.dto.ProductInquiryInfo;
-import com.codesoom.assignment.dto.UserInquiryInfo;
 import com.codesoom.assignment.dto.UserRegisterData;
 import com.codesoom.assignment.security.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,10 +49,10 @@ public class ProductCommandServiceTest {
 
             @BeforeEach
             void prepare() {
-                UserInquiryInfo info = userCommandService.register(
+                User user = userCommandService.register(
                         new UserRegisterData(Fixture.EMAIL, Fixture.PASSWORD, Fixture.USER_NAME));
 
-                authentication = new UserAuthentication(info.getId(), info.getRole());
+                authentication = new UserAuthentication(user.getId(), user.getRole());
 
                 productData = ProductData.builder()
                         .name(Fixture.PRODUCT_NAME)
@@ -90,10 +89,9 @@ public class ProductCommandServiceTest {
 
             @BeforeEach
             void prepare() {
-                UserInquiryInfo userInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
-                user = userRepository.findById(userInfo.getId()).get();
+                user = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
-                authentication = new UserAuthentication(userInfo.getId(), userInfo.getRole());
+                authentication = new UserAuthentication(user.getId(), user.getRole());
 
                 Product product = productRepository.save(Fixture.makeProduct(user));
                 productId = product.getId();

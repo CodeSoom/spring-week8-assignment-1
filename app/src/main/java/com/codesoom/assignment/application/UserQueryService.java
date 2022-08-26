@@ -1,6 +1,6 @@
 package com.codesoom.assignment.application;
 
-import com.codesoom.assignment.dto.UserInquiryInfo;
+import com.codesoom.assignment.domain.User;
 
 public interface UserQueryService {
     /**
@@ -9,5 +9,5 @@ public interface UserQueryService {
      * @param id 식별자
      * @return 유저 정보
      */
-    UserInquiryInfo findById(Long id);
+    User findById(Long id);
 }

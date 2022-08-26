@@ -1,9 +1,8 @@
 package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.Fixture;
-import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
-import com.codesoom.assignment.dto.UserInquiryInfo;
 import com.codesoom.assignment.errors.DuplicatedEmailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,18 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@DisplayName("UserService의")
+@DisplayName("UserService 의")
 public class UserCommandServiceTest {
     @Autowired
     private UserCommandService userCommandService;
     @Autowired
     private UserRepository userRepository;
-
-    public static final Role USER = Role.USER;
-
-    private UserInquiryInfo expectInquiryInfo(Long id) {
-        return new UserInquiryInfo(id, Fixture.EMAIL, Fixture.USER_NAME, USER);
-    }
 
     @BeforeEach
     void setUp() {
@@ -43,10 +36,10 @@ public class UserCommandServiceTest {
             @Test
             @DisplayName("유저 조회 정보를 리턴한다")
             void It_returns_userInquiryInfo() {
-                UserInquiryInfo inquiryInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                User user = userCommandService.register(Fixture.USER_REGISTER_DATA);
 
-                assertThat(inquiryInfo)
-                        .isEqualTo(expectInquiryInfo(inquiryInfo.getId()));
+                assertThat(user.getEmail()).isEqualTo(Fixture.USER.getEmail());
+                assertThat(user.getRole()).isEqualTo(Fixture.USER.getRole());
             }
         }
 
@@ -77,8 +70,8 @@ public class UserCommandServiceTest {
 
             @BeforeEach
             void prepare() {
-                UserInquiryInfo userInquiryInfo = userCommandService.register(Fixture.USER_REGISTER_DATA);
-                idToDelete = userInquiryInfo.getId();
+                User user = userCommandService.register(Fixture.USER_REGISTER_DATA);
+                idToDelete = user.getId();
             }
 
             @Test

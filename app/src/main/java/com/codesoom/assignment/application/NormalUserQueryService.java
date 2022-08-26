@@ -14,10 +14,8 @@ class NormalUserQueryService implements UserQueryService {
         this.userRepository = userRepository;
     }
 
-    public UserInquiryInfo findById(Long id) {
-        User user = userRepository.findById(id)
+    public User findById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-
-        return UserInquiryInfo.from(user);
     }
 }
