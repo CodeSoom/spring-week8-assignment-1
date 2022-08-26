@@ -67,4 +67,14 @@ public class User {
     public void giveAdminPrivileges() {
         this.role = Role.ADMIN;
     }
+
+    /**
+     * 같은 유저인지 확인하고 결과를 리턴한다.
+     *
+     * @param id 비교할 유저 식별자
+     * @return 같으면 true, 다르면 false
+     */
+    public boolean isSameUser(Long id) {
+        return Objects.equals(this.id, id);
+    }
 }

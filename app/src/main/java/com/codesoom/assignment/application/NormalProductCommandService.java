@@ -12,8 +12,12 @@ import com.codesoom.assignment.errors.UserNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
+@Transactional
 public class NormalProductCommandService implements ProductCommandService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -38,17 +42,25 @@ public class NormalProductCommandService implements ProductCommandService {
     @Override
     public Product update(Long productId, ProductData productData, Authentication authentication) {
         final Long userId = (Long) authentication.getPrincipal();
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(userId);
-        }
+        checkIfUserExists(userId);
 
         final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        if (!userId.equals(product.getOwner().getId()) && authentication.getCredentials().equals(Role.USER)) {
-            throw new AccessDeniedException("접근 권한이 없습니다.");
-        }
+        checkAuthority(authentication, userId, product.getOwner());
 
         return product.update(productData);
+    }
+
+    private void checkAuthority(Authentication authentication, Long userId, User owner) {
+        if (!owner.isSameUser(userId) && Role.isUser((Role) authentication.getCredentials())) {
+            throw new AccessDeniedException("접근 권한이 없습니다.");
+        }
+    }
+
+    private void checkIfUserExists(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(userId);
+        }
     }
 }
