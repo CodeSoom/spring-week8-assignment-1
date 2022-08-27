@@ -52,38 +52,4 @@ public class OrderTest {
         assertThatThrownBy(() -> new Order(1L, buyer, product, 11))
                 .isExactlyInstanceOf(Order.IllegalPurchaseQuantity.class);
     }
-
-    static class Order {
-        private Long id;
-        private User seller;
-        private Product product;
-        private Quantity quantity;
-
-        public Order(Long id, User seller, Product product, int quantity) {
-            throwIfBuyerAndSellerIsSame(seller, product);
-            throwIfPurchaseQuantityGreaterThanProductStock(product, quantity);
-            this.id = id;
-            this.seller = seller;
-            this.product = product;
-            this.quantity = new Quantity(quantity);
-        }
-
-        private void throwIfPurchaseQuantityGreaterThanProductStock(Product product, int quantity) {
-            if (product.getQuantity() < quantity) {
-                throw new IllegalPurchaseQuantity();
-            }
-        }
-
-        private void throwIfBuyerAndSellerIsSame(User seller, Product product) {
-            if (seller.isSameUser(product.getOwner().getId())) {
-                throw new IllegalBuyer();
-            }
-        }
-
-        private static class IllegalBuyer extends RuntimeException {
-        }
-
-        public static class IllegalPurchaseQuantity extends RuntimeException {
-        }
-    }
 }
