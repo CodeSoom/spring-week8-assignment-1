@@ -42,7 +42,7 @@ public class NormalProductCommandService implements ProductCommandService {
     @Override
     public Product update(Long productId, ProductData productData, Authentication authentication) {
         final Long userId = (Long) authentication.getPrincipal();
-        checkIfUserExists(userId);
+        throwIfUserExists(userId);
 
         final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
@@ -58,7 +58,7 @@ public class NormalProductCommandService implements ProductCommandService {
         }
     }
 
-    private void checkIfUserExists(Long userId) {
+    private void throwIfUserExists(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
