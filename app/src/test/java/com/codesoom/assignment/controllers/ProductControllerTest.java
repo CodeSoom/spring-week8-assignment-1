@@ -115,9 +115,10 @@ class ProductControllerTest {
     }
 
     @Test
-    void deatilWithNotExsitedProduct() throws Exception {
+    void detailWithNotExistedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(document("get-not-existed-product"));
     }
 
     @Test
@@ -129,7 +130,7 @@ class ProductControllerTest {
                         .content("{\"name\":\"쥐돌이\",\"maker\":\"냥이월드\"," +
                                 "\"price\":5000}")
                         .header("Authorization", "Bearer " + VALID_TOKEN)
-        )
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("쥐돌이")));
 
