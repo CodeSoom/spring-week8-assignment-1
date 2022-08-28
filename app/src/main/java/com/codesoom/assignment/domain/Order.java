@@ -9,14 +9,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-class Order {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private User seller;
+    @JoinColumn(name = "buyer_id")
+    private User buyer;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -28,11 +28,19 @@ class Order {
     protected Order() {
     }
 
-    public Order(Long id, User seller, Product product, int quantity) {
-        throwIfBuyerAndSellerIsSame(seller, product);
+    public Order(User buyer, Product product, int quantity) {
+        throwIfBuyerAndSellerIsSame(buyer, product);
+        throwIfPurchaseQuantityGreaterThanProductStock(product, quantity);
+        this.buyer = buyer;
+        this.product = product;
+        this.quantity = new Quantity(quantity);
+    }
+
+    public Order(Long id, User buyer, Product product, int quantity) {
+        throwIfBuyerAndSellerIsSame(buyer, product);
         throwIfPurchaseQuantityGreaterThanProductStock(product, quantity);
         this.id = id;
-        this.seller = seller;
+        this.buyer = buyer;
         this.product = product;
         this.quantity = new Quantity(quantity);
     }
