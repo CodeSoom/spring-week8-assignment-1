@@ -65,4 +65,8 @@ public class Product {
         this.price = new Price(productData.getPrice());
         return this;
     }
+
+    public void reduceQuantity(int quantity) {
+        this.quantity.reduceQuantity(quantity);
+    }
 }

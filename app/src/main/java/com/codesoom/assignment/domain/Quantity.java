@@ -46,4 +46,8 @@ public class Quantity {
     public int hashCode() {
         return Objects.hash(quantity);
     }
+
+    public void reduceQuantity(int quantity) {
+        this.quantity -= quantity;
+    }
 }

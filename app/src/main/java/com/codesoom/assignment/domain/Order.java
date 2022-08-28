@@ -1,5 +1,7 @@
 package com.codesoom.assignment.domain;
 
+import lombok.Getter;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,8 +54,8 @@ public class Order {
         }
     }
 
-    private void throwIfBuyerAndSellerIsSame(User seller, Product product) {
-        if (seller.isSameUser(product.getOwner().getId())) {
+    private void throwIfBuyerAndSellerIsSame(User buyer, Product product) {
+        if (buyer.isSameUser(product.getOwner().getId())) {
             throw new IllegalBuyer();
         }
     }
