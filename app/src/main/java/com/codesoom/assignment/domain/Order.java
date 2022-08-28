@@ -40,12 +40,8 @@ public class Order {
     }
 
     public Order(Long id, User buyer, Product product, int quantity) {
-        throwIfBuyerAndSellerIsSame(buyer, product);
-        throwIfPurchaseQuantityGreaterThanProductStock(product, quantity);
+        this(buyer, product, quantity);
         this.id = id;
-        this.buyer = buyer;
-        this.product = product;
-        this.quantity = new Quantity(quantity);
     }
 
     private void throwIfPurchaseQuantityGreaterThanProductStock(Product product, int quantity) {

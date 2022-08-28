@@ -5,10 +5,12 @@ import com.codesoom.assignment.application.ProductCommandService;
 import com.codesoom.assignment.application.UserCommandService;
 import com.codesoom.assignment.domain.ProductRepository;
 import com.codesoom.assignment.domain.User;
+import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.ProductInquiryInfo;
 import com.codesoom.assignment.security.UserAuthentication;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
+class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -36,6 +38,14 @@ public class OrderControllerTest {
     private ProductCommandService productCommandService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        productRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     private Map<String, String> postRequest(String path, Map<String, String> data) throws Exception {
         return objectMapper.readValue(
