@@ -3,12 +3,14 @@ package com.codesoom.assignment.dto;
 import lombok.Getter;
 
 @Getter
-public class SessionRequestData {
+public class UserRegisterData implements UserRegisterRequest {
     private final String email;
     private final String password;
+    private final String name;
 
-    public SessionRequestData(String email, String password) {
+    public UserRegisterData(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 }

@@ -1,52 +1,81 @@
 package com.codesoom.assignment.domain;
 
-import lombok.AllArgsConstructor;
+import com.codesoom.assignment.dto.UserRegisterRequest;
+import com.codesoom.assignment.utils.EncryptionUtil;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_email", columnNames = "email")
+        }
+)
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default
-    private String email = "";
+    private String email;
+    private String password;
+    private String name;
 
-    @Builder.Default
-    private String name = "";
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 
-    @Builder.Default
-    private String password = "";
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private final List<Product> productList = new ArrayList<>();
 
-    @Builder.Default
-    private boolean deleted = false;
+    protected User() {}
 
-    public void changeWith(User source) {
-        name = source.name;
+    @Builder
+    public User(Long id, String email, String password, String name) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
 
-    public void changePassword(String password,
-                               PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(password);
+    public User(UserRegisterRequest request) {
+        this.email = request.getEmail();
+        this.password = EncryptionUtil.encrypt(request.getPassword());
+        this.name = request.getName();
     }
 
-    public void destroy() {
-        deleted = true;
+    public void change(String password) {
+        this.password = password;
     }
 
-    public boolean authenticate(String password,
-                                PasswordEncoder passwordEncoder) {
-        return !deleted && passwordEncoder.matches(password, this.password);
+    /**
+     * 관리자 권한을 부여한다.
+     */
+    public void giveAdminPrivileges() {
+        this.role = Role.ADMIN;
+    }
+
+    /**
+     * 같은 유저인지 확인하고 결과를 리턴한다.
+     *
+     * @param id 비교할 유저 식별자
+     * @return 같으면 true, 다르면 false
+     */
+    public boolean isSameUser(Long id) {
+        return Objects.equals(this.id, id);
     }
 }

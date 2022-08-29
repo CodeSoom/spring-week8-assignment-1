@@ -1,253 +1,186 @@
 package com.codesoom.assignment.controllers;
 
-import com.codesoom.assignment.application.AuthenticationService;
-import com.codesoom.assignment.application.UserService;
-import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.Fixture;
 import com.codesoom.assignment.domain.User;
-import com.codesoom.assignment.dto.UserModificationData;
-import com.codesoom.assignment.dto.UserRegistrationData;
-import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.domain.UserRepository;
+import com.codesoom.assignment.utils.EncryptionUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.Map;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
-    private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
-    private static final String OTHER_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjJ9.TEM6MULsZeqkBbUKziCR4Dg_8kymmZkyxsCXlfNJ3g0";
-    private static final String ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjEwMDR9.3GV5ZH3flBf0cnaXQCNNZlT4mgyFyBUhn3LKzQohh1A";
-
+@SpringBootTest
+@AutoConfigureMockMvc
+@DisplayName("UserController 클래스의")
+public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private UserRepository userRepository;
 
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private AuthenticationService authenticationService;
+    private Map<String, String> postRequest(Map<String, String> data, String path) throws Exception {
+        return objectMapper.readValue(mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), new TypeReference<Map<String, String>>() {
+        });
+    }
 
     @BeforeEach
     void setUp() {
-        given(userService.registerUser(any(UserRegistrationData.class)))
-                .will(invocation -> {
-                    UserRegistrationData registrationData =
-                            invocation.getArgument(0);
-                    return User.builder()
-                            .id(13L)
-                            .email(registrationData.getEmail())
-                            .name(registrationData.getName())
-                            .build();
-                });
-
-        given(
-                userService.updateUser(
-                        eq(1L),
-                        any(UserModificationData.class),
-                        eq(1L)
-                )
-        )
-                .will(invocation -> {
-                    Long id = invocation.getArgument(0);
-                    UserModificationData modificationData =
-                            invocation.getArgument(1);
-                    return User.builder()
-                            .id(id)
-                            .email("tester@example.com")
-                            .name(modificationData.getName())
-                            .build();
-                });
-
-        given(
-                userService.updateUser(
-                        eq(100L),
-                        any(UserModificationData.class),
-                        eq(1L)
-                )
-        )
-                .willThrow(new UserNotFoundException(100L));
-
-        given(
-                userService.updateUser(
-                        eq(1L),
-                        any(UserModificationData.class),
-                        eq(2L)
-                )
-        )
-                .willThrow(new AccessDeniedException("Access denied"));
-
-        given(userService.deleteUser(100L))
-                .willThrow(new UserNotFoundException(100L));
-
-        given(authenticationService.parseToken(MY_TOKEN)).willReturn(1L);
-        given(authenticationService.parseToken(OTHER_TOKEN)).willReturn(2L);
-        given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(1004L);
-
-        given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(2L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+        userRepository.deleteAll();
     }
 
-    @Test
-    void registerUserWithValidAttributes() throws Exception {
-        mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"name\":\"Tester\",\"password\":\"test\"}")
-        )
-                .andExpect(status().isCreated())
-                .andExpect(content().string(
-                        containsString("\"id\":13")
-                ))
-                .andExpect(content().string(
-                        containsString("\"email\":\"tester@example.com\"")
-                ))
-                .andExpect(content().string(
-                        containsString("\"name\":\"Tester\"")
-                ));
+    @Nested
+    @DisplayName("register 메서드는")
+    class Describe_register {
+        @Nested
+        @DisplayName("유저 정보가 주어지면")
+        class Context_userData {
+            @Test
+            @DisplayName("유저와 201을 응답한다")
+            void It_returns_user() throws Exception {
+                mockMvc.perform(post(Fixture.USER_PATH)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.USER_DATA_MAP)))
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$.email", Is.is(Fixture.EMAIL)))
+                        .andExpect(jsonPath("$.name", Is.is(Fixture.USER_NAME)))
+                        .andExpect(jsonPath("$.role", Is.is(Fixture.ROLE_USER)));
+            }
+        }
 
-        verify(userService).registerUser(any(UserRegistrationData.class));
+        @Nested
+        @DisplayName("중복되는 이메일이 주어지면")
+        class Context_with_email {
+            @BeforeEach
+            void prepare() throws Exception {
+                postRequest(Fixture.USER_DATA_MAP, Fixture.USER_PATH);
+            }
+
+            @Test
+            @DisplayName("예외 메시지와 400을 응답한다")
+            void it_returns_exception() throws Exception {
+                mockMvc.perform(post(Fixture.USER_PATH)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Fixture.USER_DATA_MAP)))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$.message").isString());
+            }
+        }
     }
 
-    @Test
-    void registerUserWithInvalidAttributes() throws Exception {
-        mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}")
-        )
-                .andExpect(status().isBadRequest());
+    @Nested
+    @DisplayName("select 메서드는")
+    class Describe_select {
+        @Nested
+        @DisplayName("존재하는 유저의 식별자가 주어지면")
+        class Context_with_existUserId {
+            private String id;
+
+            @BeforeEach
+            void prepare() throws Exception {
+                Map<String, String> createdUser = postRequest(Fixture.USER_DATA_MAP, Fixture.USER_PATH);
+                id = createdUser.get("id");
+            }
+
+            @Test
+            @DisplayName("유저 정보와 200을 응답한다")
+            void It_returns_userInfo() throws Exception {
+                mockMvc.perform(get(Fixture.USER_PATH + "/" + id))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(id))
+                        .andExpect(jsonPath("$.name", Is.is(Fixture.USER_NAME)));
+            }
+        }
+
+        @Nested
+        @DisplayName("존재하지 않는 유저의 식별자가 주어지면")
+        class Context_with_notExistUserId {
+            @Test
+            @DisplayName("예외메시지와 404를 응답한다")
+            void It_returns_exceptionMessage() throws Exception {
+                mockMvc.perform(get(Fixture.USER_PATH + "/-1"))
+                        .andExpect(status().isNotFound())
+                        .andDo(print())
+                        .andExpect(jsonPath("$.message").isString());
+            }
+        }
     }
 
-    @Test
-    void updateUserWithValidAttributes() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"id\":1")
-                ))
-                .andExpect(content().string(
-                        containsString("\"name\":\"TEST\"")
-                ));
+    @Nested
+    @DisplayName("delete 메서드는")
+    class Describe_delete {
+        @Nested
+        @DisplayName("관리자 권한을 가진 토큰과 식별자가 주어지면")
+        class Context_with_adminToken {
+            private String userIdToDelete;
+            private String adminToken;
 
-        verify(userService)
-                .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
-    }
+            @BeforeEach
+            void prepare() throws Exception {
+                userIdToDelete = postRequest(Fixture.USER_DATA_MAP, Fixture.USER_PATH).get("id");
 
-    @Test
-    void updateUserWithInvalidAttributes() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\",\"password\":\"\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isBadRequest());
-    }
+                User admin = Fixture.ADMIN;
+                admin.giveAdminPrivileges();
+                admin.change(EncryptionUtil.encrypt(admin.getPassword()));
+                userRepository.save(admin);
 
-    @Test
-    void updateUserWithNotExsitedId() throws Exception {
-        mockMvc.perform(
-                patch("/users/100")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isNotFound());
+                adminToken = postRequest(Fixture.ADMIN_LOGIN_DATA_MAP, Fixture.SESSION_PATH)
+                        .get("accessToken");
+            }
 
-        verify(userService).updateUser(
-                eq(100L),
-                any(UserModificationData.class),
-                eq(1L));
-    }
+            @Test
+            @DisplayName("유저를 삭제하고 204를 응답한다")
+            void It_respond_noContent() throws Exception {
+                mockMvc.perform(delete(Fixture.USER_PATH + "/" + userIdToDelete)
+                                .header("Authorization", "Bearer " + adminToken))
+                        .andExpect(status().isNoContent());
+            }
+        }
 
-    @Test
-    void updateUserWithoutAccessToken() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-        )
-                .andExpect(status().isUnauthorized());
-    }
+        @Nested
+        @DisplayName("유저 권한을 가진 토큰과 식별자가 주어지면")
+        class Context_with_userToken {
+            private String userIdToDelete;
+            private String userToken;
 
-    @Test
-    void updateUserWithOthersAccessToken() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + OTHER_TOKEN)
-        )
-                .andExpect(status().isForbidden());
+            @BeforeEach
+            void prepare() throws Exception {
+                userIdToDelete = postRequest(Fixture.USER_DATA_MAP, Fixture.USER_PATH).get("id");
 
-        verify(userService)
-                .updateUser(eq(1L), any(UserModificationData.class), eq(2L));
-    }
+                userToken = postRequest(Fixture.LOGIN_DATA_MAP, Fixture.SESSION_PATH)
+                        .get("accessToken");
+            }
 
-    @Test
-    void destroyWithExistedId() throws Exception {
-        mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isOk());
-
-        verify(userService).deleteUser(1L);
-    }
-
-    @Test
-    void destroyWithNotExistedId() throws Exception {
-        mockMvc.perform(
-                delete("/users/100")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isNotFound());
-
-        verify(userService).deleteUser(100L);
-    }
-
-    @Test
-    void destroyWithoutAccessToken() throws Exception {
-        mockMvc.perform(delete("/users/1"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void destroyWithoutAdminRole() throws Exception {
-        mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isForbidden());
+            @Test
+            @DisplayName("예외를 응답한다")
+            void It_respond_exception() throws Exception {
+                mockMvc.perform(delete(Fixture.USER_PATH + "/" + userIdToDelete)
+                                .header("Authorization", "Bearer " + userToken))
+                        .andExpect(status().isForbidden());
+            }
+        }
     }
 }

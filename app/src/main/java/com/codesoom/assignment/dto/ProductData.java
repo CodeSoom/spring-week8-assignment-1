@@ -1,35 +1,30 @@
 package com.codesoom.assignment.dto;
 
-import com.github.dozermapper.core.Mapping;
-import lombok.AllArgsConstructor;
+import com.codesoom.assignment.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-@Setter
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductData {
-    private Long id;
+    private final String name;
+    private final String description;
+    private final int quantity;
+    private final Integer price;
 
-    @NotBlank
-    @Mapping("name")
-    private String name;
+    @Builder
+    public ProductData(String name, String description, int quantity, Integer price) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
-    @NotBlank
-    @Mapping("maker")
-    private String maker;
-
-    @NotNull
-    @Mapping("price")
-    private Integer price;
-
-    @Mapping("imageUrl")
-    private String imageUrl;
+    public Product toProduct() {
+        return Product.builder()
+                .name(this.name)
+                .description(this.description)
+                .quantity(this.quantity)
+                .price(this.price)
+                .build();
+    }
 }
