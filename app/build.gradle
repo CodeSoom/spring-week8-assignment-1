@@ -96,3 +96,9 @@ tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
 }
+
+// build폴더가 없다면 테스트를 실행하고 build폴더를 생성한다.
+// 테스트에 의존한다.
+asciidoctor {
+    dependsOn(test)
+}
