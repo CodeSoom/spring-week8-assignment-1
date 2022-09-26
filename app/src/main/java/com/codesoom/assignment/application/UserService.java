@@ -1,5 +1,9 @@
 package com.codesoom.assignment.application;
 
+import com.codesoom.assignment.application.userInterface.UserDelete;
+import com.codesoom.assignment.application.userInterface.UserFind;
+import com.codesoom.assignment.application.userInterface.UserRegister;
+import com.codesoom.assignment.application.userInterface.UserUpdate;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
@@ -17,7 +21,10 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDelete,
+                                    UserFind,
+                                    UserUpdate,
+                                    UserRegister {
     private final Mapper mapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -40,6 +47,7 @@ public class UserService {
      * @throws UserEmailDuplicationException 사용자의 Email이 중복되었을 경우
      * @return 저장된 유저의 정보
      */
+    @Override
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -65,6 +73,7 @@ public class UserService {
      * @throws UserNotFoundException 식별자에 해당하는 사용자가 존재하지 않을 경우
      * @return 수정된 사용자
      */
+    @Override
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
         if (!id.equals(userId)) {
@@ -86,6 +95,7 @@ public class UserService {
      * @throws UserNotFoundException 식별자에 해당하는 사용자가 존재하지 않을 경우
      * @return 삭제된 사용자
      */
+    @Override
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
@@ -99,7 +109,8 @@ public class UserService {
      * @throws UserNotFoundException 식별자에 해당하는 사용자가 존재하지 않을 경우
      * @return 식별자에 해당하는 사용자
      */
-    private User findUser(Long id) {
+    @Override
+    public User findUser(Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
