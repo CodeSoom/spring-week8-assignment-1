@@ -15,3 +15,10 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+존재하지 않는 상품 id로 요청하면 not found status를 돌려준다.
+(1000 id를 가진 상품은 없는 경우를 가정)
+
+include::{snippets}/get-not-existed-product/http-request.adoc[]
+
+include::{snippets}/get-not-existed-product/http-response.adoc[]
