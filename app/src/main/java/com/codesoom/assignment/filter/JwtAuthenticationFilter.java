@@ -1,4 +1,4 @@
-package com.codesoom.assignment.filters;
+package com.codesoom.assignment.filter;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.domain.Role;

@@ -1,7 +1,7 @@
-package com.codesoom.assignment.controllers;
+package com.codesoom.assignment.controller;
 
 import com.codesoom.assignment.application.AuthenticationService;
-import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.error.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

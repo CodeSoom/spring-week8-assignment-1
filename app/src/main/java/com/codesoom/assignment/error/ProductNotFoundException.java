@@ -1,4 +1,4 @@
-package com.codesoom.assignment.errors;
+package com.codesoom.assignment.error;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(Long id) {

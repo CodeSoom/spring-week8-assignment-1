@@ -1,4 +1,4 @@
-package com.codesoom.assignment.errors;
+package com.codesoom.assignment.error;
 
 public class LoginFailException extends RuntimeException {
     public LoginFailException(String email) {

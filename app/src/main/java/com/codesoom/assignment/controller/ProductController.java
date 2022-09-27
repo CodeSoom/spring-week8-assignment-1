@@ -1,12 +1,12 @@
-package com.codesoom.assignment.controllers;
+package com.codesoom.assignment.controller;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.dto.ProductData;
-import com.codesoom.assignment.errors.InvalidTokenException;
-import com.codesoom.assignment.errors.ProductNotFoundException;
-import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.error.InvalidTokenException;
+import com.codesoom.assignment.error.ProductNotFoundException;
+import com.codesoom.assignment.error.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

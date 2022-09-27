@@ -1,6 +1,6 @@
-package com.codesoom.assignment.utils;
+package com.codesoom.assignment.util;
 
-import com.codesoom.assignment.errors.InvalidTokenException;
+import com.codesoom.assignment.error.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

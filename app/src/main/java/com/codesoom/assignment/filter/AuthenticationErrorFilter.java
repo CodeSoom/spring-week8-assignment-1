@@ -1,6 +1,6 @@
-package com.codesoom.assignment.filters;
+package com.codesoom.assignment.filter;
 
-import com.codesoom.assignment.errors.InvalidTokenException;
+import com.codesoom.assignment.error.InvalidTokenException;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.FilterChain;

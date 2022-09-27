@@ -1,10 +1,10 @@
-package com.codesoom.assignment.controllers;
+package com.codesoom.assignment.controller;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.dto.SessionRequestData;
 import com.codesoom.assignment.dto.SessionResponseData;
-import com.codesoom.assignment.errors.LoginFailException;
-import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.error.LoginFailException;
+import com.codesoom.assignment.error.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

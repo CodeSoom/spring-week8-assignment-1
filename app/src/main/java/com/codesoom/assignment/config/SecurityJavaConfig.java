@@ -1,8 +1,8 @@
 package com.codesoom.assignment.config;
 
 import com.codesoom.assignment.application.AuthenticationService;
-import com.codesoom.assignment.filters.AuthenticationErrorFilter;
-import com.codesoom.assignment.filters.JwtAuthenticationFilter;
+import com.codesoom.assignment.filter.AuthenticationErrorFilter;
+import com.codesoom.assignment.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
