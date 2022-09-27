@@ -1,6 +1,10 @@
 package com.codesoom.assignment.controller;
 
-import com.codesoom.assignment.application.UserService;
+import com.codesoom.assignment.application.user.UserDeleteInterface;
+import com.codesoom.assignment.application.user.UserFindInterface;
+import com.codesoom.assignment.application.user.UserFindService;
+import com.codesoom.assignment.application.user.UserRegisterInterface;
+import com.codesoom.assignment.application.user.UserUpdateInterface;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
@@ -18,10 +22,17 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private final UserRegisterInterface userRegisterService;
+    private final UserUpdateInterface userUpdateService;
+    private final UserDeleteInterface userDeleteService;
+
+    public UserController(UserRegisterInterface userRegisterService,
+                          UserUpdateInterface userUpdateService,
+                          UserDeleteInterface userDeleteService) {
+        this.userRegisterService = userRegisterService;
+        this.userUpdateService = userUpdateService;
+        this.userDeleteService = userDeleteService;
     }
 
     /**
@@ -34,8 +45,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
-        User user = userService.registerUser(registrationData);
-        return getUserResultData(user);
+        return getUserResultData(userRegisterService.registerUser(registrationData));
     }
 
     /**
@@ -55,7 +65,7 @@ public class UserController {
             UserAuthentication authentication
     ) throws AccessDeniedException {
         Long userId = authentication.getUserId();
-        User user = userService.updateUser(id, modificationData, userId);
+        User user = userUpdateService.updateUser(id, modificationData, userId);
         return getUserResultData(user);
     }
 
@@ -68,7 +78,7 @@ public class UserController {
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userDeleteService.deleteUser(id);
     }
 
     private UserResultData getUserResultData(User user) {
