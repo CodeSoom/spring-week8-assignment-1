@@ -1,4 +1,4 @@
-package com.codesoom.assignment.application.userInterface;
+package com.codesoom.assignment.application.user;
 
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
