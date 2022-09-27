@@ -3,7 +3,7 @@ package com.codesoom.assignment.application.userInterface;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserRegistrationData;
 
-public interface UserRegister {
+public interface UserRegisterInterface {
     /**
      * 사용자를 등록한다.
      *

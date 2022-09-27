@@ -2,7 +2,7 @@ package com.codesoom.assignment.application.userInterface;
 
 import com.codesoom.assignment.domain.User;
 
-public interface UserFind {
+public interface UserFindInterface {
     /**
      * 사용자를 조회한다.
      *

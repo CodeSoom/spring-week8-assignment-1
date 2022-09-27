@@ -1,9 +1,9 @@
 package com.codesoom.assignment.application;
 
-import com.codesoom.assignment.application.userInterface.UserDelete;
-import com.codesoom.assignment.application.userInterface.UserFind;
-import com.codesoom.assignment.application.userInterface.UserRegister;
-import com.codesoom.assignment.application.userInterface.UserUpdate;
+import com.codesoom.assignment.application.userInterface.UserDeleteInterface;
+import com.codesoom.assignment.application.userInterface.UserFindInterface;
+import com.codesoom.assignment.application.userInterface.UserRegisterInterface;
+import com.codesoom.assignment.application.userInterface.UserUpdateInterface;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
@@ -21,10 +21,10 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class UserService implements UserDelete,
-                                    UserFind,
-                                    UserUpdate,
-                                    UserRegister {
+public class UserService implements UserDeleteInterface,
+        UserFindInterface,
+        UserUpdateInterface,
+        UserRegisterInterface {
     private final Mapper mapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;

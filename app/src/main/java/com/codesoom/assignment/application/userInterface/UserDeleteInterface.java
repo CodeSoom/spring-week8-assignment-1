@@ -2,7 +2,7 @@ package com.codesoom.assignment.application.userInterface;
 
 import com.codesoom.assignment.domain.User;
 
-public interface UserDelete {
+public interface UserDeleteInterface {
     /**
      * 사용자를 삭제한다.
      *

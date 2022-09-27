@@ -3,7 +3,7 @@ package com.codesoom.assignment.application.userInterface;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
 
-public interface UserUpdate {
+public interface UserUpdateInterface {
     /**
      * 사용자를 수정한다.
      *
