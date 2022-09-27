@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserUpdateService implements UserUpdateInterface {
 
-    private final UserFindService userFindService;
+    private final UserFindInterface userFindService;
     private final Mapper mapper;
 
-    public UserUpdateService(UserFindService userFindService, Mapper mapper) {
+    public UserUpdateService(UserFindInterface userFindService, Mapper mapper) {
         this.userFindService = userFindService;
         this.mapper = mapper;
     }

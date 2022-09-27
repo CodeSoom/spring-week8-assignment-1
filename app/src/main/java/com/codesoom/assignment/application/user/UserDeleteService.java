@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDeleteService implements UserDeleteInterface {
 
-    private final UserFindService userFindService;
+    private final UserFindInterface userFindService;
 
-    public UserDeleteService(UserFindService userFindService) {
+    public UserDeleteService(UserFindInterface userFindService) {
         this.userFindService = userFindService;
     }
 
