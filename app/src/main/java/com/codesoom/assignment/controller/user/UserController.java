@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
-        return getUserResultData(userRegisterService.registerUser(registrationData));
+        return UserResultData.of(userRegisterService.registerUser(registrationData));
     }
 
     /**
@@ -66,7 +66,7 @@ public class UserController {
     ) throws AccessDeniedException {
         Long userId = authentication.getUserId();
         User user = userUpdateService.updateUser(id, modificationData, userId);
-        return getUserResultData(user);
+        return UserResultData.of(user);
     }
 
     /**
@@ -79,17 +79,5 @@ public class UserController {
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     void destroy(@PathVariable Long id) {
         userDeleteService.deleteUser(id);
-    }
-
-    private UserResultData getUserResultData(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        return UserResultData.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
     }
 }
