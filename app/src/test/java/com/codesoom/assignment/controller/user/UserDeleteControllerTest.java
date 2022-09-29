@@ -59,7 +59,7 @@ class UserDeleteControllerTest {
                         .header("Authorization" , "Bearer " + ADMIN_TOKEN)
                 )
                 .andDo(print())
-                .andDo(document("DELETE /users/{id}"));
+                .andDo(document("delete-deleteUser"));
 
         // then
         resultActions.andExpect(status().isNoContent());

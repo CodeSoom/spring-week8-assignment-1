@@ -68,7 +68,7 @@ class UserUpdateControllerTest {
                                 .header("Authorization" , "Bearer " + USER_TOKEN)
                 )
                 .andDo(print())
-                .andDo(document("PATCH /users/{id}"));
+                .andDo(document("patch-updateUser"));
 
         // then
         result

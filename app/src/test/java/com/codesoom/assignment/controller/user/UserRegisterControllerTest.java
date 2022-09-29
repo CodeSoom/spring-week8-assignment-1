@@ -43,12 +43,11 @@ class UserRegisterControllerTest {
                                 .content(registrationContent)
                 )
                 .andDo(print())
-                .andDo(document("POST /users"));
+                .andDo(document("post-createUser"));
 
         // then
         result
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("register"))
                 .andExpect(jsonPath("$.name").value("register"))
         ;
