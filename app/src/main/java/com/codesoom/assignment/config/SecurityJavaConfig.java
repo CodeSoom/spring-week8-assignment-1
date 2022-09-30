@@ -17,8 +17,11 @@ import javax.servlet.Filter;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+
+    public SecurityJavaConfig(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
