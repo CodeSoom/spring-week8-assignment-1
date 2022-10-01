@@ -1,6 +1,7 @@
 package com.codesoom.assignment.controller.user;
 
 import com.codesoom.assignment.application.user.UserRegisterInterface;
+import com.codesoom.assignment.controller.ControllerErrorAdvice;
 import com.codesoom.assignment.dto.UserRegistrationData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +38,7 @@ class UserRegisterControllerMockTest {
 
         mockMvc = MockMvcBuilders
                     .standaloneSetup(userRegisterController)
+                    .setControllerAdvice(new ControllerErrorAdvice())
                     .build();
     }
 
@@ -66,8 +68,7 @@ class UserRegisterControllerMockTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(registrationContent))
                         .andDo(print())
-                        .andExpect(status().isCreated())
-                        .andExpect(content().string(matches("")));
+                        .andExpect(status().isInternalServerError());
             }
         }
     }

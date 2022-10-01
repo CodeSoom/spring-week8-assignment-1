@@ -3,6 +3,7 @@ package com.codesoom.assignment.controller;
 import com.codesoom.assignment.dto.ErrorResponse;
 import com.codesoom.assignment.error.LoginFailException;
 import com.codesoom.assignment.error.ProductNotFoundException;
+import com.codesoom.assignment.error.ResourceCreateException;
 import com.codesoom.assignment.error.UserEmailDuplicationException;
 import com.codesoom.assignment.error.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -37,4 +38,11 @@ public class ControllerErrorAdvice {
     public ErrorResponse handleLoginFailException() {
         return new ErrorResponse("Log-in failed");
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ResourceCreateException.class)
+    public ErrorResponse handleResourceCreateException(ResourceCreateException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
 }
