@@ -122,13 +122,14 @@ class UserServiceTest {
 
     @Test
     void updateUserWithExistedId() throws AccessDeniedException {
+        Long userId = 1L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = 1L;
-        User user = userUpdateService.updateUser(userId, modificationData, userId);
+        User user = userUpdateService.updateUser(userId, modificationData);
 
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getEmail()).isEqualTo(EXISTED_EMAIL_ADDRESS);
@@ -139,15 +140,14 @@ class UserServiceTest {
 
     @Test
     void updateUserWithNotExistedId() {
+        Long userId = 100L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = 100L;
-        assertThatThrownBy(
-                () -> userUpdateService.updateUser(userId, modificationData, userId)
-        )
+        assertThatThrownBy(() -> userUpdateService.updateUser(userId, modificationData))
                 .isInstanceOf(UserNotFoundException.class);
 
         verify(userRepository).findByIdAndDeletedIsFalse(100L);
@@ -156,14 +156,16 @@ class UserServiceTest {
 
     @Test
     void updateUserWithDeletedId() {
+        Long userId = DELETED_USER_ID;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = DELETED_USER_ID;
+
         assertThatThrownBy(
-                () -> userUpdateService.updateUser(userId, modificationData, userId)
+                () -> userUpdateService.updateUser(userId, modificationData)
         )
                 .isInstanceOf(UserNotFoundException.class);
 
@@ -172,17 +174,17 @@ class UserServiceTest {
 
     @Test
     void updateUserByOthersAccess() {
+        Long targetUserId = 1L;
+        Long otherUserId = 2L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(otherUserId)
                 .build();
-
-        Long targetUserId = 1L;
-        Long currentUserId = 2L;
 
         assertThatThrownBy(() -> {
             userUpdateService.updateUser(
-                    targetUserId, modificationData, currentUserId);
+                    targetUserId, modificationData);
         }).isInstanceOf(AccessDeniedException.class);
     }
 
