@@ -42,11 +42,18 @@ class UserUpdateControllerTest {
     private JwtUtil jwtUtil;
 
     private UserRegistrationData newUserRegistrationData(String text){
-        return new UserRegistrationData(text , text ,text);
+        return UserRegistrationData.builder()
+                                    .email(text)
+                                    .name(text)
+                                    .password(text)
+                                    .build();
     }
 
     private UserModificationData newUserModificationData(String text){
-        return new UserModificationData("modifier" , "modifier");
+        return UserModificationData.builder()
+                                    .name(text)
+                                    .password(text)
+                                    .build();
     }
 
     @Test

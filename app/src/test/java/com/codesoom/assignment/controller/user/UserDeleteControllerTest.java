@@ -38,7 +38,11 @@ class UserDeleteControllerTest {
     private RoleRegisterInterface roleRegisterService;
 
     private UserRegistrationData newUserRegistrationData(String text){
-        return new UserRegistrationData(text , text ,text);
+        return UserRegistrationData.builder()
+                                    .email(text)
+                                    .name(text)
+                                    .password(text)
+                                    .build();
     }
 
     @Test
