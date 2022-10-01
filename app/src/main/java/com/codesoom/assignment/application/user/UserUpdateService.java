@@ -29,9 +29,8 @@ public class UserUpdateService implements UserUpdateInterface {
      * @return 수정된 사용자
      */
     @Override
-    public User updateUser(Long id, UserModificationData modificationData,
-                           Long userId) throws AccessDeniedException {
-        if (!id.equals(userId)) {
+    public User updateUser(Long id, UserModificationData modificationData) throws AccessDeniedException {
+        if (modificationData.isDifferentUser(id)) {
             throw new AccessDeniedException("Access denied");
         }
 

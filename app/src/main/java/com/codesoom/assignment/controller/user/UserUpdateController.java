@@ -43,7 +43,7 @@ public class UserUpdateController {
             UserAuthentication authentication
     ) throws AccessDeniedException {
         Long userId = authentication.getUserId();
-        User user = userUpdateService.updateUser(id, modificationData, userId);
+        User user = userUpdateService.updateUser(id, modificationData.addUserId(userId));
         return UserResultData.of(user);
     }
 }

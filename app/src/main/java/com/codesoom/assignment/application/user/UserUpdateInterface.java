@@ -11,5 +11,5 @@ public interface UserUpdateInterface {
      * @param modificationData 수정할 사용자의 정보
      * @return 수정된 사용자
      */
-    User updateUser(Long id , UserModificationData modificationData , Long userId);
+    User updateUser(Long id , UserModificationData modificationData);
 }
