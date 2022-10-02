@@ -38,7 +38,7 @@ public class UserRegisterController {
     UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
         User user = userRegisterService.registerUser(registrationData);
         if(user == null){
-            throw new ResourceCreateException("사용자 수정 메소드의 반환 값이 존재하지 않습니다.");
+            throw new ResourceCreateException("사용자 생성에 실패하였습니다.[registerUser에서 null이 반환되었습니다.]");
         }
         return UserResultData.of(user);
     }
