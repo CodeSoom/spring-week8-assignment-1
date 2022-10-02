@@ -12,14 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserRegisterControllerMockTest {
@@ -39,6 +38,7 @@ class UserRegisterControllerMockTest {
         mockMvc = MockMvcBuilders
                     .standaloneSetup(userRegisterController)
                     .setControllerAdvice(new ControllerErrorAdvice())
+                    .addFilter(new CharacterEncodingFilter("UTF-8" , true))
                     .build();
     }
 
@@ -65,7 +65,7 @@ class UserRegisterControllerMockTest {
             @DisplayName("자원을 생성했다는 상태와 바디는 공백으로 반환된다.")
             void It_CreatedStatusAndBlankBody() throws Exception {
                 mockMvc.perform(post("/users")
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_UTF8)
                                 .content(registrationContent))
                         .andDo(print())
                         .andExpect(status().isInternalServerError());
