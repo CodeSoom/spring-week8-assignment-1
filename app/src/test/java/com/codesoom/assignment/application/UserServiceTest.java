@@ -1,13 +1,21 @@
 package com.codesoom.assignment.application;
 
+import com.codesoom.assignment.application.user.UserDeleteInterface;
+import com.codesoom.assignment.application.user.UserDeleteService;
+import com.codesoom.assignment.application.user.UserFindInterface;
+import com.codesoom.assignment.application.user.UserFindService;
+import com.codesoom.assignment.application.user.UserRegisterInterface;
+import com.codesoom.assignment.application.user.UserRegisterService;
+import com.codesoom.assignment.application.user.UserUpdateInterface;
+import com.codesoom.assignment.application.user.UserUpdateService;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
-import com.codesoom.assignment.errors.UserEmailDuplicationException;
-import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.error.UserEmailDuplicationException;
+import com.codesoom.assignment.error.UserNotFoundException;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +28,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -29,7 +38,10 @@ class UserServiceTest {
     private static final String EXISTED_EMAIL_ADDRESS = "existed@example.com";
     private static final Long DELETED_USER_ID = 200L;
 
-    private UserService userService;
+    private UserFindInterface userFindService;
+    private UserRegisterInterface userRegisterService;
+    private UserDeleteInterface userDeleteService;
+    private UserUpdateInterface userUpdateService;
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
@@ -39,8 +51,13 @@ class UserServiceTest {
         Mapper mapper = DozerBeanMapperBuilder.buildDefault();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        userService = new UserService(
-                mapper, userRepository, roleRepository, passwordEncoder);
+        userFindService = new UserFindService(userRepository);
+        userRegisterService = new UserRegisterService(userRepository,
+                                                        roleRepository,
+                                                        mapper,
+                                                        passwordEncoder);
+        userDeleteService = new UserDeleteService(userFindService);
+        userUpdateService = new UserUpdateService(userFindService , mapper);
 
         given(userRepository.existsByEmail(EXISTED_EMAIL_ADDRESS))
                 .willThrow(new UserEmailDuplicationException(
@@ -79,7 +96,7 @@ class UserServiceTest {
                 .password("test")
                 .build();
 
-        User user = userService.registerUser(registrationData);
+        User user = userRegisterService.registerUser(registrationData);
 
         assertThat(user.getId()).isEqualTo(13L);
         assertThat(user.getEmail()).isEqualTo("tester@example.com");
@@ -97,7 +114,7 @@ class UserServiceTest {
                 .password("test")
                 .build();
 
-        assertThatThrownBy(() -> userService.registerUser(registrationData))
+        assertThatThrownBy(() -> userRegisterService.registerUser(registrationData))
                 .isInstanceOf(UserEmailDuplicationException.class);
 
         verify(userRepository).existsByEmail(EXISTED_EMAIL_ADDRESS);
@@ -105,13 +122,14 @@ class UserServiceTest {
 
     @Test
     void updateUserWithExistedId() throws AccessDeniedException {
+        Long userId = 1L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = 1L;
-        User user = userService.updateUser(userId, modificationData, userId);
+        User user = userUpdateService.updateUser(userId, modificationData);
 
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getEmail()).isEqualTo(EXISTED_EMAIL_ADDRESS);
@@ -122,15 +140,14 @@ class UserServiceTest {
 
     @Test
     void updateUserWithNotExistedId() {
+        Long userId = 100L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = 100L;
-        assertThatThrownBy(
-                () -> userService.updateUser(userId, modificationData, userId)
-        )
+        assertThatThrownBy(() -> userUpdateService.updateUser(userId, modificationData))
                 .isInstanceOf(UserNotFoundException.class);
 
         verify(userRepository).findByIdAndDeletedIsFalse(100L);
@@ -139,14 +156,16 @@ class UserServiceTest {
 
     @Test
     void updateUserWithDeletedId() {
+        Long userId = DELETED_USER_ID;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(userId)
                 .build();
 
-        Long userId = DELETED_USER_ID;
+
         assertThatThrownBy(
-                () -> userService.updateUser(userId, modificationData, userId)
+                () -> userUpdateService.updateUser(userId, modificationData)
         )
                 .isInstanceOf(UserNotFoundException.class);
 
@@ -155,23 +174,23 @@ class UserServiceTest {
 
     @Test
     void updateUserByOthersAccess() {
+        Long targetUserId = 1L;
+        Long otherUserId = 2L;
         UserModificationData modificationData = UserModificationData.builder()
                 .name("TEST")
                 .password("TEST")
+                .userId(otherUserId)
                 .build();
 
-        Long targetUserId = 1L;
-        Long currentUserId = 2L;
-
         assertThatThrownBy(() -> {
-            userService.updateUser(
-                    targetUserId, modificationData, currentUserId);
+            userUpdateService.updateUser(
+                    targetUserId, modificationData);
         }).isInstanceOf(AccessDeniedException.class);
     }
 
     @Test
     void deleteUserWithExistedId() {
-        User user = userService.deleteUser(1L);
+        User user = userDeleteService.deleteUser(1L);
 
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.isDeleted()).isTrue();
@@ -181,7 +200,7 @@ class UserServiceTest {
 
     @Test
     void deleteUserWithNotExistedId() {
-        assertThatThrownBy(() -> userService.deleteUser(100L))
+        assertThatThrownBy(() -> userDeleteService.deleteUser(100L))
                 .isInstanceOf(UserNotFoundException.class);
 
         verify(userRepository).findByIdAndDeletedIsFalse(100L);
@@ -189,7 +208,7 @@ class UserServiceTest {
 
     @Test
     void deleteUserWithDeletedId() {
-        assertThatThrownBy(() -> userService.deleteUser(DELETED_USER_ID))
+        assertThatThrownBy(() -> userDeleteService.deleteUser(DELETED_USER_ID))
                 .isInstanceOf(UserNotFoundException.class);
 
         verify(userRepository).findByIdAndDeletedIsFalse(DELETED_USER_ID);
