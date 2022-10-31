@@ -18,7 +18,8 @@ plugins {
     id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-sourceCompatibility = '1.8'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
 configurations {
     developmentOnly
@@ -28,6 +29,7 @@ configurations {
 }
 
 repositories {
+    mavenCentral()
     // Use JCenter for resolving dependencies.
     jcenter()
 }
@@ -69,7 +71,10 @@ dependencies {
 
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Database
     runtimeOnly 'com.h2database:h2'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
