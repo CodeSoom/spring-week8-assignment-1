@@ -1,17 +1,37 @@
 = 고양이 장난감 가게 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
 
-== GET /products
+[[Product-API]]
+== 상품
 
-상품 목록을 JSON 형태로 돌려준다.
+[[모든-상품-조회]]
+=== 모든 상품 조회하기
+operation::product-controller-test/모든_상품_조회[snippets='http-request,http-response,response-fields']
 
-include::{snippets}/get-products/http-request.adoc[]
+[[상품-상세-조회]]
+=== 상품 상세 조회하기
+operation::product-controller-test/상품_상세_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
-include::{snippets}/get-products/http-response.adoc[]
+[[상품-생성]]
+=== 상품 생성하기
+operation::product-controller-test/상품_생성[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
-== GET /product/{id}
+[[상품-수정]]
+=== 상품 수정하기
+operation::product-controller-test/상품_수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+[[상품-삭제]]
+=== 상품 삭제하기
+operation::product-controller-test/상품_삭제[snippets='http-request,request-headers,path-parameters,http-response']
 
-include::{snippets}/get-product/http-request.adoc[]
+[[Session-API]]
+== 로그인
 
-include::{snippets}/get-product/http-response.adoc[]
+[[로그인]]
+=== 회원 로그인 하기
+operation::session-controller-test/로그인[snippets='http-request,http-response,response-fields']
