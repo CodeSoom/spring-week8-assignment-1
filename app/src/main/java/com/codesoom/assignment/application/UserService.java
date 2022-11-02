@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 
 /**
  * User(회원) 관련 비즈니스 로직
@@ -69,7 +70,7 @@ public class UserService {
      */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
-        if (!id.equals(userId)) {
+        if (!Objects.equals(id, userId)) {
             throw new AccessDeniedException("Access denied");
         }
 
