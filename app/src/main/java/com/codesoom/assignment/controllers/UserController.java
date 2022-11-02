@@ -9,6 +9,7 @@ import com.codesoom.assignment.security.UserAuthentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,11 +32,10 @@ public class UserController {
 
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    UserResultData update(
-            @PathVariable Long id,
-            @RequestBody @Valid UserModificationData modificationData,
-            UserAuthentication authentication
-    ) throws AccessDeniedException {
+    UserResultData update(@PathVariable Long id,
+                          @RequestBody @Valid UserModificationData modificationData) throws AccessDeniedException {
+        UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext()
+                .getAuthentication();
         Long userId = authentication.getUserId();
         User user = userService.updateUser(id, modificationData, userId);
         return getUserResultData(user);
