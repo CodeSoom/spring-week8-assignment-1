@@ -3,6 +3,7 @@ package com.codesoom.assignment.controllers;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.errors.LoginFailException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -43,6 +44,7 @@ class SessionControllerTest {
     }
 
     @Test
+    @DisplayName("login 메서드는 저장된 유저의 email과 password로 요청한 경우 유효한 accessToken을 리턴한다")
     void loginWithRightEmailAndPassword() throws Exception {
         mockMvc.perform(
                         post("/session")
@@ -66,6 +68,7 @@ class SessionControllerTest {
     }
 
     @Test
+    @DisplayName("login 메서드는 저장되어있지 않는 email로 요청한 경우 400을 리턴한다")
     void loginWithWrongEmail() throws Exception {
         mockMvc.perform(
                         post("/session")
@@ -77,6 +80,7 @@ class SessionControllerTest {
     }
 
     @Test
+    @DisplayName("login 메서드는 틀린 password 로 요청한 경우 400을 리턴한다")
     void loginWithWrongPassword() throws Exception {
         mockMvc.perform(
                         post("/session")
