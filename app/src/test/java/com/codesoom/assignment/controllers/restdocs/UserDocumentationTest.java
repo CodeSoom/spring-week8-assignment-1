@@ -128,7 +128,7 @@ public class UserDocumentationTest {
                     "홍길돈",
                     "test4321!"
             );
-            System.out.println(savedUser.getId());
+
             // when
             final ResultActions resultActions = mockMvc.perform(patch("/users/{id}", savedUser.getId())
                     .contentType(MediaType.APPLICATION_JSON)
