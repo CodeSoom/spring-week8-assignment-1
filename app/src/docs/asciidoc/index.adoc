@@ -34,4 +34,20 @@ operation::product-controller-test/상품_삭제[snippets='http-request,request-
 
 [[로그인]]
 === 회원 로그인 하기
-operation::session-controller-test/로그인[snippets='http-request,http-response,response-fields']
+operation::session-controller-test/로그인[snippets='http-request,request-fields,http-response,response-fields']
+
+[[User-API]]
+== 회원
+
+[[회원-등록]]
+=== 회원 등록하기
+operation::user-controller-test/회원_등록[snippets='http-request,request-fields,http-response,response-fields']
+
+[[회원-수정]]
+=== 회원 정보 수정하기
+operation::user-controller-test/회원_수정[snippets='http-request,path-parameters,request-headers,http-response,response-fields']
+
+[[회원-탈퇴]]
+=== 회원 탈퇴하기
+operation::user-controller-test/회원_삭제[snippets='http-request,path-parameters,request-headers,http-response']
+
