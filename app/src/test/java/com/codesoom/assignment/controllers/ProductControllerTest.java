@@ -8,6 +8,7 @@ import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -105,6 +106,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("list 메서드는 product 의 리스트를 리턴한다")
     void list() throws Exception {
         mockMvc.perform(
                         get("/products")
@@ -124,6 +126,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("detail 메서드는 요청한 product id 의 product 를 리턴한다")
     void deatilWithExsitedProduct() throws Exception {
         mockMvc.perform(
                         get("/products/{productId}", 1)
@@ -148,12 +151,14 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("detail 메서드는 요청한 product id 가 저장되어 있지 않는 경우 404 를 리턴한다")
     void deatilWithNotExsitedProduct() throws Exception {
         mockMvc.perform(get("/products/1000"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @DisplayName("create 메서드는 새로운 product 를 생성하여 저장하고 리턴한다")
     void createWithValidAttributes() throws Exception {
         mockMvc.perform(
                         post("/products")
@@ -189,6 +194,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("create 메서드는 유효하지 않은 attribute 로 요청한 경우 400을 리턴한다")
     void createWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                         post("/products")
@@ -202,6 +208,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("create 메서드는 Access Token 이 없이 요청한 경우 401을 리턴한다")
     void createWithoutAccessToken() throws Exception {
         mockMvc.perform(
                         post("/products")
@@ -214,6 +221,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("create 메서드는 유효하지 않은 Access Token 으로 요청한 경우 401을 리턴한다")
     void createWithWrongAccessToken() throws Exception {
         mockMvc.perform(
                         post("/products")
@@ -227,6 +235,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("update 메서드는 요청한 product id 의 product 를 수정하고 리턴한다")
     void updateWithExistedProduct() throws Exception {
         mockMvc.perform(
                         patch("/products/{productId}", 1)
@@ -265,6 +274,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("update 메서드는 저장되지 않은 product Id로 요청한 경우 404를 리턴한다")
     void updateWithNotExistedProduct() throws Exception {
         mockMvc.perform(
                         patch("/products/1000")
@@ -279,6 +289,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("update 메서드는 유효하지 않은 attribute 로 요청한 경우 400을 리턴한다")
     void updateWithInvalidAttributes() throws Exception {
         mockMvc.perform(
                         patch("/products/1")
@@ -292,6 +303,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("update 메서드는 Access Token 이 없이 요청한 경우 401을 리턴한다")
     void updateWithoutAccessToken() throws Exception {
         mockMvc.perform(
                         patch("/products/1")
@@ -304,6 +316,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("update 메서드는 유효하지 않은 Access Token 으로 요청한 경우 401을 리턴한다")
     void updateWithInvalidAccessToken() throws Exception {
         mockMvc.perform(
                         patch("/products/1")
@@ -317,6 +330,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("destroy 메서드는 요청한 product Id의 product 를 삭제한다")
     void destroyWithExistedProduct() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.delete("/products/{productId}", 1)
@@ -336,6 +350,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("destory 메서드는 요청한 product Id 의 product 가 저장되어 있지 않은 경우 404를 리턴한다")
     void destroyWithNotExistedProduct() throws Exception {
         mockMvc.perform(
                         delete("/products/1000")
@@ -347,6 +362,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("destroy 메서드는 Access Token 이 없이 요청한 경우 401을 리턴한다")
     void destroyWithoutAccessToken() throws Exception {
         mockMvc.perform(
                         delete("/products/1")
@@ -359,6 +375,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("destroy 메서드는 유효하지 않은 Access Token 으로 요청한 경우 401을 리턴한다")
     void destroyWithInvalidAccessToken() throws Exception {
         mockMvc.perform(
                         delete("/products/1")
