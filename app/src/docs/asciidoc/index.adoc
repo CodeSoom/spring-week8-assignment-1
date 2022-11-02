@@ -71,3 +71,19 @@ include::{snippets}/delete-product/http-request.adoc[]
 
 ==== response
 include::{snippets}/delete-product/http-response.adoc[]
+
+== /session
+
+=== POST /session
+
+Token을 생성하여 돌려준다.
+
+==== request
+include::{snippets}/post-session/request-fields.adoc[]
+
+include::{snippets}/post-session/http-request.adoc[]
+
+==== response
+include::{snippets}/post-session/response-fields.adoc[]
+
+include::{snippets}/post-session/http-response.adoc[]
