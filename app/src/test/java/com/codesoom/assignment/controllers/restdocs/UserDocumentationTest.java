@@ -1,6 +1,8 @@
 package com.codesoom.assignment.controllers.restdocs;
 
 import com.codesoom.assignment.application.UserService;
+import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
@@ -54,6 +56,8 @@ public class UserDocumentationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -124,7 +128,7 @@ public class UserDocumentationTest {
                     "홍길돈",
                     "test4321!"
             );
-
+            System.out.println(savedUser.getId());
             // when
             final ResultActions resultActions = mockMvc.perform(patch("/users/{id}", savedUser.getId())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -165,6 +169,11 @@ public class UserDocumentationTest {
 
         private final User savedUser = userService.registerUser(param);
         private final String VALID_TOKEN = jwtUtil.encode(savedUser.getId());
+
+        @BeforeEach
+        void prepare() {
+            roleRepository.save(new Role(savedUser.getId(), "ADMIN"));
+        }
 
         @Test
         void destroy() throws Exception {
