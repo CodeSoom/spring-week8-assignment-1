@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
+    @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     void destroy(@PathVariable Long id) {
         userService.deleteUser(id);
     }

@@ -13,9 +13,11 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    // Asciidoctor plugin
+    id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
     developmentOnly
@@ -67,6 +69,7 @@ dependencies {
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -78,6 +81,13 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Spring REST Docs
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    // REST Docs를 MockMVC를 이용해서 작성
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 application {
@@ -85,7 +95,30 @@ application {
     mainClass = 'com.codesoom.assignment.App'
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 tasks.named('test') {
+    outputs.dir snippetsDir
     // Use junit platform for unit tests.
     useJUnitPlatform()
 }
+
+tasks.named("asciidoctor") {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+// asciidoctor task 수행전 static/docs 폴더 비우기
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+
