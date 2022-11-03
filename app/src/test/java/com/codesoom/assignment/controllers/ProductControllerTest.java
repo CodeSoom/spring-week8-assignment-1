@@ -4,6 +4,7 @@ import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleName;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
@@ -86,7 +87,7 @@ class ProductControllerTest {
                 .willThrow(new InvalidTokenException(INVALID_TOKEN));
 
         given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER)));
     }
 
     @Test

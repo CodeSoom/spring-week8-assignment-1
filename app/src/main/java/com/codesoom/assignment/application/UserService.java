@@ -1,6 +1,7 @@
 package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleName;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
@@ -52,7 +53,7 @@ public class UserService {
 
         user.changePassword(registrationData.getPassword(), passwordEncoder);
 
-        roleRepository.save(new Role(user.getId(), "USER"));
+        roleRepository.save(new Role(user.getId(), RoleName.USER));
 
         return user;
     }

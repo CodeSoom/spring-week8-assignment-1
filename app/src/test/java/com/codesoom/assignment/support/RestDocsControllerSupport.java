@@ -4,6 +4,7 @@ import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
 import com.codesoom.assignment.application.UserService;
 import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleName;
 import com.codesoom.assignment.security.UserAuthentication;
 import com.codesoom.assignment.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,7 +75,7 @@ public class RestDocsControllerSupport {
 
     private UserAuthentication getUserAuthentication() {
         return new UserAuthentication(1L,
-                List.of(new Role("USER"), new Role("ADMIN"))
+                List.of(new Role(RoleName.USER), new Role(RoleName.ADMIN))
         );
     }
 }
