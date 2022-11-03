@@ -6,27 +6,48 @@
 :toclevels: 2
 :sectlinks:
 
+REST API를 사용한 고양이 장난감 가게의 요청 및 응답 예제를 살펴볼 수 있는 문서입니다.
+
+상품 조회 및 회원 등록은 모든 방문자가 이용 가능하지만, 그밖의 다른 기능은 고양이 장난감 가게의 회원인 경우에만 이용할 수 있습니다.
+
+접근 및 보안에 관련된 상세 정보는 요청시 필요한 Header 값을 참고해주세요.
+
 [[Product-API]]
 == 상품
 
 [[모든-상품-조회]]
 === 모든 상품 조회하기
+
+고양이 장난감 가게의 모든 상품을 조회합니다.
+
 operation::product-controller-test/모든_상품_조회[snippets='http-request,http-response,response-fields']
 
 [[상품-상세-조회]]
 === 상품 상세 조회하기
+
+하나의 상품에 대한 상세 정보를 조회합니다.
+
 operation::product-controller-test/상품_상세_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 [[상품-생성]]
 === 상품 생성하기
+
+상품을 생성합니다.
+
 operation::product-controller-test/상품_생성[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 [[상품-수정]]
 === 상품 수정하기
+
+상품의 정보를 변경합니다.
+
 operation::product-controller-test/상품_수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 [[상품-삭제]]
 === 상품 삭제하기
+
+상품을 삭제합니다.
+
 operation::product-controller-test/상품_삭제[snippets='http-request,request-headers,path-parameters,http-response']
 
 [[Session-API]]
@@ -34,6 +55,9 @@ operation::product-controller-test/상품_삭제[snippets='http-request,request-
 
 [[로그인]]
 === 회원 로그인 하기
+
+등록된 이메일과 비밀번호로 로그인에 성공하면 이후 요청에 이용할 수 있는 토큰이 발급됩니다.
+
 operation::session-controller-test/로그인[snippets='http-request,request-fields,http-response,response-fields']
 
 [[User-API]]
@@ -41,13 +65,22 @@ operation::session-controller-test/로그인[snippets='http-request,request-fiel
 
 [[회원-등록]]
 === 회원 등록하기
+
+고양이 장난감 가게의 회원으로 등록합니다.
+
 operation::user-controller-test/회원_등록[snippets='http-request,request-fields,http-response,response-fields']
 
 [[회원-수정]]
 === 회원 정보 수정하기
+
+회원 정보를 변경합니다.
+
 operation::user-controller-test/회원_수정[snippets='http-request,path-parameters,request-headers,http-response,response-fields']
 
 [[회원-탈퇴]]
 === 회원 탈퇴하기
+
+회원을 탈퇴합니다.
+
 operation::user-controller-test/회원_삭제[snippets='http-request,path-parameters,request-headers,http-response']
 
