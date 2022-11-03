@@ -7,18 +7,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static com.codesoom.assignment.support.FieldsItem.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -39,11 +39,13 @@ public class ProductControllerTest extends RestDocsControllerSupport {
         result.andExpect(status().isOk())
                 .andDo(restDocs.document(
                         responseFields(
-                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("[].maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지")
+                                of("[]", ARRAY, "상품",
+                                        of("id", NUMBER, "아이디"),
+                                        of("name", STRING, "이름"),
+                                        of("maker", STRING, "제조사"),
+                                        of("price", NUMBER, "가격"),
+                                        of("imageUrl", STRING, "이미지"))
+                                        .build()
                         )
                 ));
     }
@@ -61,11 +63,11 @@ public class ProductControllerTest extends RestDocsControllerSupport {
                                 parameterWithName("id").description("조회할 상품 아이디")
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지")
+                                of("id", NUMBER, "상품 아이디").toField(),
+                                of("name", STRING, "상품명").toField(),
+                                of("maker", STRING, "상품 제조사").toField(),
+                                of("price", NUMBER, "상품 가격").toField(),
+                                of("imageUrl", STRING, "상품 이미지").toField()
                         )
                 ));
     }
@@ -83,20 +85,20 @@ public class ProductControllerTest extends RestDocsControllerSupport {
         result.andExpect(status().isCreated())
                 .andDo(restDocs.document(
                         requestHeaders(
-                            headerWithName(HttpHeaders.AUTHORIZATION).description("회원 식별 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("회원 식별 토큰")
                         ),
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지")
+                                of("name", STRING, "상품명").toField(),
+                                of("maker", STRING, "상품 제조사").toField(),
+                                of("price", NUMBER, "상품 가격").toField(),
+                                of("imageUrl", STRING, "상품 이미지").toField()
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("생성된 상품 아이디"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("생성된 상품명"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("생성된 상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("생성된 상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("생성된 상품 이미지")
+                                of("id", NUMBER, "상품 아이디").toField(),
+                                of("name", STRING, "상품명").toField(),
+                                of("maker", STRING, "상품 제조사").toField(),
+                                of("price", NUMBER, "상품 가격").toField(),
+                                of("imageUrl", STRING, "상품 이미지").toField()
                         )
                 ));
     }
@@ -120,17 +122,17 @@ public class ProductControllerTest extends RestDocsControllerSupport {
                                 parameterWithName("id").description("수정할 상품 아이디")
                         ),
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("수정할 상품명"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("수정할 상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("수정할 상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("수정할 상품 이미지")
+                                of("name", STRING, "수정할 상품명").toField(),
+                                of("maker", STRING, "수정할 상품 제조사").toField(),
+                                of("price", NUMBER, "수정할 상품 가격").toField(),
+                                of("imageUrl", STRING, "수정할 상품 이미지").toField()
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
-                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 제조사"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지")
+                                of("id", NUMBER, "상품 아이디").toField(),
+                                of("name", STRING, "상품명").toField(),
+                                of("maker", STRING, "상품 제조사").toField(),
+                                of("price", NUMBER, "상품 가격").toField(),
+                                of("imageUrl", STRING, "상품 이미지").toField()
                         )
                 ));
     }

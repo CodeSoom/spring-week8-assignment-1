@@ -8,9 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.codesoom.assignment.support.FieldsItem.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -19,7 +19,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -42,14 +42,14 @@ public class UserControllerTest extends RestDocsControllerSupport {
         result.andExpect(status().isCreated())
                 .andDo(restDocs.document(
                         requestFields(
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("회원명"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                                fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                                of("name", STRING, "회원명").toField(),
+                                of("email", STRING, "이메일").toField(),
+                                of("password", STRING, "비밀번호").toField()
                         ),
                         responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 아이디"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("회원명"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                                of("id", NUMBER, "회원 아이디").toField(),
+                                of("name", STRING, "회원명").toField(),
+                                of("email", STRING, "이메일").toField()
                         )
                 ));
     }
@@ -73,13 +73,13 @@ public class UserControllerTest extends RestDocsControllerSupport {
                                 parameterWithName("id").description("수정할 회원 아이디")
                         ),
                         requestFields(
-                           fieldWithPath("name").type(JsonFieldType.STRING).description("회원명"),
-                           fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                                of("name", STRING, "회원명").toField(),
+                                of("password", STRING, "비밀번호").toField()
                         ),
                         responseFields(
-                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 아이디"),
-                            fieldWithPath("name").type(JsonFieldType.STRING).description("회원명"),
-                            fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                                of("id", NUMBER, "회원 아이디").toField(),
+                                of("name", STRING, "회원명").toField(),
+                                of("email", STRING, "이메일").toField()
                         )
                 ));
     }
