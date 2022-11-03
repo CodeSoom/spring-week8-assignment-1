@@ -1,0 +1,51 @@
+[#_users]
+== /users
+
+=== POST /users
+
+user를 새로 생성하여 저장하고 JSON 형태로 돌려준다.
+
+==== request
+
+include::{snippets}/post-users/request-fields.adoc[]
+
+include::{snippets}/post-users/http-request.adoc[]
+
+==== response
+
+include::{snippets}/post-users/response-fields.adoc[]
+
+include::{snippets}/post-users/http-response.adoc[]
+
+=== PATCH /users/{id}
+
+저장된 user를 수정하고 수정한 user를 JSON 형태로 돌려준다.
+
+==== request
+
+include::{snippets}/patch-users/request-headers.adoc[]
+include::{snippets}/patch-users/path-parameters.adoc[]
+include::{snippets}/patch-users/request-fields.adoc[]
+
+include::{snippets}/patch-users/http-request.adoc[]
+
+==== response
+
+include::{snippets}/patch-users/response-fields.adoc[]
+
+include::{snippets}/patch-users/http-response.adoc[]
+
+=== DELETE /users/{id}
+
+저장된 user를 삭제한다.
+
+==== request
+
+include::{snippets}/delete-users/request-headers.adoc[]
+include::{snippets}/delete-users/path-parameters.adoc[]
+
+include::{snippets}/delete-users/http-request.adoc[]
+
+==== response
+
+include::{snippets}/delete-users/http-response.adoc[]
