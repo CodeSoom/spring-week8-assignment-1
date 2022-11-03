@@ -131,17 +131,8 @@ public class FieldsItem {
         );
 
         // 자식 필드가 있으면 결과 목록에 추가한다.
-        for (FieldsItem child : children) {
-            fieldDescriptors.add(
-                    fieldWithPath(this.path + "." + child.path)
-                            .type(child.type)
-                            .description(child.description)
-            );
-
-            // 자식의 자식이 있으면 목록에 추가한다.
-            if (!child.children.isEmpty()) {
-                fieldDescriptors.addAll(getChildList(this.path + "." + child.path, child.children));
-            }
+        if (!this.children.isEmpty()) {
+            fieldDescriptors.addAll(getChildList(this.path, this.children));
         }
 
         return fieldDescriptors;
