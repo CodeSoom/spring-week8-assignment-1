@@ -1,5 +1,6 @@
 package com.codesoom.assignment.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.dozermapper.core.Mapping;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class UserRegistrationData {
     @Mapping("password")
     private String password;
 
-
+    @JsonCreator
     public UserRegistrationData(@JsonProperty("email") String email, @JsonProperty("name") String name, @JsonProperty("password") String password) {
         this.email = email;
         this.name = name;
