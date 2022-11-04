@@ -9,7 +9,7 @@ plugins {
     id 'org.asciidoctor.convert' version '2.4.0'
 }
 
-version = '0.0.1-SNAPSHOT'
+version = '2022.11'
 sourceCompatibility = '11'
 
 configurations {
