@@ -7,6 +7,7 @@ import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
 import com.codesoom.assignment.errors.UserNotFoundException;
+import com.codesoom.assignment.security.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -111,16 +112,14 @@ class UserControllerTest {
         given(userService.deleteUser(100L))
                 .willThrow(new UserNotFoundException(100L));
 
-        given(authenticationService.parseToken(MY_TOKEN)).willReturn(1L);
-        given(authenticationService.parseToken(OTHER_TOKEN)).willReturn(2L);
-        given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(1004L);
+        given(authenticationService.authenticate(MY_TOKEN)).willReturn(
+                new UserAuthentication(1L, List.of(new Role("USER"))));
 
-        given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(2L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+        given(authenticationService.authenticate(OTHER_TOKEN)).willReturn(
+                new UserAuthentication(2L, List.of(new Role("USER"))));
+
+        given(authenticationService.authenticate(ADMIN_TOKEN)).willReturn(
+                new UserAuthentication(1004L, List.of(new Role("USER"), new Role("ADMIN"))));
     }
 
     @Test

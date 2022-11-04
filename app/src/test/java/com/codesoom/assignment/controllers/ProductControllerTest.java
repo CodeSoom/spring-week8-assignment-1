@@ -2,11 +2,13 @@ package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.ProductService;
+import com.codesoom.assignment.application.RoleService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.Role;
 import com.codesoom.assignment.dto.ProductData;
 import com.codesoom.assignment.errors.InvalidTokenException;
 import com.codesoom.assignment.errors.ProductNotFoundException;
+import com.codesoom.assignment.security.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +61,9 @@ class ProductControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
 
+    @MockBean
+    private RoleService roleService;
+
     @BeforeEach
     void setUp() {
         Product product = Product.builder()
@@ -96,13 +101,11 @@ class ProductControllerTest {
         given(productService.deleteProduct(1000L))
                 .willThrow(new ProductNotFoundException(1000L));
 
-        given(authenticationService.parseToken(VALID_TOKEN)).willReturn(1L);
+        given(authenticationService.authenticate(VALID_TOKEN)).willReturn(
+                new UserAuthentication(1L, Arrays.asList(new Role("USER"))));
 
-        given(authenticationService.parseToken(INVALID_TOKEN))
+        given(authenticationService.authenticate(INVALID_TOKEN))
                 .willThrow(new InvalidTokenException(INVALID_TOKEN));
-
-        given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
     }
 
     @Test
