@@ -19,15 +19,15 @@ public class FieldsItemTest extends RestDocsControllerSupport {
 
     FieldsItem items =
             of("member", OBJECT, "회원",
-            of("id", NUMBER, "회원 아이디"),
-            of("name", STRING, "회원명"),
-            of("favorite", OBJECT, "좋아하는 것",
-                of("music", OBJECT, "음악",
+                of("id", NUMBER, "회원 아이디"),
+                of("name", STRING, "회원명"),
+                of("favorite", OBJECT, "좋아하는 것",
+                    of("music", OBJECT, "음악",
                         of("artist", STRING, "가수"),
                         of("title", STRING, "곡명")),
-                of("movie", OBJECT, "영화",
-                    of("name", STRING, "영화명"),
-                    of("star", NUMBER, "평점"))));
+                    of("movie", OBJECT, "영화",
+                        of("name", STRING, "영화명"),
+                        of("star", NUMBER, "평점"))));
 
     @Test
     void 재귀문_구현_테스트() throws Exception {
