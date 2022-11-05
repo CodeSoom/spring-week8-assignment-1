@@ -1,7 +1,8 @@
 package com.codesoom.assignment.controllers;
 
 import com.codesoom.assignment.application.AuthenticationService;
-import com.codesoom.assignment.application.ProductService;
+import com.codesoom.assignment.application.ProductCommandService;
+import com.codesoom.assignment.application.ProductQueryService;
 import com.codesoom.assignment.application.RoleService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.domain.Role;
@@ -56,7 +57,10 @@ class ProductControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductService productService;
+    private ProductCommandService productCommandService;
+
+    @MockBean
+    private ProductQueryService productQueryService;
 
     @MockBean
     private AuthenticationService authenticationService;
@@ -73,17 +77,17 @@ class ProductControllerTest {
                 .price(5000)
                 .build();
 
-        given(productService.getProducts()).willReturn(List.of(product));
+        given(productQueryService.getProducts()).willReturn(List.of(product));
 
-        given(productService.getProduct(1L)).willReturn(product);
+        given(productQueryService.getProduct(1L)).willReturn(product);
 
-        given(productService.getProduct(1000L))
+        given(productQueryService.getProduct(1000L))
                 .willThrow(new ProductNotFoundException(1000L));
 
-        given(productService.createProduct(any(ProductData.class)))
+        given(productCommandService.createProduct(any(ProductData.class)))
                 .willReturn(product);
 
-        given(productService.updateProduct(eq(1L), any(ProductData.class)))
+        given(productCommandService.updateProduct(eq(1L), any(ProductData.class)))
                 .will(invocation -> {
                     Long id = invocation.getArgument(0);
                     ProductData productData = invocation.getArgument(1);
@@ -95,10 +99,10 @@ class ProductControllerTest {
                             .build();
                 });
 
-        given(productService.updateProduct(eq(1000L), any(ProductData.class)))
+        given(productCommandService.updateProduct(eq(1000L), any(ProductData.class)))
                 .willThrow(new ProductNotFoundException(1000L));
 
-        given(productService.deleteProduct(1000L))
+        given(productCommandService.deleteProduct(1000L))
                 .willThrow(new ProductNotFoundException(1000L));
 
         given(authenticationService.authenticate(VALID_TOKEN)).willReturn(
@@ -193,7 +197,7 @@ class ProductControllerTest {
                         )
                 );
 
-        verify(productService).createProduct(any(ProductData.class));
+        verify(productCommandService).createProduct(any(ProductData.class));
     }
 
     @Test
@@ -273,7 +277,7 @@ class ProductControllerTest {
                         )
                 );
 
-        verify(productService).updateProduct(eq(1L), any(ProductData.class));
+        verify(productCommandService).updateProduct(eq(1L), any(ProductData.class));
     }
 
     @Test
@@ -288,7 +292,7 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isNotFound());
 
-        verify(productService).updateProduct(eq(1000L), any(ProductData.class));
+        verify(productCommandService).updateProduct(eq(1000L), any(ProductData.class));
     }
 
     @Test
@@ -349,7 +353,7 @@ class ProductControllerTest {
                         ))
                 );
 
-        verify(productService).deleteProduct(1L);
+        verify(productCommandService).deleteProduct(1L);
     }
 
     @Test
@@ -361,7 +365,7 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isNotFound());
 
-        verify(productService).deleteProduct(1000L);
+        verify(productCommandService).deleteProduct(1000L);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.codesoom.assignment.controllers;
 
-import com.codesoom.assignment.application.ProductService;
+import com.codesoom.assignment.application.ProductCommandService;
+import com.codesoom.assignment.application.ProductQueryService;
 import com.codesoom.assignment.domain.Product;
 import com.codesoom.assignment.dto.ProductData;
 import org.springframework.http.HttpStatus;
@@ -21,27 +22,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductService productService;
+    private final ProductCommandService productCommandService;
+    private final ProductQueryService productQueryService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductCommandService productCommandService, ProductQueryService productQueryService) {
+        this.productCommandService = productCommandService;
+        this.productQueryService = productQueryService;
     }
 
     @GetMapping
     public List<Product> list() {
-        return productService.getProducts();
+        return productQueryService.getProducts();
     }
 
     @GetMapping("{id}")
     public Product detail(@PathVariable Long id) {
-        return productService.getProduct(id);
+        return productQueryService.getProduct(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     public Product create(@RequestBody @Valid ProductData productData) {
-        return productService.createProduct(productData);
+        return productCommandService.createProduct(productData);
     }
 
     @PatchMapping("{id}")
@@ -50,12 +53,12 @@ public class ProductController {
             @PathVariable Long id,
             @RequestBody @Valid ProductData productData
     ) {
-        return productService.updateProduct(id, productData);
+        return productCommandService.updateProduct(id, productData);
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public void destroy(@PathVariable Long id) {
-        productService.deleteProduct(id);
+        productCommandService.deleteProduct(id);
     }
 }
