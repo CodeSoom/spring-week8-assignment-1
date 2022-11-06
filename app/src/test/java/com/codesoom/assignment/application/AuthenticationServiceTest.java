@@ -1,6 +1,7 @@
 package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleName;
 import com.codesoom.assignment.domain.RoleRepository;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.domain.UserRepository;
@@ -50,9 +51,9 @@ class AuthenticationServiceTest {
                 .willReturn(Optional.of(user));
 
         given(roleRepository.findAllByUserId(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER)));
         given(roleRepository.findAllByUserId(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
     }
 
     @Test
@@ -101,13 +102,15 @@ class AuthenticationServiceTest {
     void roles() {
         assertThat(
                 authenticationService.roles(1L).stream()
-                        .map(Role::getName)
+                        .map(Role::getRoleName)
+                        .map(roleName -> roleName.name())
                         .collect(Collectors.toList())
         ).isEqualTo(Arrays.asList("USER"));
 
         assertThat(
                 authenticationService.roles(1004L).stream()
-                        .map(Role::getName)
+                        .map(Role::getRoleName)
+                        .map(roleName -> roleName.name())
                         .collect(Collectors.toList())
         ).isEqualTo(Arrays.asList("USER", "ADMIN"));
     }

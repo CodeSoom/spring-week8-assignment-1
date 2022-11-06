@@ -3,6 +3,7 @@ package com.codesoom.assignment.controllers;
 import com.codesoom.assignment.application.AuthenticationService;
 import com.codesoom.assignment.application.UserService;
 import com.codesoom.assignment.domain.Role;
+import com.codesoom.assignment.domain.RoleName;
 import com.codesoom.assignment.domain.User;
 import com.codesoom.assignment.dto.UserModificationData;
 import com.codesoom.assignment.dto.UserRegistrationData;
@@ -104,11 +105,11 @@ class UserControllerTest {
         given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(1004L);
 
         given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER)));
         given(authenticationService.roles(2L))
-                .willReturn(Arrays.asList(new Role("USER")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER)));
         given(authenticationService.roles(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+                .willReturn(Arrays.asList(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
     }
 
     @Test

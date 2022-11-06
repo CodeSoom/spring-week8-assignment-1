@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -17,14 +19,15 @@ public class Role {
     private Long userId;
 
     @Getter
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleName roleName;
 
-    public Role(Long userId, String name) {
+    public Role(Long userId, RoleName roleName) {
         this.userId = userId;
-        this.name = name;
+        this.roleName = roleName;
     }
 
-    public Role(String name) {
-        this(null, name);
+    public Role(RoleName roleName) {
+        this(null, roleName);
     }
 }

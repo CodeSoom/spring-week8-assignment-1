@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductData {
-    private Long id;
 
     @NotBlank
     @Mapping("name")
