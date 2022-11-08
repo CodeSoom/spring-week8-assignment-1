@@ -1,17 +1,53 @@
 = 고양이 장난감 가게 API
+notification-api-docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
 
-== GET /products
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
 
-상품 목록을 JSON 형태로 돌려준다.
+== 회원 Home
 
-include::{snippets}/get-products/http-request.adoc[]
+=== 회원 등록
 
-include::{snippets}/get-products/http-response.adoc[]
+==== Request Field
+include::{snippets}/users-create/request-fields.adoc[]
 
-== GET /product/{id}
+==== Request Sample
+include::{snippets}/users-create/http-request.adoc[]
 
-상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
+==== Response Fields
+include::{snippets}/users-create/response-fields.adoc[]
 
-include::{snippets}/get-product/http-request.adoc[]
+==== Response Sample
+include::{snippets}/users-create/http-response.adoc[]
 
-include::{snippets}/get-product/http-response.adoc[]
+=== 회원 수정
+
+==== Path Variable
+include::{snippets}/users-update/path-parameters.adoc[]
+
+==== Request Field
+include::{snippets}/users-update/request-fields.adoc[]
+
+==== Request Sample
+include::{snippets}/users-update/http-request.adoc[]
+
+==== Response Fields
+include::{snippets}/users-update/response-fields.adoc[]
+
+==== Response Sample
+include::{snippets}/users-update/http-response.adoc[]
+
+=== 회원 삭제
+
+==== Path Variable
+include::{snippets}/users-delete/path-parameters.adoc[]
+
+==== Request Sample
+include::{snippets}/users-delete/http-request.adoc[]

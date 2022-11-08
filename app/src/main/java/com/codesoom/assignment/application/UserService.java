@@ -14,7 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 
+/**
+ * User(회원) 관련 비즈니스 로직
+ */
 @Service
 @Transactional
 public class UserService {
@@ -33,6 +37,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 신규 회원을 등록하고, 등록된 회원정보를 리턴한다.
+     * @param registrationData 신규 회원정보
+     * @return 등록된 회원정보
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -49,9 +58,19 @@ public class UserService {
         return user;
     }
 
+
+    /**
+     * 회원정보를 수정하고, 수정된 회원정보를 리턴한다.
+     * @param id 수정대상 사용자 ID
+     * @param modificationData 수정 회원정보
+     * @param userId 수정요청 사용자 ID
+     * @return 수정된 회원정보
+     * @throws AccessDeniedException 다른 사람의 회원정보를 수정요청한 경우
+     * @throws UserNotFoundException 회원을 찾지 못한 경우
+     */
     public User updateUser(Long id, UserModificationData modificationData,
                            Long userId) throws AccessDeniedException {
-        if (!id.equals(userId)) {
+        if (!Objects.equals(id, userId)) {
             throw new AccessDeniedException("Access denied");
         }
 
@@ -63,6 +82,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 회원정보를 삭제하고, 삭제된 회원정보를 리턴한다.
+     * @param id 삭제할 회원 ID
+     * @return 삭제된 회원정보
+     * @throws UserNotFoundException 회원을 찾지 못한 경우
+     */
     public User deleteUser(Long id) {
         User user = findUser(id);
         user.destroy();
