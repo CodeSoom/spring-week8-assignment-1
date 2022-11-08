@@ -8,28 +8,22 @@ import com.github.dozermapper.core.Mapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
+/**
+ * Product 를 생성,수정,삭제하는 서비스
+ */
 @Service
 @Transactional
-public class ProductService {
+public class ProductCommandService {
     private final Mapper mapper;
     private final ProductRepository productRepository;
 
-    public ProductService(
+    public ProductCommandService(
             Mapper dozerMapper,
             ProductRepository productRepository
     ) {
         this.mapper = dozerMapper;
         this.productRepository = productRepository;
-    }
-
-    public List<Product> getProducts() {
-        return productRepository.findAll();
-    }
-
-    public Product getProduct(Long id) {
-        return findProduct(id);
     }
 
     public Product createProduct(ProductData productData) {

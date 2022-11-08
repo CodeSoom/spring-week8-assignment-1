@@ -30,6 +30,7 @@ class UserServiceTest {
     private static final Long DELETED_USER_ID = 200L;
 
     private UserService userService;
+    private UserRegisterService userRegisterService;
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
@@ -39,8 +40,8 @@ class UserServiceTest {
         Mapper mapper = DozerBeanMapperBuilder.buildDefault();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        userService = new UserService(
-                mapper, userRepository, roleRepository, passwordEncoder);
+        userRegisterService = new UserRegisterService(mapper, userRepository, roleRepository, passwordEncoder);
+        userService = new UserService(mapper, userRepository, userRegisterService);
 
         given(userRepository.existsByEmail(EXISTED_EMAIL_ADDRESS))
                 .willThrow(new UserEmailDuplicationException(

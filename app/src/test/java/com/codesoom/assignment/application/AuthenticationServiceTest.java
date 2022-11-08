@@ -1,26 +1,19 @@
 package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.domain.Role;
-import com.codesoom.assignment.domain.RoleRepository;
-import com.codesoom.assignment.domain.User;
-import com.codesoom.assignment.domain.UserRepository;
 import com.codesoom.assignment.errors.InvalidTokenException;
-import com.codesoom.assignment.errors.LoginFailException;
+import com.codesoom.assignment.security.UserAuthentication;
 import com.codesoom.assignment.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 class AuthenticationServiceTest {
     private static final String SECRET = "12345678901234567890123456789012";
@@ -32,60 +25,37 @@ class AuthenticationServiceTest {
 
     private AuthenticationService authenticationService;
 
-    private UserRepository userRepository = mock(UserRepository.class);
-    private RoleRepository roleRepository = mock(RoleRepository.class);
 
     @BeforeEach
     void setUp() {
         JwtUtil jwtUtil = new JwtUtil(SECRET);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        RoleService roleService = mock(RoleService.class);
 
-        authenticationService = new AuthenticationService(
-                userRepository, roleRepository, jwtUtil, passwordEncoder);
+        authenticationService = new AuthenticationService(roleService, jwtUtil);
 
-        User user = User.builder().id(1L).build();
-        user.changePassword("test", passwordEncoder);
-
-        given(userRepository.findByEmail("tester@example.com"))
-                .willReturn(Optional.of(user));
-
-        given(roleRepository.findAllByUserId(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(roleRepository.findAllByUserId(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+        given(roleService.getRoles(1L)).willReturn(List.of(new Role("USER")));
     }
 
     @Test
-    void loginWithRightEmailAndPassword() {
-        String accessToken = authenticationService.login(
-                "tester@example.com", "test");
+    void authenticateWithValidToken() {
+        UserAuthentication authenticate = authenticationService.authenticate(VALID_TOKEN);
 
-        assertThat(accessToken).isEqualTo(VALID_TOKEN);
-
-        verify(userRepository).findByEmail("tester@example.com");
+        assertThat(authenticate.getUserId()).isEqualTo(1L);
+        assertThat(authenticate.getAuthorities())
+                .hasSize(1)
+                .first().extracting(GrantedAuthority::getAuthority).isEqualTo("USER");
     }
 
     @Test
-    void loginWithWrongEmail() {
+    void authenticateWithInvalidToken() {
         assertThatThrownBy(
-                () -> authenticationService.login("badguy@example.com", "test")
-        ).isInstanceOf(LoginFailException.class);
-
-        verify(userRepository).findByEmail("badguy@example.com");
-    }
-
-    @Test
-    void loginWithWrongPassword() {
-        assertThatThrownBy(
-                () -> authenticationService.login("tester@example.com", "xxx")
-        ).isInstanceOf(LoginFailException.class);
-
-        verify(userRepository).findByEmail("tester@example.com");
+                () -> authenticationService.authenticate(INVALID_TOKEN)
+        ).isInstanceOf(InvalidTokenException.class);
     }
 
     @Test
     void parseTokenWithValidToken() {
-        Long userId = authenticationService.parseToken(VALID_TOKEN);
+        Long userId = authenticationService.getUserId(VALID_TOKEN);
 
         assertThat(userId).isEqualTo(1L);
     }
@@ -93,22 +63,7 @@ class AuthenticationServiceTest {
     @Test
     void parseTokenWithInvalidToken() {
         assertThatThrownBy(
-                () -> authenticationService.parseToken(INVALID_TOKEN)
+                () -> authenticationService.getUserId(INVALID_TOKEN)
         ).isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
-    void roles() {
-        assertThat(
-                authenticationService.roles(1L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER"));
-
-        assertThat(
-                authenticationService.roles(1004L).stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toList())
-        ).isEqualTo(Arrays.asList("USER", "ADMIN"));
     }
 }

@@ -7,3 +7,11 @@ spring:
 
 jwt:
   secret: "12345678901234567890123456789010"
+
+---
+spring:
+  profiles: mariadb
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/test
+    username: root
+    password: password
