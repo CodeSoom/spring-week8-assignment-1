@@ -1,6 +1,7 @@
 package com.codesoom.assignment.utils;
 
-import com.codesoom.assignment.errors.InvalidTokenException;
+import com.codesoom.assignment.session.exception.InvalidTokenException;
+import com.codesoom.assignment.common.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

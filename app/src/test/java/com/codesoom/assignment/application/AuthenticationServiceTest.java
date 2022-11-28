@@ -1,12 +1,13 @@
 package com.codesoom.assignment.application;
 
-import com.codesoom.assignment.domain.Role;
-import com.codesoom.assignment.domain.RoleRepository;
-import com.codesoom.assignment.domain.User;
-import com.codesoom.assignment.domain.UserRepository;
-import com.codesoom.assignment.errors.InvalidTokenException;
-import com.codesoom.assignment.errors.LoginFailException;
-import com.codesoom.assignment.utils.JwtUtil;
+import com.codesoom.assignment.common.utils.JwtUtil;
+import com.codesoom.assignment.role.domain.Role;
+import com.codesoom.assignment.role.domain.RoleRepository;
+import com.codesoom.assignment.session.application.AuthenticationService;
+import com.codesoom.assignment.session.exception.InvalidTokenException;
+import com.codesoom.assignment.session.exception.LoginFailException;
+import com.codesoom.assignment.user.domain.User;
+import com.codesoom.assignment.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
