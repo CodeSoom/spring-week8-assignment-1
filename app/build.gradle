@@ -13,6 +13,9 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    // Asciidoctor
+    id 'org.asciidoctor.convert' version '2.4.0'
 }
 
 sourceCompatibility = '1.8'
@@ -30,39 +33,8 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-
-    // AssertJ
-    testImplementation 'org.assertj:assertj-core:3.18.1'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
-    // This dependency is used by the application.
-    implementation 'com.google.guava:guava:29.0-jre'
-
-    // Jackson for JSON.
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
-
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
-
-    // DozerMapper
-    implementation 'com.github.dozermapper:dozer-core:6.4.0'
-
-    // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    runtime 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // Spring Validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -71,13 +43,55 @@ dependencies {
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // Spring Developer Tools
+    // Spring Boot Validation: @Valid 관련 검증 어노테이션 기능 제공
+    // - 추가 이유: Spring Boot 2.3 버전부터는 spring-boot-starter-web 의존성 내부에 있던 validation이 분리됨
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Spring REST Docs: Test 코드를 통해 API 명세서를 만들어주는 기능 제공
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // Spring devTool: 개발을 편리하게 할 수 있는 기능 제공
+    // - Automatic Restart: claapath에 있는 파일이 변경될 때마다 애플리케이션을 자동으로 재시작해주는 기능 제공
+    // - Live Reload: 정적 자원(html, css, js) 수정 시 새로고침 없이 바로 적용되는 기능 제공
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // Spring Boot Test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    // AssertJ
+    testImplementation 'org.assertj:assertj-core:3.18.1'
+
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:29.0-jre'
+
+    // Jackson for JSON.
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtime 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+    // Lombok: 보일러플레이트 코드를 어노테이션을 통해 줄여주는 라이브러리
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    // Mapstruct: 어노테이션 프로세서를 사용하여 객체 간 Mapping을 도와주는 라이브러리
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // DozerMapper (Deprecated) - Mapstruct 대체 예정
+    implementation 'com.github.dozermapper:dozer-core:6.4.0'
 }
 
 application {
@@ -88,4 +102,9 @@ application {
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+}
+
+asciidoctor {
+    // asciidoctor는 test에 의존한다.
+    dependsOn test
 }
