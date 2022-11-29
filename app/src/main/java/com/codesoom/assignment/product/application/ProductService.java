@@ -1,10 +1,11 @@
 package com.codesoom.assignment.product.application;
 
-import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductData;
+import com.codesoom.assignment.product.application.port.ProductUseCase;
+import com.codesoom.assignment.product.application.port.command.ProductCreateRequest;
+import com.codesoom.assignment.product.application.port.command.ProductUpdateRequest;
 import com.codesoom.assignment.product.domain.Product;
 import com.codesoom.assignment.product.domain.ProductRepository;
 import com.codesoom.assignment.product.exception.ProductNotFoundException;
-import com.github.dozermapper.core.Mapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,15 +13,10 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ProductService {
-    private final Mapper mapper;
+public class ProductService implements ProductUseCase {
     private final ProductRepository productRepository;
 
-    public ProductService(
-            Mapper dozerMapper,
-            ProductRepository productRepository
-    ) {
-        this.mapper = dozerMapper;
+    public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -28,24 +24,24 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProduct(Long id) {
+    public Product getProduct(final Long id) {
         return findProduct(id);
     }
 
-    public Product createProduct(ProductData productData) {
-        Product product = mapper.map(productData, Product.class);
-        return productRepository.save(product);
+    public Product createProduct(final ProductCreateRequest productCreateRequest) {
+        return productRepository.save(productCreateRequest.toEntity());
     }
 
-    public Product updateProduct(Long id, ProductData productData) {
+    public Product updateProduct(final Long id,
+                                 final ProductUpdateRequest productUpdateRequest) {
         Product product = findProduct(id);
 
-        product.changeWith(mapper.map(productData, Product.class));
+        product.update(productUpdateRequest.toEntity());
 
         return product;
     }
 
-    public Product deleteProduct(Long id) {
+    public Product deleteProduct(final Long id) {
         Product product = findProduct(id);
 
         productRepository.delete(product);
@@ -53,8 +49,8 @@ public class ProductService {
         return product;
     }
 
-    private Product findProduct(Long id) {
+    private Product findProduct(final Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+                .orElseThrow(ProductNotFoundException::new);
     }
 }
