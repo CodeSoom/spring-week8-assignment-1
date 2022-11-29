@@ -3,8 +3,8 @@ package com.codesoom.assignment.presentation;
 import com.codesoom.assignment.role.domain.Role;
 import com.codesoom.assignment.session.application.AuthenticationService;
 import com.codesoom.assignment.user.adapter.in.web.UserController;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserModificationData;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserRegistrationData;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
 import com.codesoom.assignment.user.application.UserService;
 import com.codesoom.assignment.user.domain.User;
 import com.codesoom.assignment.user.exception.UserNotFoundException;
@@ -50,9 +50,9 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        given(userService.registerUser(any(UserRegistrationData.class)))
+        given(userService.createUser(any(UserCreateRequestDto.class)))
                 .will(invocation -> {
-                    UserRegistrationData registrationData =
+                    UserCreateRequestDto registrationData =
                             invocation.getArgument(0);
                     return User.builder()
                             .id(13L)
@@ -64,13 +64,13 @@ class UserControllerTest {
         given(
                 userService.updateUser(
                         eq(1L),
-                        any(UserModificationData.class),
+                        any(UserUpdateRequestDto.class),
                         eq(1L)
                 )
         )
                 .will(invocation -> {
                     Long id = invocation.getArgument(0);
-                    UserModificationData modificationData =
+                    UserUpdateRequestDto modificationData =
                             invocation.getArgument(1);
                     return User.builder()
                             .id(id)
@@ -82,7 +82,7 @@ class UserControllerTest {
         given(
                 userService.updateUser(
                         eq(100L),
-                        any(UserModificationData.class),
+                        any(UserUpdateRequestDto.class),
                         eq(1L)
                 )
         )
@@ -91,7 +91,7 @@ class UserControllerTest {
         given(
                 userService.updateUser(
                         eq(1L),
-                        any(UserModificationData.class),
+                        any(UserUpdateRequestDto.class),
                         eq(2L)
                 )
         )
@@ -131,7 +131,7 @@ class UserControllerTest {
                         containsString("\"name\":\"Tester\"")
                 ));
 
-        verify(userService).registerUser(any(UserRegistrationData.class));
+        verify(userService).createUser(any(UserCreateRequestDto.class));
     }
 
     @Test
@@ -161,7 +161,7 @@ class UserControllerTest {
                 ));
 
         verify(userService)
-                .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
+                .updateUser(eq(1L), any(UserUpdateRequestDto.class), eq(1L));
     }
 
     @Test
@@ -187,7 +187,7 @@ class UserControllerTest {
 
         verify(userService).updateUser(
                 eq(100L),
-                any(UserModificationData.class),
+                any(UserUpdateRequestDto.class),
                 eq(1L));
     }
 
@@ -212,7 +212,7 @@ class UserControllerTest {
                 .andExpect(status().isForbidden());
 
         verify(userService)
-                .updateUser(eq(1L), any(UserModificationData.class), eq(2L));
+                .updateUser(eq(1L), any(UserUpdateRequestDto.class), eq(2L));
     }
 
     @Test

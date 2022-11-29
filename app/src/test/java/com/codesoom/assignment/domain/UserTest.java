@@ -20,7 +20,7 @@ class UserTest {
     void changeWith() {
         User user = User.builder().build();
 
-        user.changeWith(User.builder()
+        user.update(User.builder()
                 .name("TEST")
                 .password("TEST")
                 .build());

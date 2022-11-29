@@ -3,8 +3,6 @@ package com.codesoom.assignment.common.exception;
 import com.codesoom.assignment.common.exception.dto.ErrorResponse;
 import com.codesoom.assignment.session.exception.InvalidTokenException;
 import com.codesoom.assignment.session.exception.LoginFailException;
-import com.codesoom.assignment.user.exception.UserEmailDuplicationException;
-import com.codesoom.assignment.user.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +19,6 @@ import java.util.Set;
 
 @RestControllerAdvice
 public class ControllerErrorAdvice extends ResponseEntityExceptionHandler {
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFound() {
-        return new ErrorResponse("User not found");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UserEmailDuplicationException.class)
-    public ErrorResponse handleUserEmailIsAlreadyExisted() {
-        return new ErrorResponse("User's email address is already existed");
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(LoginFailException.class)
     public ErrorResponse handleLoginFailException() {

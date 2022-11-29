@@ -1,11 +1,11 @@
 package com.codesoom.assignment.user.adapter.in.web;
 
 import com.codesoom.assignment.common.security.UserAuthentication;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserModificationData;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserRegistrationData;
-import com.codesoom.assignment.user.adapter.in.web.dto.response.UserResultData;
-import com.codesoom.assignment.user.application.UserService;
-import com.codesoom.assignment.user.domain.User;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
+import com.codesoom.assignment.user.adapter.in.web.dto.response.CreateUserResponseDto;
+import com.codesoom.assignment.user.adapter.in.web.dto.response.UpdateUserResponseDto;
+import com.codesoom.assignment.user.application.port.UserUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,46 +23,54 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
+    private final UserUseCase userUseCase;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(final UserUseCase userUseCase) {
+        this.userUseCase = userUseCase;
     }
 
+    /**
+     * 회원을 등록하고 리턴합니다.
+     *
+     * @param userCreateRequestDto 등록할 회원 정보
+     * @return 등록한 회원 상세 정보 리턴
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    UserResultData create(@RequestBody @Valid UserRegistrationData registrationData) {
-        User user = userService.registerUser(registrationData);
-        return getUserResultData(user);
+    CreateUserResponseDto create(@RequestBody @Valid final UserCreateRequestDto userCreateRequestDto) {
+        return new CreateUserResponseDto(
+                userUseCase.createUser(userCreateRequestDto)
+        );
     }
 
+    /**
+     * 회원을 수정하고 리턴합니다.
+     *
+     * @param id                   회원 고유 id
+     * @param userUpdateRequestDto 수정할 회원 정보
+     * @param authentication       사용자 인증 정보
+     * @return 수정한 회원 상세 정보 리턴
+     * @throws AccessDeniedException 요청 id와 인증 정보 id가 서로 다를 경우
+     */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    UserResultData update(
-            @PathVariable Long id,
-            @RequestBody @Valid UserModificationData modificationData,
-            UserAuthentication authentication
-    ) throws AccessDeniedException {
-        Long userId = authentication.getUserId();
-        User user = userService.updateUser(id, modificationData, userId);
-        return getUserResultData(user);
+    UpdateUserResponseDto update(@PathVariable final Long id,
+                                 @RequestBody @Valid final UserUpdateRequestDto userUpdateRequestDto,
+                                 final UserAuthentication authentication) throws AccessDeniedException {
+        return new UpdateUserResponseDto(
+                userUseCase.updateUser(id, userUpdateRequestDto, authentication.getUserId())
+        );
     }
 
+    /**
+     * 회원을 삭제합니다. <br>
+     * 실제 값을 삭제하지 않고 deleted 변수를 true로 변환합니다.
+     *
+     * @param id 회원 고유 id
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
-    void destroy(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
-
-    private UserResultData getUserResultData(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        return UserResultData.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .build();
+    void destroy(@PathVariable final Long id) {
+        userUseCase.deleteUser(id);
     }
 }

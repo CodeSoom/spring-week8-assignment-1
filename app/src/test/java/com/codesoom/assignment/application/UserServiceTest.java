@@ -2,15 +2,13 @@ package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.role.domain.Role;
 import com.codesoom.assignment.role.domain.RoleRepository;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserModificationData;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserRegistrationData;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
+import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
 import com.codesoom.assignment.user.application.UserService;
 import com.codesoom.assignment.user.domain.User;
 import com.codesoom.assignment.user.domain.UserRepository;
 import com.codesoom.assignment.user.exception.UserEmailDuplicationException;
 import com.codesoom.assignment.user.exception.UserNotFoundException;
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -37,15 +35,12 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        Mapper mapper = DozerBeanMapperBuilder.buildDefault();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        userService = new UserService(
-                mapper, userRepository, roleRepository, passwordEncoder);
+        userService = new UserService(userRepository, roleRepository, passwordEncoder);
 
         given(userRepository.existsByEmail(EXISTED_EMAIL_ADDRESS))
-                .willThrow(new UserEmailDuplicationException(
-                        EXISTED_EMAIL_ADDRESS));
+                .willThrow(new UserEmailDuplicationException());
 
         given(userRepository.save(any(User.class))).will(invocation -> {
             User source = invocation.getArgument(0);
@@ -74,13 +69,13 @@ class UserServiceTest {
 
     @Test
     void registerUser() {
-        UserRegistrationData registrationData = UserRegistrationData.builder()
+        UserCreateRequestDto registrationData = UserCreateRequestDto.builder()
                 .email("tester@example.com")
                 .name("Tester")
                 .password("test")
                 .build();
 
-        User user = userService.registerUser(registrationData);
+        User user = userService.createUser(registrationData);
 
         assertThat(user.getId()).isEqualTo(13L);
         assertThat(user.getEmail()).isEqualTo("tester@example.com");
@@ -92,13 +87,13 @@ class UserServiceTest {
 
     @Test
     void registerUserWithDuplicatedEmail() {
-        UserRegistrationData registrationData = UserRegistrationData.builder()
+        UserCreateRequestDto registrationData = UserCreateRequestDto.builder()
                 .email(EXISTED_EMAIL_ADDRESS)
                 .name("Tester")
                 .password("test")
                 .build();
 
-        assertThatThrownBy(() -> userService.registerUser(registrationData))
+        assertThatThrownBy(() -> userService.createUser(registrationData))
                 .isInstanceOf(UserEmailDuplicationException.class);
 
         verify(userRepository).existsByEmail(EXISTED_EMAIL_ADDRESS);
@@ -106,7 +101,7 @@ class UserServiceTest {
 
     @Test
     void updateUserWithExistedId() throws AccessDeniedException {
-        UserModificationData modificationData = UserModificationData.builder()
+        UserUpdateRequestDto modificationData = UserUpdateRequestDto.builder()
                 .name("TEST")
                 .password("TEST")
                 .build();
@@ -123,7 +118,7 @@ class UserServiceTest {
 
     @Test
     void updateUserWithNotExistedId() {
-        UserModificationData modificationData = UserModificationData.builder()
+        UserUpdateRequestDto modificationData = UserUpdateRequestDto.builder()
                 .name("TEST")
                 .password("TEST")
                 .build();
@@ -140,7 +135,7 @@ class UserServiceTest {
 
     @Test
     void updateUserWithDeletedId() {
-        UserModificationData modificationData = UserModificationData.builder()
+        UserUpdateRequestDto modificationData = UserUpdateRequestDto.builder()
                 .name("TEST")
                 .password("TEST")
                 .build();
@@ -156,7 +151,7 @@ class UserServiceTest {
 
     @Test
     void updateUserByOthersAccess() {
-        UserModificationData modificationData = UserModificationData.builder()
+        UserUpdateRequestDto modificationData = UserUpdateRequestDto.builder()
                 .name("TEST")
                 .password("TEST")
                 .build();
