@@ -10,7 +10,7 @@ import com.codesoom.assignment.product.application.port.command.ProductUpdateReq
 import com.codesoom.assignment.product.domain.Product;
 import com.codesoom.assignment.product.exception.ProductNotFoundException;
 import com.codesoom.assignment.role.domain.Role;
-import com.codesoom.assignment.session.application.AuthenticationService;
+import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
 import com.codesoom.assignment.session.exception.InvalidTokenException;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.ProductFixture;
@@ -65,7 +65,7 @@ class ProductControllerTest {
     private ProductService productService;
 
     @MockBean
-    private AuthenticationService authenticationService;
+    private AuthenticationUseCase authenticationUseCase;
 
     /**
      * Spring Boot 2.3 버전까지 mock이 각 테스트 종료 후 reset되지 않는 이슈 존재 <br>
@@ -80,13 +80,13 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUpAuthToken() {
-        given(authenticationService.parseToken(eq(유저_1번_값_비정상_토큰.토큰_값())))
-                .willThrow(new InvalidTokenException(유저_1번_값_비정상_토큰.토큰_값()));
+        given(authenticationUseCase.parseToken(eq(유저_1번_값_비정상_토큰.토큰_값())))
+                .willThrow(new InvalidTokenException());
 
 
-        given(authenticationService.parseToken(eq(유저_1번_정상_토큰.토큰_값())))
+        given(authenticationUseCase.parseToken(eq(유저_1번_정상_토큰.토큰_값())))
                 .willReturn(유저_1번_정상_토큰.아이디());
-        given(authenticationService.roles(eq(유저_1번_정상_토큰.아이디())))
+        given(authenticationUseCase.roles(eq(유저_1번_정상_토큰.아이디())))
                 .willReturn(Arrays.asList(
                         new Role(유저_1번_정상_토큰.아이디(), "USER")
                 ));

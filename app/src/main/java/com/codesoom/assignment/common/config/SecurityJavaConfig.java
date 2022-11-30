@@ -2,8 +2,7 @@ package com.codesoom.assignment.common.config;
 
 import com.codesoom.assignment.common.filters.AuthenticationErrorFilter;
 import com.codesoom.assignment.common.filters.JwtAuthenticationFilter;
-import com.codesoom.assignment.session.application.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,13 +16,16 @@ import javax.servlet.Filter;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationUseCase authenticationUseCase;
+
+    public SecurityJavaConfig(final AuthenticationUseCase authenticationUseCase) {
+        this.authenticationUseCase = authenticationUseCase;
+    }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
         Filter authenticationFilter = new JwtAuthenticationFilter(
-                authenticationManager(), authenticationService);
+                authenticationManager(), authenticationUseCase);
         Filter authenticationErrorFilter = new AuthenticationErrorFilter();
 
         http

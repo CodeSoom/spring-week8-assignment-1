@@ -1,8 +1,8 @@
 package com.codesoom.assignment.session.adapter.in.web;
 
-import com.codesoom.assignment.session.adapter.in.web.dto.request.SessionRequestData;
-import com.codesoom.assignment.session.adapter.in.web.dto.response.SessionResponseData;
-import com.codesoom.assignment.session.application.AuthenticationService;
+import com.codesoom.assignment.session.adapter.in.web.dto.request.SessionRequestDto;
+import com.codesoom.assignment.session.adapter.in.web.dto.response.SessionResponseDto;
+import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,27 +10,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/session")
 public class SessionController {
-    private AuthenticationService authenticationService;
+    private final AuthenticationUseCase authenticationUseCase;
 
-    public SessionController(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
+    public SessionController(final AuthenticationUseCase authenticationUseCase) {
+        this.authenticationUseCase = authenticationUseCase;
     }
 
+    /**
+     * 로그인 성공 시 인증 토큰을 리턴합니다.
+     *
+     * @param sessionRequestDto 로그인 정보
+     * @return 인증 토큰 리턴
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SessionResponseData login(
-            @RequestBody SessionRequestData sessionRequestData
-    ) {
-        String email = sessionRequestData.getEmail();
-        String password = sessionRequestData.getPassword();
+    public SessionResponseDto login(@RequestBody @Valid final SessionRequestDto sessionRequestDto) {
+        String email = sessionRequestDto.getEmail();
+        String password = sessionRequestDto.getPassword();
 
-        String accessToken = authenticationService.login(email, password);
-
-        return SessionResponseData.builder()
-                .accessToken(accessToken)
-                .build();
+        return new SessionResponseDto(
+                authenticationUseCase.login(email, password)
+        );
     }
 }

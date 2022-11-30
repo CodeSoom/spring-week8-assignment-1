@@ -2,7 +2,7 @@ package com.codesoom.assignment.common.filters;
 
 import com.codesoom.assignment.common.security.UserAuthentication;
 import com.codesoom.assignment.role.domain.Role;
-import com.codesoom.assignment.session.application.AuthenticationService;
+import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -17,26 +17,26 @@ import java.io.IOException;
 import java.util.List;
 
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-    private final AuthenticationService authenticationService;
+    private final AuthenticationUseCase authenticationUseCase;
 
     public JwtAuthenticationFilter(
-            AuthenticationManager authenticationManager,
-            AuthenticationService authenticationService) {
+            final AuthenticationManager authenticationManager,
+            final AuthenticationUseCase authenticationUseCase) {
         super(authenticationManager);
-        this.authenticationService = authenticationService;
+        this.authenticationUseCase = authenticationUseCase;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain)
+    protected void doFilterInternal(final HttpServletRequest request,
+                                    final HttpServletResponse response,
+                                    final FilterChain chain)
             throws IOException, ServletException {
         String authorization = request.getHeader("Authorization");
 
         if (authorization != null) {
             String accessToken = authorization.substring("Bearer ".length());
-            Long userId = authenticationService.parseToken(accessToken);
-            List<Role> roles = authenticationService.roles(userId);
+            Long userId = authenticationUseCase.parseToken(accessToken);
+            List<Role> roles = authenticationUseCase.roles(userId);
             Authentication authentication =
                     new UserAuthentication(userId, roles);
 
