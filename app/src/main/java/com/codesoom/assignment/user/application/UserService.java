@@ -56,8 +56,7 @@ public class UserService implements UserUseCase {
 
         User user = findUser(id);
 
-        User source = userUpdateRequest.toEntity();
-        user.update(source);
+        user.update(userUpdateRequest.toEntity(), passwordEncoder);
 
         return user;
     }

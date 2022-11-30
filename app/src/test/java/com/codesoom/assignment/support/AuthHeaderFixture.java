@@ -1,5 +1,7 @@
 package com.codesoom.assignment.support;
 
+import static com.codesoom.assignment.support.IdFixture.ID_MAX;
+
 public enum AuthHeaderFixture {
     유저_1번_정상_토큰(
             "Bearer",
@@ -35,7 +37,15 @@ public enum AuthHeaderFixture {
             1L,
             "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.ZZ3CUxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.ZZ3CUxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    );
+    ),
+    유저_MAX번_값_정상_토큰(
+            "Bearer",
+            "12345678901234567890123456789010",
+            ID_MAX.value(),
+            "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjkyMjMzNzIwMzY4NTQ3NzU4MDd9.V4ta3HoILGPIy9qeECpjIILMJEG6h35cshzyu9h1jnU",
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjkyMjMzNzIwMzY4NTQ3NzU4MDd9.V4ta3HoILGPIy9qeECpjIILMJEG6h35cshzyu9h1jnU"
+    )
+    ;
 
     private final String tokenType;
     private final String secretKey;

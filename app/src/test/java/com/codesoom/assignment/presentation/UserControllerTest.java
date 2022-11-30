@@ -1,254 +1,491 @@
 package com.codesoom.assignment.presentation;
 
-import com.codesoom.assignment.role.domain.Role;
-import com.codesoom.assignment.session.application.AuthenticationService;
+import com.codesoom.assignment.MockMvcCharacterEncodingCustomizer;
+import com.codesoom.assignment.common.utils.JsonUtil;
+import com.codesoom.assignment.support.AuthHeaderFixture;
+import com.codesoom.assignment.support.UserFixture;
 import com.codesoom.assignment.user.adapter.in.web.UserController;
 import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
-import com.codesoom.assignment.user.application.UserService;
-import com.codesoom.assignment.user.domain.User;
+import com.codesoom.assignment.user.application.port.UserUseCase;
 import com.codesoom.assignment.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
-
-import static org.hamcrest.Matchers.containsString;
+import static com.codesoom.assignment.support.AuthHeaderFixture.관리자_1004번_정상_토큰;
+import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_값_비정상_토큰;
+import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_정상_토큰;
+import static com.codesoom.assignment.support.AuthHeaderFixture.유저_2번_정상_토큰;
+import static com.codesoom.assignment.support.UserFixture.회원_1번;
+import static com.codesoom.assignment.support.UserFixture.회원_2번;
+import static com.codesoom.assignment.support.UserFixture.회원_비밀번호_비정상;
+import static com.codesoom.assignment.support.UserFixture.회원_이름_비정상;
+import static com.codesoom.assignment.support.UserFixture.회원_이메일_비정상;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-class UserControllerTest {
-    private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
-    private static final String OTHER_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjJ9.TEM6MULsZeqkBbUKziCR4Dg_8kymmZkyxsCXlfNJ3g0";
-    private static final String ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjEwMDR9.3GV5ZH3flBf0cnaXQCNNZlT4mgyFyBUhn3LKzQohh1A";
+@Import(MockMvcCharacterEncodingCustomizer.class)
+@DisplayName("UserController 웹 유닛 테스트")
+class UserControllerTest extends AuthenticationProvider {
+    private static final String REQUEST_USER_URL = "/users";
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private UserUseCase userUseCase;
 
-    @MockBean
-    private AuthenticationService authenticationService;
-
+    /**
+     * Spring Boot 2.3 버전까지 mock이 각 테스트 종료 후 reset되지 않는 이슈 존재 <br>
+     * 따라서 각 테스트 실행 전 mock의 invoke 횟수를 수동으로 초기화 시켜줍니다.
+     * <br><br>
+     * Ref: https://github.com/spring-projects/spring-boot/issues/12470
+     */
     @BeforeEach
-    void setUp() {
-        given(userService.createUser(any(UserCreateRequestDto.class)))
-                .will(invocation -> {
-                    UserCreateRequestDto registrationData =
-                            invocation.getArgument(0);
-                    return User.builder()
-                            .id(13L)
-                            .email(registrationData.getEmail())
-                            .name(registrationData.getName())
-                            .build();
-                });
-
-        given(
-                userService.updateUser(
-                        eq(1L),
-                        any(UserUpdateRequestDto.class),
-                        eq(1L)
-                )
-        )
-                .will(invocation -> {
-                    Long id = invocation.getArgument(0);
-                    UserUpdateRequestDto modificationData =
-                            invocation.getArgument(1);
-                    return User.builder()
-                            .id(id)
-                            .email("tester@example.com")
-                            .name(modificationData.getName())
-                            .build();
-                });
-
-        given(
-                userService.updateUser(
-                        eq(100L),
-                        any(UserUpdateRequestDto.class),
-                        eq(1L)
-                )
-        )
-                .willThrow(new UserNotFoundException(100L));
-
-        given(
-                userService.updateUser(
-                        eq(1L),
-                        any(UserUpdateRequestDto.class),
-                        eq(2L)
-                )
-        )
-                .willThrow(new AccessDeniedException("Access denied"));
-
-        given(userService.deleteUser(100L))
-                .willThrow(new UserNotFoundException(100L));
-
-        given(authenticationService.parseToken(MY_TOKEN)).willReturn(1L);
-        given(authenticationService.parseToken(OTHER_TOKEN)).willReturn(2L);
-        given(authenticationService.parseToken(ADMIN_TOKEN)).willReturn(1004L);
-
-        given(authenticationService.roles(1L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(2L))
-                .willReturn(Arrays.asList(new Role("USER")));
-        given(authenticationService.roles(1004L))
-                .willReturn(Arrays.asList(new Role("USER"), new Role("ADMIN")));
+    void setUpClearMock() {
+        Mockito.clearInvocations(userUseCase);
     }
 
-    @Test
-    void registerUserWithValidAttributes() throws Exception {
-        mockMvc.perform(
-                post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"tester@example.com\"," +
-                                "\"name\":\"Tester\",\"password\":\"test\"}")
-        )
-                .andExpect(status().isCreated())
-                .andExpect(content().string(
-                        containsString("\"id\":13")
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_등록_API는 {
+
+        @Nested
+        @DisplayName("유효하지 않은 회원 정보가 주어지면")
+        class Context_with_invalid_user {
+
+            @Nested
+            @DisplayName("이메일이 공백일 경우")
+            class Context_with_empty_email {
+
+                @Test
+                @DisplayName("400 코드로 응답한다")
+                void it_responses_400() throws Exception {
+                    ResultActions perform = 회원_등록_API_요청(회원_이름_비정상);
+
+                    perform.andExpect(status().isBadRequest());
+
+                    verify(userUseCase, never()).createUser(any(UserCreateRequestDto.class));
+                }
+            }
+
+            @Nested
+            @DisplayName("이름이 공백일 경우")
+            class Context_with_empty_name {
+
+                @Test
+                @DisplayName("400 코드로 응답한다")
+                void it_responses_400() throws Exception {
+                    ResultActions perform = 회원_등록_API_요청(회원_이메일_비정상);
+
+                    perform.andExpect(status().isBadRequest());
+
+                    verify(userUseCase, never()).createUser(any(UserCreateRequestDto.class));
+                }
+            }
+
+            @Nested
+            @DisplayName("비밀번호가 4글자 미만일 경우")
+            class Context_with_invalid_password {
+
+                @Test
+                @DisplayName("400 코드로 응답한다")
+                void it_responses_400() throws Exception {
+                    ResultActions perform = 회원_등록_API_요청(회원_비밀번호_비정상);
+
+                    perform.andExpect(status().isBadRequest());
+
+                    verify(userUseCase, never()).createUser(any(UserCreateRequestDto.class));
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("유효한 회원 정보가 주어지면")
+        class Context_with_valid_user {
+
+            @BeforeEach
+            void setUp() {
+                given(userUseCase.createUser(eq(회원_1번.등록_요청_데이터_생성())))
+                        .willReturn(회원_1번.회원_엔티티_생성(회원_1번.아이디()));
+            }
+
+            @Test
+            @DisplayName("201 코드로 응답한다")
+            void it_responses_201() throws Exception {
+                ResultActions perform = 회원_등록_API_요청(회원_1번);
+
+                perform.andExpect(status().isCreated());
+
+                verify(userUseCase).createUser(회원_1번.등록_요청_데이터_생성());
+            }
+        }
+    }
+
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_수정_API는 {
+
+        @Nested
+        @DisplayName("인증 토큰이 없다면")
+        class Context_with_token_not_exist {
+
+            @Test
+            @DisplayName("401 코드로 응답한다")
+            void it_responses_401() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        patch(REQUEST_USER_URL + "/" + 회원_1번.아이디())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JsonUtil.writeValueAsString(회원_1번.수정_요청_데이터_생성()))
+                );
+
+                perform.andExpect(status().isUnauthorized());
+
+                verify(userUseCase, never())
+                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class), any(Long.class));
+            }
+        }
+
+        @Nested
+        @DisplayName("유효하지 않은 인증 토큰이 주어지면")
+        class Context_with_invalid_token_value {
+
+            @Test
+            @DisplayName("401 코드로 응답한다")
+            void it_responses_401() throws Exception {
+                ResultActions perform = 회원_수정_API_요청(
+                        회원_1번.아이디(),
+                        유저_1번_값_비정상_토큰,
+                        회원_1번
+                );
+
+                perform.andExpect(status().isUnauthorized());
+
+                verify(userUseCase, never())
+                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class), any(Long.class));
+            }
+        }
+
+        @Nested
+        @DisplayName("다른 사람의 인증 토큰이 주어지면")
+        class Context_with_different_id_token_and_request {
+
+            @BeforeEach
+            void setUp() {
+                given(userUseCase.updateUser(
+                        eq(회원_1번.아이디()),
+                        eq(회원_1번.수정_요청_데이터_생성()),
+                        eq(유저_2번_정상_토큰.아이디())
                 ))
-                .andExpect(content().string(
-                        containsString("\"email\":\"tester@example.com\"")
-                ))
-                .andExpect(content().string(
-                        containsString("\"name\":\"Tester\"")
-                ));
+                        .willThrow(new AccessDeniedException("Access denied"));
+            }
 
-        verify(userService).createUser(any(UserCreateRequestDto.class));
+            @Test
+            @DisplayName("403 코드로 응답한다")
+            void it_returns_403() throws Exception {
+                ResultActions perform = 회원_수정_API_요청(
+                        회원_1번.아이디(),
+                        유저_2번_정상_토큰,
+                        회원_1번
+                );
+
+                perform.andExpect(status().isForbidden());
+
+                verify(userUseCase).updateUser(
+                        eq(회원_1번.아이디()),
+                        eq(회원_1번.수정_요청_데이터_생성()),
+                        eq(유저_2번_정상_토큰.아이디())
+                );
+            }
+        }
+
+        @Nested
+        @DisplayName("유효한 인증 토큰이 주어지고")
+        class Context_with_valid_token_value {
+            private final AuthHeaderFixture 유효한_인증_토큰 = 유저_1번_정상_토큰;
+
+            @Nested
+            @DisplayName("찾을 수 없는 id가 주어질 때")
+            class Context_with_not_exist_id {
+
+                @BeforeEach
+                void setUp() {
+                    given(userUseCase.updateUser(
+                            eq(회원_1번.아이디()),
+                            eq(회원_2번.수정_요청_데이터_생성()),
+                            eq(유효한_인증_토큰.아이디())
+                    ))
+                            .willThrow(new UserNotFoundException());
+                }
+
+                @Test
+                @DisplayName("404 코드로 응답한다")
+                void it_responses_404() throws Exception {
+                    ResultActions perform = 회원_수정_API_요청(
+                            회원_1번.아이디(),
+                            유효한_인증_토큰,
+                            회원_2번
+                    );
+
+                    perform.andExpect(status().isNotFound());
+
+                    verify(userUseCase).updateUser(
+                            eq(회원_1번.아이디()),
+                            eq(회원_2번.수정_요청_데이터_생성()),
+                            eq(유효한_인증_토큰.아이디())
+                    );
+                }
+            }
+
+            @Nested
+            @DisplayName("찾을 수 있는 id가 주어지고")
+            class Context_with_exist_id {
+                private final Long 찾을_수_있는_id = 회원_1번.아이디();
+
+                @Nested
+                @DisplayName("유효하지 않은 회원 정보가 주어진다면")
+                class Context_with_invalid_user {
+
+                    @Nested
+                    @DisplayName("이름이 공백일 경우")
+                    class Context_with_empty_name {
+
+                        @Test
+                        @DisplayName("400 코드로 응답한다")
+                        void it_responses_400() throws Exception {
+                            ResultActions perform = 회원_수정_API_요청(
+                                    찾을_수_있는_id,
+                                    유저_1번_정상_토큰,
+                                    회원_이름_비정상
+                            );
+
+                            perform.andExpect(status().isBadRequest());
+
+                            verify(userUseCase, never()).updateUser(
+                                    any(Long.class),
+                                    any(UserUpdateRequestDto.class),
+                                    any(Long.class)
+                            );
+                        }
+                    }
+
+                    @Nested
+                    @DisplayName("비밀번호가 4글자 미만일 경우")
+                    class Context_with_invalid_password {
+
+                        @Test
+                        @DisplayName("400 코드로 응답한다")
+                        void it_responses_400() throws Exception {
+                            ResultActions perform = 회원_수정_API_요청(
+                                    찾을_수_있는_id,
+                                    유저_1번_정상_토큰,
+                                    회원_비밀번호_비정상
+                            );
+
+                            perform.andExpect(status().isBadRequest());
+
+                            verify(userUseCase, never()).updateUser(
+                                    any(Long.class),
+                                    any(UserUpdateRequestDto.class),
+                                    any(Long.class)
+                            );
+                        }
+                    }
+                }
+
+                @Nested
+                @DisplayName("유효한 회원 정보가 주어진다면")
+                class Context_with_valid_user {
+
+                    @BeforeEach
+                    void setUp() {
+                        given(userUseCase.updateUser(
+                                eq(찾을_수_있는_id),
+                                eq(회원_1번.수정_요청_데이터_생성()),
+                                eq(유저_1번_정상_토큰.아이디())
+                        ))
+                                .willReturn(회원_1번.회원_엔티티_생성(회원_1번.아이디()));
+                    }
+
+                    @Test
+                    @DisplayName("200 코드로 응답한다")
+                    void it_responses_200() throws Exception {
+                        ResultActions perform = 회원_수정_API_요청(
+                                찾을_수_있는_id,
+                                유저_1번_정상_토큰,
+                                회원_1번
+                        );
+
+                        perform.andExpect(status().isOk());
+
+                        verify(userUseCase).updateUser(
+                                eq(찾을_수_있는_id),
+                                eq(회원_1번.수정_요청_데이터_생성()),
+                                eq(유저_1번_정상_토큰.아이디())
+                        );
+                    }
+                }
+            }
+        }
     }
 
-    @Test
-    void registerUserWithInvalidAttributes() throws Exception {
-        mockMvc.perform(
-                post("/users")
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_삭제_API는 {
+
+        @Nested
+        @DisplayName("인증 토큰이 없다면")
+        class Context_with_not_exist_token {
+
+            @Test
+            @DisplayName("401 코드로 응답한다")
+            void it_responses_401() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        delete(REQUEST_USER_URL + "/" + 회원_1번.아이디())
+                );
+
+                perform.andExpect(status().isUnauthorized());
+
+                verify(userUseCase, never()).deleteUser(회원_1번.아이디());
+            }
+        }
+
+        @Nested
+        @DisplayName("유효하지 않은 인증 토큰이 주어지면")
+        class Context_with_invalid_token {
+
+            @Test
+            @DisplayName("401 코드로 응답한다")
+            void it_responses_401() throws Exception {
+                ResultActions perform = 회원_삭제_API_요청(
+                        회원_1번.아이디(),
+                        유저_1번_값_비정상_토큰
+                );
+
+                perform.andExpect(status().isUnauthorized());
+
+                verify(userUseCase, never()).deleteUser(any(Long.class));
+            }
+        }
+
+        @Nested
+        @DisplayName("관리자가 아닌 토큰이 주어지면")
+        class Context_with_no_admin_token {
+
+            @Test
+            @DisplayName("403 코드로 응답한다")
+            void it_responses_403() throws Exception {
+                ResultActions perform = 회원_삭제_API_요청(
+                        회원_1번.아이디(),
+                        유저_1번_정상_토큰
+                );
+
+                perform.andExpect(status().isForbidden());
+
+                verify(userUseCase, never()).deleteUser(any(Long.class));
+            }
+        }
+
+        @Nested
+        @DisplayName("관리자 토큰이 주어지고")
+        class Context_with_admin_token {
+            private final AuthHeaderFixture 관리자_토큰 = 관리자_1004번_정상_토큰;
+
+            @Nested
+            @DisplayName("찾을 수 없는 id가 주어지면")
+            class Context_with_not_exist_id {
+                private final Long 찾을_수_없는_id = 회원_2번.아이디();
+
+                @BeforeEach
+                void setUp() {
+                    given(userUseCase.deleteUser(찾을_수_없는_id))
+                            .willThrow(new UserNotFoundException());
+                }
+
+                @Test
+                @DisplayName("404 코드로 응답한다")
+                void it_responses_404() throws Exception {
+                    ResultActions perform = 회원_삭제_API_요청(
+                            찾을_수_없는_id,
+                            관리자_토큰
+                    );
+
+                    perform.andExpect(status().isNotFound());
+
+                    verify(userUseCase).deleteUser(찾을_수_없는_id);
+                }
+            }
+
+            @Nested
+            @DisplayName("찾을 수 있는 id가 주어지면")
+            class Context_with_exist_id {
+                private final Long 찾을_수_있는_id = 회원_1번.아이디();
+
+                @Test
+                @DisplayName("200 코드로 응답한다")
+                void it_responses_200() throws Exception {
+                    ResultActions perform = 회원_삭제_API_요청(
+                            찾을_수_있는_id,
+                            관리자_토큰
+                    );
+
+                    perform.andExpect(status().isOk());
+
+                    verify(userUseCase).deleteUser(찾을_수_있는_id);
+                }
+            }
+        }
+    }
+
+
+    private ResultActions 회원_등록_API_요청(final UserFixture userFixture) throws Exception {
+        return mockMvc.perform(
+                post(REQUEST_USER_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}")
-        )
-                .andExpect(status().isBadRequest());
+                        .content(JsonUtil.writeValueAsString(userFixture.등록_요청_데이터_생성()))
+        );
     }
 
-    @Test
-    void updateUserWithValidAttributes() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
+    private ResultActions 회원_수정_API_요청(final Long userId,
+                                       final AuthHeaderFixture authHeaderFixture,
+                                       final UserFixture userFixture) throws Exception {
+        return mockMvc.perform(
+                patch(REQUEST_USER_URL + "/" + userId)
+                        .header(HttpHeaders.AUTHORIZATION, authHeaderFixture.인증_헤더값())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"id\":1")
-                ))
-                .andExpect(content().string(
-                        containsString("\"name\":\"TEST\"")
-                ));
-
-        verify(userService)
-                .updateUser(eq(1L), any(UserUpdateRequestDto.class), eq(1L));
+                        .content(JsonUtil.writeValueAsString(userFixture.수정_요청_데이터_생성()))
+        );
     }
 
-    @Test
-    void updateUserWithInvalidAttributes() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\",\"password\":\"\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void updateUserWithNotExsitedId() throws Exception {
-        mockMvc.perform(
-                patch("/users/100")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"TEST\"}")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isNotFound());
-
-        verify(userService).updateUser(
-                eq(100L),
-                any(UserUpdateRequestDto.class),
-                eq(1L));
-    }
-
-    @Test
-    void updateUserWithoutAccessToken() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-        )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void updateUserWithOthersAccessToken() throws Exception {
-        mockMvc.perform(
-                patch("/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TEST\",\"password\":\"test\"}")
-                        .header("Authorization", "Bearer " + OTHER_TOKEN)
-        )
-                .andExpect(status().isForbidden());
-
-        verify(userService)
-                .updateUser(eq(1L), any(UserUpdateRequestDto.class), eq(2L));
-    }
-
-    @Test
-    void destroyWithExistedId() throws Exception {
-        mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isOk());
-
-        verify(userService).deleteUser(1L);
-    }
-
-    @Test
-    void destroyWithNotExistedId() throws Exception {
-        mockMvc.perform(
-                delete("/users/100")
-                        .header("Authorization", "Bearer " + ADMIN_TOKEN)
-        )
-                .andExpect(status().isNotFound());
-
-        verify(userService).deleteUser(100L);
-    }
-
-    @Test
-    void destroyWithoutAccessToken() throws Exception {
-        mockMvc.perform(delete("/users/1"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void destroyWithoutAdminRole() throws Exception {
-        mockMvc.perform(
-                delete("/users/1")
-                        .header("Authorization", "Bearer " + MY_TOKEN)
-        )
-                .andExpect(status().isForbidden());
+    private ResultActions 회원_삭제_API_요청(final Long userId,
+                                       final AuthHeaderFixture authHeaderFixture) throws Exception {
+        return mockMvc.perform(
+                delete(REQUEST_USER_URL + "/" + userId)
+                        .header(HttpHeaders.AUTHORIZATION, authHeaderFixture.인증_헤더값())
+        );
     }
 }

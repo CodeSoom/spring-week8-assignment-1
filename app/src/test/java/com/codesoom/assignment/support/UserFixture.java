@@ -3,6 +3,8 @@ package com.codesoom.assignment.support;
 import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
 import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
 import com.codesoom.assignment.user.domain.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.codesoom.assignment.support.IdFixture.ID_MAX;
 
@@ -19,6 +21,7 @@ public enum UserFixture {
     private final String name;
     private final String email;
     private final String password;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     UserFixture(Long id, String name, String email, String password) {
         this.id = id;
@@ -37,7 +40,7 @@ public enum UserFixture {
                 .id(id)
                 .name(this.name)
                 .email(this.email)
-                .password(this.password)
+                .password(passwordEncoder.encode(this.password))
                 .build();
     }
 

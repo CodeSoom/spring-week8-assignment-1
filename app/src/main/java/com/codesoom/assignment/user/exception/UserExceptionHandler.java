@@ -23,7 +23,7 @@ public class UserExceptionHandler {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFound(UserNotFoundException exception) {
+    public ErrorResponse handleUserNotFound(final UserNotFoundException exception) {
         return ErrorResponse.from(exception);
     }
 
@@ -35,7 +35,7 @@ public class UserExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserEmailDuplicationException.class)
-    public ErrorResponse handleUserEmailIsAlreadyExisted(UserEmailDuplicationException exception) {
+    public ErrorResponse handleUserEmailIsAlreadyExisted(final UserEmailDuplicationException exception) {
         return ErrorResponse.from(exception);
     }
 }
