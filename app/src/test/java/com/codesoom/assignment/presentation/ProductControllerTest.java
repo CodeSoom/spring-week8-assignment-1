@@ -1,6 +1,5 @@
 package com.codesoom.assignment.presentation;
 
-import com.codesoom.assignment.MockMvcCharacterEncodingCustomizer;
 import com.codesoom.assignment.common.utils.JsonUtil;
 import com.codesoom.assignment.product.adapter.in.web.ProductController;
 import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductCreateRequestDto;
@@ -21,45 +20,48 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_값_비정상_토큰;
 import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_정상_토큰;
-import static com.codesoom.assignment.support.IdFixture.ID_1;
 import static com.codesoom.assignment.support.IdFixture.ID_MAX;
 import static com.codesoom.assignment.support.ProductFixture.상품_1번;
 import static com.codesoom.assignment.support.ProductFixture.상품_2번;
 import static com.codesoom.assignment.support.ProductFixture.상품_가격_비정상;
 import static com.codesoom.assignment.support.ProductFixture.상품_메이커_비정상;
 import static com.codesoom.assignment.support.ProductFixture.상품_이름_비정상;
+import static com.codesoom.assignment.utils.ApiDocumentUtil.getDocumentRequest;
+import static com.codesoom.assignment.utils.ApiDocumentUtil.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
-@Import(MockMvcCharacterEncodingCustomizer.class)
 @DisplayName("ProductController 웹 유닛 테스트")
-class ProductControllerTest {
+class ProductControllerTest extends RestDocsMockMvcProvider {
     private static final String REQUEST_PRODUCT_URL = "/products";
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @MockBean
     private ProductService productService;
@@ -83,7 +85,6 @@ class ProductControllerTest {
         given(authenticationUseCase.parseToken(eq(유저_1번_값_비정상_토큰.토큰_값())))
                 .willThrow(new InvalidTokenException());
 
-
         given(authenticationUseCase.parseToken(eq(유저_1번_정상_토큰.토큰_값())))
                 .willReturn(유저_1번_정상_토큰.아이디());
         given(authenticationUseCase.roles(eq(유저_1번_정상_토큰.아이디())))
@@ -97,9 +98,19 @@ class ProductControllerTest {
     @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
     class list_메서드는 {
 
+        @BeforeEach
+        void setUp() {
+            List<Product> products = new ArrayList<>();
+            products.add(상품_1번.엔티티_생성(상품_1번.아이디()));
+            products.add(상품_2번.엔티티_생성(상품_2번.아이디()));
+
+            given(productService.getProducts())
+                    .willReturn(products);
+        }
+
         @Test
         @DisplayName("200 코드로 응답한다")
-        void it_responses_200() throws Exception {
+        void getProducts() throws Exception {
             ResultActions perform = mockMvc.perform(
                     get(REQUEST_PRODUCT_URL)
             );
@@ -107,6 +118,19 @@ class ProductControllerTest {
             perform.andExpect(status().isOk());
 
             verify(productService).getProducts();
+
+            perform.andDo(document("{method-name}",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    responseFields()
+                            .andWithPrefix("[].",
+                                    fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 고유 번호"),
+                                    fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                    fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                    fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                    fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
+                            )
+            ));
         }
     }
 
@@ -141,23 +165,39 @@ class ProductControllerTest {
         @Nested
         @DisplayName("찾을 수 있는 id가 주어지면")
         class Context_with_exist_id {
+            private final Long 찾을_수_있는_id = 상품_1번.아이디();
 
             @BeforeEach
             void setUp() {
-                given(productService.getProduct(ID_1.value()))
-                        .willReturn(상품_1번.엔티티_생성(ID_1.value()));
+                given(productService.getProduct(찾을_수_있는_id))
+                        .willReturn(상품_1번.엔티티_생성(찾을_수_있는_id));
             }
 
             @Test
             @DisplayName("200 코드로 응답한다")
-            void it_responses_200() throws Exception {
+            void getProduct() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        get("/products/" + ID_1.value())
+                        get(REQUEST_PRODUCT_URL + "/{id}", 찾을_수_있는_id)
                 );
 
                 perform.andExpect(status().isOk());
 
-                verify(productService).getProduct(ID_1.value());
+                verify(productService).getProduct(찾을_수_있는_id);
+
+                perform.andDo(document("{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("id").description("상품 고유 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 고유 번호"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                        )
+                ));
             }
         }
     }
@@ -297,7 +337,7 @@ class ProductControllerTest {
 
                 @Test
                 @DisplayName("201 코드로 응답한다")
-                void it_responses_201() throws Exception {
+                void createProduct() throws Exception {
                     ResultActions perform = 상품_등록_API_요청(
                             유효한_인증_토큰,
                             상품_1번
@@ -306,6 +346,24 @@ class ProductControllerTest {
                     perform.andExpect(status().isCreated());
 
                     verify(productService).createProduct(any(ProductCreateRequestDto.class));
+
+                    perform.andDo(document("{method-name}",
+                            getDocumentRequest(),
+                            getDocumentResponse(),
+                            requestFields(
+                                    fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                    fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                    fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                    fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                            ),
+                            responseFields(
+                                    fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 고유 번호"),
+                                    fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                    fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                    fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                    fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                            )
+                    ));
                 }
             }
         }
@@ -478,7 +536,7 @@ class ProductControllerTest {
 
                     @Test
                     @DisplayName("200 코드로 응답한다")
-                    void it_responses_200() throws Exception {
+                    void updateProduct() throws Exception {
                         ResultActions perform = 상품_수정_API_요청(
                                 찾을_수_있는_id,
                                 유저_1번_정상_토큰,
@@ -488,6 +546,27 @@ class ProductControllerTest {
                         perform.andExpect(status().isOk());
 
                         verify(productService).updateProduct(eq(찾을_수_있는_id), any(ProductUpdateRequestDto.class));
+
+                        perform.andDo(document("{method-name}",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("id").description("상품 고유 번호")
+                                ),
+                                requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 고유 번호"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("maker").type(JsonFieldType.STRING).description("상품 메이커"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소").optional()
+                                )
+                        ));
                     }
                 }
             }
@@ -561,6 +640,31 @@ class ProductControllerTest {
                     verify(productService).deleteProduct(찾을_수_없는_id);
                 }
             }
+
+            @Nested
+            @DisplayName("찾을 수 있는 id가 주어지면")
+            class Context_with_exist_id {
+
+                @Test
+                @DisplayName("200 코드로 응답한다")
+                void deleteProduct() throws Exception {
+                    ResultActions perform = 상품_삭제_API_요청(
+                            상품_1번.아이디(),
+                            유저_1번_정상_토큰
+                    );
+
+                    perform.andExpect(status().isOk());
+
+                    verify(productService).deleteProduct(상품_1번.아이디());
+
+                    perform.andDo(document("{method-name}",
+                            getDocumentRequest(),
+                            pathParameters(
+                                    parameterWithName("id").description("상품 고유 번호")
+                            )
+                    ));
+                }
+            }
         }
     }
 
@@ -579,7 +683,7 @@ class ProductControllerTest {
                                        final AuthHeaderFixture authHeaderFixture,
                                        final ProductFixture productFixture) throws Exception {
         return mockMvc.perform(
-                patch(REQUEST_PRODUCT_URL + "/" + productId)
+                patch(REQUEST_PRODUCT_URL + "/{id}", productId)
                         .header(HttpHeaders.AUTHORIZATION, authHeaderFixture.인증_헤더값())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValueAsString(productFixture.수정_요청_데이터_생성()))
@@ -589,7 +693,7 @@ class ProductControllerTest {
     private ResultActions 상품_삭제_API_요청(final Long productId,
                                        final AuthHeaderFixture authHeaderFixture) throws Exception {
         return mockMvc.perform(
-                delete(REQUEST_PRODUCT_URL + "/" + productId)
+                delete(REQUEST_PRODUCT_URL + "/{id}", productId)
                         .header(HttpHeaders.AUTHORIZATION, authHeaderFixture.인증_헤더값())
         );
     }
