@@ -1,6 +1,6 @@
 package com.codesoom.assignment.common.security;
 
-import com.codesoom.assignment.role.domain.Role;
+import com.codesoom.assignment.role.repository.Role;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class UserAuthentication extends AbstractAuthenticationToken {
     private final Long userId;
 
-    public UserAuthentication(Long userId, List<Role> roles) {
+    public UserAuthentication(final Long userId, final List<Role> roles) {
         super(authorities(roles));
         this.userId = userId;
     }
@@ -40,7 +40,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
         return "Authentication(" + userId + ")";
     }
 
-    private static List<GrantedAuthority> authorities(List<Role> roles) {
+    private static List<GrantedAuthority> authorities(final List<Role> roles) {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());

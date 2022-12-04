@@ -1,7 +1,7 @@
 package com.codesoom.assignment.utils;
 
 import com.codesoom.assignment.common.utils.JsonUtil;
-import com.codesoom.assignment.product.domain.Product;
+import com.codesoom.assignment.product.repository.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

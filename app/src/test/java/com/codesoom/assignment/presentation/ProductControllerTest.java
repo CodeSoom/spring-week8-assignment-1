@@ -1,15 +1,15 @@
 package com.codesoom.assignment.presentation;
 
+import com.codesoom.assignment.adapter.in.web.product.ProductController;
+import com.codesoom.assignment.adapter.in.web.product.dto.request.ProductCreateRequestDto;
+import com.codesoom.assignment.adapter.in.web.product.dto.request.ProductUpdateRequestDto;
 import com.codesoom.assignment.common.utils.JsonUtil;
-import com.codesoom.assignment.product.adapter.in.web.ProductController;
-import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductCreateRequestDto;
-import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductUpdateRequestDto;
-import com.codesoom.assignment.product.application.ProductService;
-import com.codesoom.assignment.product.application.port.command.ProductUpdateRequest;
-import com.codesoom.assignment.product.domain.Product;
+import com.codesoom.assignment.product.domain.ProductService;
+import com.codesoom.assignment.product.domain.port.command.ProductUpdateRequest;
 import com.codesoom.assignment.product.exception.ProductNotFoundException;
-import com.codesoom.assignment.role.domain.Role;
-import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
+import com.codesoom.assignment.product.repository.Product;
+import com.codesoom.assignment.role.repository.Role;
+import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
 import com.codesoom.assignment.session.exception.InvalidTokenException;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.ProductFixture;

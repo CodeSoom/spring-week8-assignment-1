@@ -1,13 +1,13 @@
 package com.codesoom.assignment.presentation;
 
 import com.codesoom.assignment.MockMvcCharacterEncodingCustomizer;
+import com.codesoom.assignment.adapter.in.web.user.UserController;
+import com.codesoom.assignment.adapter.in.web.user.dto.request.UserCreateRequestDto;
+import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequestDto;
 import com.codesoom.assignment.common.utils.JsonUtil;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.UserFixture;
-import com.codesoom.assignment.user.adapter.in.web.UserController;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
-import com.codesoom.assignment.user.application.port.UserUseCase;
+import com.codesoom.assignment.user.domain.port.in.UserUseCase;
 import com.codesoom.assignment.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

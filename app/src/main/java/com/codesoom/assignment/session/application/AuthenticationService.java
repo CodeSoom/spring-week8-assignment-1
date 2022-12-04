@@ -1,12 +1,12 @@
 package com.codesoom.assignment.session.application;
 
 import com.codesoom.assignment.common.utils.JwtUtil;
-import com.codesoom.assignment.role.domain.Role;
-import com.codesoom.assignment.role.domain.RoleRepository;
-import com.codesoom.assignment.session.application.port.AuthenticationUseCase;
+import com.codesoom.assignment.role.repository.Role;
+import com.codesoom.assignment.role.repository.RoleRepository;
+import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
 import com.codesoom.assignment.session.exception.LoginFailException;
-import com.codesoom.assignment.user.domain.User;
-import com.codesoom.assignment.user.domain.UserRepository;
+import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.codesoom.assignment.support;
 
-import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductCreateRequestDto;
-import com.codesoom.assignment.product.adapter.in.web.dto.request.ProductUpdateRequestDto;
-import com.codesoom.assignment.product.domain.Product;
+import com.codesoom.assignment.adapter.in.web.product.dto.request.ProductCreateRequestDto;
+import com.codesoom.assignment.adapter.in.web.product.dto.request.ProductUpdateRequestDto;
+import com.codesoom.assignment.product.repository.Product;
 
 import static com.codesoom.assignment.support.IdFixture.ID_MAX;
 

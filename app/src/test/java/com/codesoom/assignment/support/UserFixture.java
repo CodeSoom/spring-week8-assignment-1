@@ -1,9 +1,9 @@
 package com.codesoom.assignment.support;
 
-import com.codesoom.assignment.session.adapter.in.web.dto.request.SessionRequestDto;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserCreateRequestDto;
-import com.codesoom.assignment.user.adapter.in.web.dto.request.UserUpdateRequestDto;
-import com.codesoom.assignment.user.domain.User;
+import com.codesoom.assignment.adapter.in.web.session.dto.request.SessionRequestDto;
+import com.codesoom.assignment.adapter.in.web.user.dto.request.UserCreateRequestDto;
+import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequestDto;
+import com.codesoom.assignment.user.repository.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
