@@ -1,13 +1,13 @@
 package com.codesoom.assignment.adapter.in.web.product.dto.response;
 
-import com.codesoom.assignment.product.repository.Product;
+import com.codesoom.assignment.product.domain.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CreateProductResponseDto {
     @JsonIgnore
-    private Product product;
+    private final Product product;
 
-    public CreateProductResponseDto(Product product) {
+    public CreateProductResponseDto(final Product product) {
         this.product = product;
     }
 

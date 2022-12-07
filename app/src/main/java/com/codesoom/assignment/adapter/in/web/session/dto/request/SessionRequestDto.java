@@ -16,7 +16,7 @@ public class SessionRequestDto {
     private final String password;
 
     @Builder
-    public SessionRequestDto(final String email, final String password) {
+    private SessionRequestDto(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

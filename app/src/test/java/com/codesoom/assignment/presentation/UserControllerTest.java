@@ -7,8 +7,8 @@ import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequest
 import com.codesoom.assignment.common.utils.JsonUtil;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.UserFixture;
-import com.codesoom.assignment.user.domain.port.in.UserUseCase;
-import com.codesoom.assignment.user.exception.UserNotFoundException;
+import com.codesoom.assignment.user.application.exception.UserNotFoundException;
+import com.codesoom.assignment.user.application.port.in.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

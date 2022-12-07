@@ -1,7 +1,7 @@
 package com.codesoom.assignment.adapter.in.web.product.dto.response;
 
-import com.codesoom.assignment.product.domain.port.command.ProductMapper;
-import com.codesoom.assignment.product.repository.Product;
+import com.codesoom.assignment.adapter.in.web.product.dto.ProductMapper;
+import com.codesoom.assignment.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,14 +9,15 @@ import java.util.List;
 
 @Getter
 public class ProductResponseDto {
-    private Long id;
-    private String name;
-    private String maker;
-    private Integer price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final String maker;
+    private final Integer price;
+    private final String imageUrl;
 
     @Builder
-    public ProductResponseDto(Long id, String name, String maker, Integer price, String imageUrl) {
+    public ProductResponseDto(final Long id, final String name, final String maker,
+                              final Integer price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.maker = maker;
@@ -24,11 +25,11 @@ public class ProductResponseDto {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponseDto from(Product product) {
+    public static ProductResponseDto from(final Product product) {
         return ProductMapper.INSTANCE.toResponse(product);
     }
 
-    public static List<ProductResponseDto> fromList(List<Product> product) {
+    public static List<ProductResponseDto> fromList(final List<Product> product) {
         return ProductMapper.INSTANCE.toResponseList(product);
     }
 }

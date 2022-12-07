@@ -1,6 +1,6 @@
 package com.codesoom.assignment.adapter.in.web.user.dto.response;
 
-import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CreateUserResponseDto {

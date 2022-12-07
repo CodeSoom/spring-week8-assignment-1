@@ -1,8 +1,8 @@
 package com.codesoom.assignment.adapter.in.web.user.dto.request;
 
-import com.codesoom.assignment.user.domain.port.command.UserMapper;
-import com.codesoom.assignment.user.domain.port.command.UserUpdateRequest;
-import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.adapter.in.web.user.dto.UserMapper;
+import com.codesoom.assignment.user.application.port.command.UserUpdateRequest;
+import com.codesoom.assignment.user.domain.User;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class UserUpdateRequestDto implements UserUpdateRequest {
     private final String password;
 
     @Builder
-    public UserUpdateRequestDto(final String name, final String password) {
+    private UserUpdateRequestDto(final String name, final String password) {
         this.name = name;
         this.password = password;
     }

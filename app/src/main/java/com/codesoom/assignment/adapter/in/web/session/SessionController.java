@@ -2,7 +2,7 @@ package com.codesoom.assignment.adapter.in.web.session;
 
 import com.codesoom.assignment.adapter.in.web.session.dto.request.SessionRequestDto;
 import com.codesoom.assignment.adapter.in.web.session.dto.response.SessionResponseDto;
-import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
+import com.codesoom.assignment.auth.application.port.in.AuthenticationUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

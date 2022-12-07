@@ -5,7 +5,7 @@ import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequest
 import com.codesoom.assignment.adapter.in.web.user.dto.response.CreateUserResponseDto;
 import com.codesoom.assignment.adapter.in.web.user.dto.response.UpdateUserResponseDto;
 import com.codesoom.assignment.common.security.UserAuthentication;
-import com.codesoom.assignment.user.domain.port.in.UserUseCase;
+import com.codesoom.assignment.user.application.port.in.UserUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;

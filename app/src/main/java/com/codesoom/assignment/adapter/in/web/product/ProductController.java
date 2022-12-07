@@ -5,7 +5,7 @@ import com.codesoom.assignment.adapter.in.web.product.dto.request.ProductUpdateR
 import com.codesoom.assignment.adapter.in.web.product.dto.response.CreateProductResponseDto;
 import com.codesoom.assignment.adapter.in.web.product.dto.response.ProductResponseDto;
 import com.codesoom.assignment.adapter.in.web.product.dto.response.UpdateProductResponseDto;
-import com.codesoom.assignment.product.domain.port.in.ProductUseCase;
+import com.codesoom.assignment.product.application.port.in.ProductUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ProductController {
     private final ProductUseCase productUseCase;
 
-    public ProductController(ProductUseCase productUseCase) {
+    public ProductController(final ProductUseCase productUseCase) {
         this.productUseCase = productUseCase;
     }
 

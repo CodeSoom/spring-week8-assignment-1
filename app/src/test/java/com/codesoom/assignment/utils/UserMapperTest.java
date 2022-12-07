@@ -1,10 +1,10 @@
 package com.codesoom.assignment.utils;
 
 
+import com.codesoom.assignment.adapter.in.web.user.dto.UserMapper;
 import com.codesoom.assignment.adapter.in.web.user.dto.request.UserCreateRequestDto;
 import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequestDto;
-import com.codesoom.assignment.user.domain.port.command.UserMapper;
-import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

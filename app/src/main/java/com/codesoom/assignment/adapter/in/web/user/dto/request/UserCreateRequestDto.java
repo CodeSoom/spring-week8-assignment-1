@@ -1,8 +1,8 @@
 package com.codesoom.assignment.adapter.in.web.user.dto.request;
 
-import com.codesoom.assignment.user.domain.port.command.UserCreateRequest;
-import com.codesoom.assignment.user.domain.port.command.UserMapper;
-import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.adapter.in.web.user.dto.UserMapper;
+import com.codesoom.assignment.user.application.port.command.UserCreateRequest;
+import com.codesoom.assignment.user.domain.User;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class UserCreateRequestDto implements UserCreateRequest {
     private final String password;
 
     @Builder
-    public UserCreateRequestDto(final String email, final String name, final String password) {
+    private UserCreateRequestDto(final String email, final String name, final String password) {
         this.email = email;
         this.name = name;
         this.password = password;

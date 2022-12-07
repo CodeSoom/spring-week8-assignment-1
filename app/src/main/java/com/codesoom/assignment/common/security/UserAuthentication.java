@@ -1,6 +1,6 @@
 package com.codesoom.assignment.common.security;
 
-import com.codesoom.assignment.role.repository.Role;
+import com.codesoom.assignment.role.domain.Role;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

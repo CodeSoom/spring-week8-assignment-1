@@ -1,13 +1,13 @@
 package com.codesoom.assignment.domain;
 
-import com.codesoom.assignment.role.repository.Role;
-import com.codesoom.assignment.role.repository.RoleRepository;
+import com.codesoom.assignment.role.application.port.out.RoleRepository;
+import com.codesoom.assignment.role.domain.Role;
 import com.codesoom.assignment.support.UserFixture;
-import com.codesoom.assignment.user.domain.UserService;
-import com.codesoom.assignment.user.exception.UserEmailDuplicationException;
-import com.codesoom.assignment.user.exception.UserNotFoundException;
-import com.codesoom.assignment.user.repository.User;
-import com.codesoom.assignment.user.repository.UserRepository;
+import com.codesoom.assignment.user.application.UserService;
+import com.codesoom.assignment.user.application.exception.UserEmailDuplicationException;
+import com.codesoom.assignment.user.application.exception.UserNotFoundException;
+import com.codesoom.assignment.user.application.port.out.UserRepository;
+import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

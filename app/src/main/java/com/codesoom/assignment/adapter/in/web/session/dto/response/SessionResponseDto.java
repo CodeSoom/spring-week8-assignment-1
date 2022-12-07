@@ -6,7 +6,7 @@ import lombok.Getter;
 public class SessionResponseDto {
     private final String accessToken;
 
-    public SessionResponseDto(String accessToken) {
+    public SessionResponseDto(final String accessToken) {
         this.accessToken = accessToken;
     }
 }

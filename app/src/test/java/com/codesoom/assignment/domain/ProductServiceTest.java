@@ -1,9 +1,9 @@
 package com.codesoom.assignment.domain;
 
-import com.codesoom.assignment.product.domain.ProductService;
-import com.codesoom.assignment.product.exception.ProductNotFoundException;
-import com.codesoom.assignment.product.repository.Product;
-import com.codesoom.assignment.product.repository.ProductRepository;
+import com.codesoom.assignment.product.application.ProductService;
+import com.codesoom.assignment.product.application.exception.ProductNotFoundException;
+import com.codesoom.assignment.product.application.port.out.ProductRepository;
+import com.codesoom.assignment.product.domain.Product;
 import com.codesoom.assignment.support.ProductFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

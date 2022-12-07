@@ -1,14 +1,14 @@
 package com.codesoom.assignment.domain;
 
+import com.codesoom.assignment.auth.application.AuthenticationService;
+import com.codesoom.assignment.auth.application.exception.InvalidTokenException;
+import com.codesoom.assignment.auth.application.exception.LoginFailException;
+import com.codesoom.assignment.auth.application.port.in.AuthenticationUseCase;
 import com.codesoom.assignment.common.utils.JwtUtil;
-import com.codesoom.assignment.role.repository.Role;
-import com.codesoom.assignment.role.repository.RoleRepository;
-import com.codesoom.assignment.session.application.AuthenticationService;
-import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
-import com.codesoom.assignment.session.exception.InvalidTokenException;
-import com.codesoom.assignment.session.exception.LoginFailException;
-import com.codesoom.assignment.user.repository.User;
-import com.codesoom.assignment.user.repository.UserRepository;
+import com.codesoom.assignment.role.application.port.out.RoleRepository;
+import com.codesoom.assignment.role.domain.Role;
+import com.codesoom.assignment.user.application.port.out.UserRepository;
+import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

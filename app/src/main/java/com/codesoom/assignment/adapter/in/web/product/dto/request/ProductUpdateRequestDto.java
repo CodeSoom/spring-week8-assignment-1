@@ -1,8 +1,8 @@
 package com.codesoom.assignment.adapter.in.web.product.dto.request;
 
-import com.codesoom.assignment.product.domain.port.command.ProductMapper;
-import com.codesoom.assignment.product.domain.port.command.ProductUpdateRequest;
-import com.codesoom.assignment.product.repository.Product;
+import com.codesoom.assignment.adapter.in.web.product.dto.ProductMapper;
+import com.codesoom.assignment.product.application.port.command.ProductUpdateRequest;
+import com.codesoom.assignment.product.domain.Product;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -31,7 +31,8 @@ public class ProductUpdateRequestDto implements ProductUpdateRequest {
     private String imageUrl;
 
     @Builder
-    public ProductUpdateRequestDto(String name, String maker, Integer price, String imageUrl) {
+    private ProductUpdateRequestDto(final String name, final String maker,
+                                    final Integer price, final String imageUrl) {
         this.name = name;
         this.maker = maker;
         this.price = price;

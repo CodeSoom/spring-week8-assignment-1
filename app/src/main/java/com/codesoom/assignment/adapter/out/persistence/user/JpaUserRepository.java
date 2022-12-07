@@ -1,7 +1,7 @@
 package com.codesoom.assignment.adapter.out.persistence.user;
 
-import com.codesoom.assignment.user.repository.User;
-import com.codesoom.assignment.user.repository.UserRepository;
+import com.codesoom.assignment.user.application.port.out.UserRepository;
+import com.codesoom.assignment.user.domain.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

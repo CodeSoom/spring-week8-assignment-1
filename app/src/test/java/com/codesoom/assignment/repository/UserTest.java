@@ -1,6 +1,6 @@
 package com.codesoom.assignment.repository;
 
-import com.codesoom.assignment.user.repository.User;
+import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

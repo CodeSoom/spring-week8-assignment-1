@@ -1,7 +1,7 @@
 package com.codesoom.assignment.adapter.out.persistence.product;
 
-import com.codesoom.assignment.product.repository.Product;
-import com.codesoom.assignment.product.repository.ProductRepository;
+import com.codesoom.assignment.product.application.port.out.ProductRepository;
+import com.codesoom.assignment.product.domain.Product;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

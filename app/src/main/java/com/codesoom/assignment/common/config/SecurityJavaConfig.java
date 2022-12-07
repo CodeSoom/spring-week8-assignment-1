@@ -1,8 +1,8 @@
 package com.codesoom.assignment.common.config;
 
+import com.codesoom.assignment.auth.application.port.in.AuthenticationUseCase;
 import com.codesoom.assignment.common.filters.AuthenticationErrorFilter;
 import com.codesoom.assignment.common.filters.JwtAuthenticationFilter;
-import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

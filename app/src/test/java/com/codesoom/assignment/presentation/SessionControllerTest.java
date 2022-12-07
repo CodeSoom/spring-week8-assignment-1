@@ -2,9 +2,9 @@ package com.codesoom.assignment.presentation;
 
 import com.codesoom.assignment.MockMvcCharacterEncodingCustomizer;
 import com.codesoom.assignment.adapter.in.web.session.SessionController;
+import com.codesoom.assignment.auth.application.exception.LoginFailException;
+import com.codesoom.assignment.auth.application.port.in.AuthenticationUseCase;
 import com.codesoom.assignment.common.utils.JsonUtil;
-import com.codesoom.assignment.session.application.port.in.AuthenticationUseCase;
-import com.codesoom.assignment.session.exception.LoginFailException;
 import com.codesoom.assignment.support.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
