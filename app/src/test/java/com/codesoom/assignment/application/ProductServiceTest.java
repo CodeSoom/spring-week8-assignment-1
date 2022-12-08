@@ -1,4 +1,4 @@
-package com.codesoom.assignment.domain;
+package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.product.application.ProductService;
 import com.codesoom.assignment.product.application.exception.ProductNotFoundException;

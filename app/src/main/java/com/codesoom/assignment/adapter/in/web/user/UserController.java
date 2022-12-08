@@ -4,10 +4,10 @@ import com.codesoom.assignment.adapter.in.web.user.dto.request.UserCreateRequest
 import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequestDto;
 import com.codesoom.assignment.adapter.in.web.user.dto.response.CreateUserResponseDto;
 import com.codesoom.assignment.adapter.in.web.user.dto.response.UpdateUserResponseDto;
-import com.codesoom.assignment.common.security.UserAuthentication;
+import com.codesoom.assignment.common.authentication.security.UserAuthentication;
+import com.codesoom.assignment.common.authorization.IdVerification;
 import com.codesoom.assignment.user.application.port.in.UserUseCase;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -50,15 +50,15 @@ public class UserController {
      * @param userUpdateRequestDto 수정할 회원 정보
      * @param authentication       사용자 인증 정보
      * @return 수정한 회원 상세 정보 리턴
-     * @throws AccessDeniedException 요청 id와 인증 정보 id가 서로 다를 경우
      */
     @PatchMapping("{id}")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
+    @IdVerification
     UpdateUserResponseDto update(@PathVariable final Long id,
                                  @RequestBody @Valid final UserUpdateRequestDto userUpdateRequestDto,
-                                 final UserAuthentication authentication) throws AccessDeniedException {
+                                 final UserAuthentication authentication) {
         return new UpdateUserResponseDto(
-                userUseCase.updateUser(id, userUpdateRequestDto, authentication.getUserId())
+                userUseCase.updateUser(id, userUpdateRequestDto)
         );
     }
 

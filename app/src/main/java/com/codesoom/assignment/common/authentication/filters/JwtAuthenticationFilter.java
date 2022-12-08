@@ -1,7 +1,7 @@
-package com.codesoom.assignment.common.filters;
+package com.codesoom.assignment.common.authentication.filters;
 
 import com.codesoom.assignment.auth.application.port.in.AuthenticationUseCase;
-import com.codesoom.assignment.common.security.UserAuthentication;
+import com.codesoom.assignment.common.authentication.security.UserAuthentication;
 import com.codesoom.assignment.role.domain.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;

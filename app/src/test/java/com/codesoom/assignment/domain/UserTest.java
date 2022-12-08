@@ -1,4 +1,4 @@
-package com.codesoom.assignment.repository;
+package com.codesoom.assignment.domain;
 
 import com.codesoom.assignment.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,13 +34,13 @@ class UserTest {
 
             User userUpdate = User.builder()
                     .name(회원_2번.이름())
-                    .password(회원_2번.비밀번호())
+                    .password("")
                     .build();
 
-            user.update(userUpdate, passwordEncoder);
+            user.update(userUpdate);
 
             assertThat(user.getName()).isEqualTo(회원_2번.이름());
-            assertThat(passwordEncoder.matches(회원_2번.비밀번호(), user.getPassword())).isTrue();
+            assertThat(passwordEncoder.matches(회원_1번.비밀번호(), user.getPassword())).isTrue();
         }
     }
 

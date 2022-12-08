@@ -10,7 +10,6 @@ import com.codesoom.assignment.product.application.ProductService;
 import com.codesoom.assignment.product.application.exception.ProductNotFoundException;
 import com.codesoom.assignment.product.application.port.command.ProductUpdateRequest;
 import com.codesoom.assignment.product.domain.Product;
-import com.codesoom.assignment.role.domain.Role;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.ProductFixture;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +38,7 @@ import static com.codesoom.assignment.support.ProductFixture.상품_2번;
 import static com.codesoom.assignment.support.ProductFixture.상품_가격_비정상;
 import static com.codesoom.assignment.support.ProductFixture.상품_메이커_비정상;
 import static com.codesoom.assignment.support.ProductFixture.상품_이름_비정상;
+import static com.codesoom.assignment.support.RoleFixture.유저_1번_권한;
 import static com.codesoom.assignment.utils.ApiDocumentUtil.getDocumentRequest;
 import static com.codesoom.assignment.utils.ApiDocumentUtil.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
@@ -89,7 +89,7 @@ class ProductControllerTest extends RestDocsMockMvcProvider {
                 .willReturn(유저_1번_정상_토큰.아이디());
         given(authenticationUseCase.roles(eq(유저_1번_정상_토큰.아이디())))
                 .willReturn(Arrays.asList(
-                        new Role(유저_1번_정상_토큰.아이디(), "USER")
+                        유저_1번_권한.권한_데이터_생성()
                 ));
     }
 

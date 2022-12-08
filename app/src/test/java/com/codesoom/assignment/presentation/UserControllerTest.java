@@ -4,6 +4,7 @@ import com.codesoom.assignment.MockMvcCharacterEncodingCustomizer;
 import com.codesoom.assignment.adapter.in.web.user.UserController;
 import com.codesoom.assignment.adapter.in.web.user.dto.request.UserCreateRequestDto;
 import com.codesoom.assignment.adapter.in.web.user.dto.request.UserUpdateRequestDto;
+import com.codesoom.assignment.common.authorization.UserAuthorizationAop;
 import com.codesoom.assignment.common.utils.JsonUtil;
 import com.codesoom.assignment.support.AuthHeaderFixture;
 import com.codesoom.assignment.support.UserFixture;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -46,7 +48,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@Import(MockMvcCharacterEncodingCustomizer.class)
+@Import({MockMvcCharacterEncodingCustomizer.class, AopAutoConfiguration.class, UserAuthorizationAop.class})
 @DisplayName("UserController 웹 유닛 테스트")
 class UserControllerTest extends AuthenticationProvider {
     private static final String REQUEST_USER_URL = "/users";
@@ -165,7 +167,7 @@ class UserControllerTest extends AuthenticationProvider {
                 perform.andExpect(status().isUnauthorized());
 
                 verify(userUseCase, never())
-                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class), any(Long.class));
+                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class));
             }
         }
 
@@ -185,7 +187,7 @@ class UserControllerTest extends AuthenticationProvider {
                 perform.andExpect(status().isUnauthorized());
 
                 verify(userUseCase, never())
-                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class), any(Long.class));
+                        .updateUser(any(Long.class), any(UserUpdateRequestDto.class));
             }
         }
 
@@ -197,8 +199,7 @@ class UserControllerTest extends AuthenticationProvider {
             void setUp() {
                 given(userUseCase.updateUser(
                         eq(회원_1번.아이디()),
-                        eq(회원_1번.수정_요청_데이터_생성()),
-                        eq(유저_2번_정상_토큰.아이디())
+                        eq(회원_1번.수정_요청_데이터_생성())
                 ))
                         .willThrow(new AccessDeniedException("Access denied"));
             }
@@ -214,10 +215,9 @@ class UserControllerTest extends AuthenticationProvider {
 
                 perform.andExpect(status().isForbidden());
 
-                verify(userUseCase).updateUser(
-                        eq(회원_1번.아이디()),
-                        eq(회원_1번.수정_요청_데이터_생성()),
-                        eq(유저_2번_정상_토큰.아이디())
+                verify(userUseCase, never()).updateUser(
+                        any(Long.class),
+                        any(UserUpdateRequestDto.class)
                 );
             }
         }
@@ -235,8 +235,7 @@ class UserControllerTest extends AuthenticationProvider {
                 void setUp() {
                     given(userUseCase.updateUser(
                             eq(회원_1번.아이디()),
-                            eq(회원_2번.수정_요청_데이터_생성()),
-                            eq(유효한_인증_토큰.아이디())
+                            eq(회원_2번.수정_요청_데이터_생성())
                     ))
                             .willThrow(new UserNotFoundException());
                 }
@@ -254,8 +253,7 @@ class UserControllerTest extends AuthenticationProvider {
 
                     verify(userUseCase).updateUser(
                             eq(회원_1번.아이디()),
-                            eq(회원_2번.수정_요청_데이터_생성()),
-                            eq(유효한_인증_토큰.아이디())
+                            eq(회원_2번.수정_요청_데이터_생성())
                     );
                 }
             }
@@ -286,8 +284,7 @@ class UserControllerTest extends AuthenticationProvider {
 
                             verify(userUseCase, never()).updateUser(
                                     any(Long.class),
-                                    any(UserUpdateRequestDto.class),
-                                    any(Long.class)
+                                    any(UserUpdateRequestDto.class)
                             );
                         }
                     }
@@ -309,8 +306,7 @@ class UserControllerTest extends AuthenticationProvider {
 
                             verify(userUseCase, never()).updateUser(
                                     any(Long.class),
-                                    any(UserUpdateRequestDto.class),
-                                    any(Long.class)
+                                    any(UserUpdateRequestDto.class)
                             );
                         }
                     }
@@ -324,8 +320,7 @@ class UserControllerTest extends AuthenticationProvider {
                     void setUp() {
                         given(userUseCase.updateUser(
                                 eq(찾을_수_있는_id),
-                                eq(회원_1번.수정_요청_데이터_생성()),
-                                eq(유저_1번_정상_토큰.아이디())
+                                eq(회원_1번.수정_요청_데이터_생성())
                         ))
                                 .willReturn(회원_1번.회원_엔티티_생성(회원_1번.아이디()));
                     }
@@ -343,8 +338,7 @@ class UserControllerTest extends AuthenticationProvider {
 
                         verify(userUseCase).updateUser(
                                 eq(찾을_수_있는_id),
-                                eq(회원_1번.수정_요청_데이터_생성()),
-                                eq(유저_1번_정상_토큰.아이디())
+                                eq(회원_1번.수정_요청_데이터_생성())
                         );
                     }
                 }

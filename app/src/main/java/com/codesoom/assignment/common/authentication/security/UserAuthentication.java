@@ -1,4 +1,4 @@
-package com.codesoom.assignment.common.security;
+package com.codesoom.assignment.common.authentication.security;
 
 import com.codesoom.assignment.role.domain.Role;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -42,7 +42,7 @@ public class UserAuthentication extends AbstractAuthenticationToken {
 
     private static List<GrantedAuthority> authorities(final List<Role> roles) {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
                 .collect(Collectors.toList());
     }
 }

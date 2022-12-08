@@ -18,10 +18,9 @@ public interface UserUseCase {
      *
      * @param id                회원 고유 id
      * @param updateUserRequest 수정할 회원 정보
-     * @param userId            인증 토큰의 회원 id
      * @return 수정한 회원 리턴
      */
-    User updateUser(final Long id, final UserUpdateRequest updateUserRequest, final Long userId);
+    User updateUser(final Long id, final UserUpdateRequest updateUserRequest);
 
     /**
      * 회원을 삭제하고 리턴합니다.

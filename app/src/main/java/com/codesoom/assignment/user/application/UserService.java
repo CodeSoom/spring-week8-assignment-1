@@ -9,10 +9,11 @@ import com.codesoom.assignment.user.application.port.command.UserUpdateRequest;
 import com.codesoom.assignment.user.application.port.in.UserUseCase;
 import com.codesoom.assignment.user.application.port.out.UserRepository;
 import com.codesoom.assignment.user.domain.User;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.codesoom.assignment.role.domain.RoleType.USER;
 
 
 @Service
@@ -31,33 +32,28 @@ public class UserService implements UserUseCase {
     }
 
     public User createUser(final UserCreateRequest userCreateRequest) {
-        String email = userCreateRequest.getEmail();
-
-        if (userRepository.existsByEmail(email)) {
+        if (isAlreadyExistEmail(userCreateRequest)) {
             throw new UserEmailDuplicationException();
         }
 
-        User user = userRepository.save(userCreateRequest.toEntity());
+        User user = userRepository.save(
+                userCreateRequest.toEntity(passwordEncoder)
+        );
 
-        // TODO: 미리 비밀번호 encoding 후 save 진행
-        user.changePassword(userCreateRequest.getPassword(), passwordEncoder);
-
-        roleRepository.save(new Role(user.getId(), "USER"));
+        roleRepository.save(Role.builder()
+                .userId(user.getId())
+                .roleName(USER.getRoleName())
+                .build()
+        );
 
         return user;
     }
 
     public User updateUser(final Long id,
-                           final UserUpdateRequest userUpdateRequest,
-                           final Long userId) throws AccessDeniedException {
-        // TODO: 인가 로직 AOP로 분리
-        if (!id.equals(userId)) {
-            throw new AccessDeniedException("Access denied");
-        }
-
+                           final UserUpdateRequest userUpdateRequest) {
         User user = findUser(id);
 
-        user.update(userUpdateRequest.toEntity(), passwordEncoder);
+        user.update(userUpdateRequest.toEntity(passwordEncoder));
 
         return user;
     }
@@ -68,8 +64,13 @@ public class UserService implements UserUseCase {
         return user;
     }
 
+
     private User findUser(final Long id) {
         return userRepository.findByIdAndDeletedIsFalse(id)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    private boolean isAlreadyExistEmail(final UserCreateRequest userCreateRequest) {
+        return userRepository.existsByEmail(userCreateRequest.getEmail());
     }
 }

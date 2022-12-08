@@ -1,4 +1,4 @@
-package com.codesoom.assignment.domain;
+package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.role.application.port.out.RoleRepository;
 import com.codesoom.assignment.role.domain.Role;
@@ -14,15 +14,11 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_정상_토큰;
-import static com.codesoom.assignment.support.AuthHeaderFixture.유저_2번_정상_토큰;
-import static com.codesoom.assignment.support.AuthHeaderFixture.유저_MAX번_값_정상_토큰;
 import static com.codesoom.assignment.support.IdFixture.ID_MAX;
 import static com.codesoom.assignment.support.UserFixture.회원_1번;
 import static com.codesoom.assignment.support.UserFixture.회원_2번;
@@ -119,21 +115,6 @@ class UserServiceTest {
     @Nested
     @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
     class updateUser_메서드는 {
-        @Nested
-        @DisplayName("다른 사람의 인증 토큰이 주어지면")
-        class Context_with_different_id_token_and_request {
-
-            @Test
-            @DisplayName("AccessDeniedException 예외를 던진다")
-            void it_returns_exception() {
-                assertThatThrownBy(() -> userService.updateUser(
-                        회원_1번.아이디(),
-                        회원_1번.수정_요청_데이터_생성(),
-                        유저_2번_정상_토큰.아이디()
-                ))
-                        .isInstanceOf(AccessDeniedException.class);
-            }
-        }
 
         @Nested
         @DisplayName("찾을 수 없는 id가 주어지면")
@@ -152,8 +133,7 @@ class UserServiceTest {
                 assertThatThrownBy(
                         () -> userService.updateUser(
                                 찾을_수_없는_id,
-                                회원_2번.수정_요청_데이터_생성(),
-                                유저_2번_정상_토큰.아이디()
+                                회원_2번.수정_요청_데이터_생성()
                         )
                 )
                         .isInstanceOf(UserNotFoundException.class);
@@ -179,8 +159,7 @@ class UserServiceTest {
                 assertThatThrownBy(
                         () -> userService.updateUser(
                                 삭제된_회원_id,
-                                회원_1번.수정_요청_데이터_생성(),
-                                유저_MAX번_값_정상_토큰.아이디()
+                                회원_1번.수정_요청_데이터_생성()
                         )
                 )
                         .isInstanceOf(UserNotFoundException.class);
@@ -207,8 +186,7 @@ class UserServiceTest {
             void it_returns_user() {
                 User user = userService.updateUser(
                         찾을_수_있는_id,
-                        회원_2번.수정_요청_데이터_생성(),
-                        유저_1번_정상_토큰.아이디()
+                        회원_2번.수정_요청_데이터_생성()
                 );
 
 

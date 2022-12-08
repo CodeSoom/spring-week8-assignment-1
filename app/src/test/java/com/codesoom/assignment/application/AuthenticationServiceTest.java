@@ -1,4 +1,4 @@
-package com.codesoom.assignment.domain;
+package com.codesoom.assignment.application;
 
 import com.codesoom.assignment.auth.application.AuthenticationService;
 import com.codesoom.assignment.auth.application.exception.InvalidTokenException;
@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 import static com.codesoom.assignment.support.AuthHeaderFixture.관리자_1004번_정상_토큰;
 import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_값_비정상_토큰;
 import static com.codesoom.assignment.support.AuthHeaderFixture.유저_1번_정상_토큰;
+import static com.codesoom.assignment.support.RoleFixture.관리자_1004번_권한;
+import static com.codesoom.assignment.support.RoleFixture.유저_1번_권한;
 import static com.codesoom.assignment.support.UserFixture.회원_1번;
 import static com.codesoom.assignment.support.UserFixture.회원_1번_틀린_비밀번호;
 import static com.codesoom.assignment.support.UserFixture.회원_2번;
@@ -169,7 +171,7 @@ class AuthenticationServiceTest {
             @BeforeEach
             void setUp() {
                 given(roleRepository.findAllByUserId(eq(관리자_1004번_정상_토큰.아이디())))
-                        .willReturn(List.of(new Role(관리자_1004번_정상_토큰.아이디(), "ADMIN")));
+                        .willReturn(List.of(관리자_1004번_권한.권한_데이터_생성()));
             }
 
             @Test
@@ -177,7 +179,7 @@ class AuthenticationServiceTest {
             void it_returs_admin() {
                 assertThat(
                         authenticationUseCase.roles(관리자_1004번_정상_토큰.아이디()).stream()
-                                .map(Role::getName)
+                                .map(Role::getRoleName)
                                 .collect(Collectors.toList())
                 ).isEqualTo(List.of("ADMIN"));
             }
@@ -190,7 +192,7 @@ class AuthenticationServiceTest {
             @BeforeEach
             void setUp() {
                 given(roleRepository.findAllByUserId(eq(유저_1번_정상_토큰.아이디())))
-                        .willReturn(List.of(new Role(유저_1번_정상_토큰.아이디(), "USER")));
+                        .willReturn(List.of(유저_1번_권한.권한_데이터_생성()));
             }
 
             @Test
@@ -198,7 +200,7 @@ class AuthenticationServiceTest {
             void it_returs_users() {
                 assertThat(
                         authenticationUseCase.roles(유저_1번_정상_토큰.아이디()).stream()
-                                .map(Role::getName)
+                                .map(Role::getRoleName)
                                 .collect(Collectors.toList())
                 ).isEqualTo(List.of("USER"));
             }

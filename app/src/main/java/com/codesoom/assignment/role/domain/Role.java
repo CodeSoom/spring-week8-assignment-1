@@ -1,5 +1,8 @@
 package com.codesoom.assignment.role.domain;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class Role {
     @Id
     @GeneratedValue
@@ -17,15 +21,12 @@ public class Role {
     private Long userId;
 
     @Getter
-    private String name;
+    private String roleName;
 
-    // TODO: User 2차 리팩토링 진행하면서 같이 리팩토링
-    public Role(final Long userId, final String name) {
+    @Builder
+    private Role(final Long id, final Long userId, final String roleName) {
+        this.id = id;
         this.userId = userId;
-        this.name = name;
-    }
-
-    public Role(final String name) {
-        this(null, name);
+        this.roleName = roleName;
     }
 }

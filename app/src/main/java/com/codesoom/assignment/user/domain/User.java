@@ -1,11 +1,8 @@
 package com.codesoom.assignment.user.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Entity;
@@ -14,39 +11,44 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @EqualsAndHashCode
 public class User {
     @Id
     @GeneratedValue
     private Long id;
 
-    // TODO: 리팩토링 필요
-    @Builder.Default
-    private String email = "";
+    private String email;
 
-    @Builder.Default
-    private String name = "";
+    private String name;
 
-    @Builder.Default
-    private String password = "";
+    private String password;
 
     @Builder.Default
     private boolean deleted = false;
 
+    protected User() {
+        this.deleted = false;
+    }
+
+    @Builder
+    private User(final Long id, final String email,
+                 final String name, final String password, final boolean deleted) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.deleted = deleted;
+    }
 
     /**
      * 회원 정보를 수정합니다. <br>
      * 필드가 null일 경우 수정하지 않습니다.
      *
-     * @param updateUser      수정할 회원 정보
-     * @param passwordEncoder 비밀번호 인코더
+     * @param updateUser 수정할 회원 정보
      */
-    public void update(final User updateUser, final PasswordEncoder passwordEncoder) {
+    public void update(final User updateUser) {
         updateName(updateUser.getName());
-        updatePassword(updateUser.getPassword(), passwordEncoder);
+        updatePassword(updateUser.getPassword());
     }
 
     /**
@@ -81,15 +83,16 @@ public class User {
         return !this.deleted && passwordEncoder.matches(password, this.password);
     }
 
+
     private void updateName(final String name) {
         if (!name.isBlank()) {
             this.name = name;
         }
     }
 
-    private void updatePassword(final String password, final PasswordEncoder passwordEncoder) {
+    private void updatePassword(final String password) {
         if (!password.isBlank()) {
-            changePassword(password, passwordEncoder);
+            this.password = password;
         }
     }
 }
