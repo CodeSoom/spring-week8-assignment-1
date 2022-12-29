@@ -70,12 +70,10 @@ public class AuthenticationService {
     }
 
     /**
-     * Returns jwt of the user's id.
-     * First, find the user with the given email in the database.
+     * Returns JSON Web Token of the user's id.
+     * Find the user with the given input user information in the database.
+     * When the user is found, it creates a JSON Web Token with the user's id as the payload and returns the token.
      * If no such user is found, it throws a {@code LoginFailException}.
-     * If the user is found, it checks if the input password matches the password in the database.
-     * If it does not, it also throws a {@code LoginFailException}.
-     * If both the email and password are correct, it creates a JSON Web Token with the user's id as the payload and returns the token.
      *
      * @param email
      *        The email address of the user
