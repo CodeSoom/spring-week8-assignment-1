@@ -70,9 +70,9 @@ public class AuthenticationService {
     }
 
     /**
-     * Returns JSON Web Token of the user's id.
+     * Returns JSON Web Token.
      * Find the user with the given input user information in the database.
-     * When the user is found, it creates a JSON Web Token with the user's id as the payload and returns the token.
+     * When the user is found, it creates a JSON Web Token and returns the token.
      * If no such user is found, it throws a {@code LoginFailException}.
      *
      * @param email
@@ -83,7 +83,7 @@ public class AuthenticationService {
      *
      * @return the jwt token created through by the user's id
      *
-     * @throws LoginFailException if you can't find the user by email or the password doesn't match.
+     * @throws LoginFailException if you can't find the user.
      */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
