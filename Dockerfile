@@ -10,4 +10,4 @@ FROM openjdk:15.0.1
 # 위의 빌드 이미지로부터 만들어진 jar 파일을 복사합니다.
 COPY --from=builder /app/build/libs/app.jar .
 # 서버를 실행시키는 명령어입니다.
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
