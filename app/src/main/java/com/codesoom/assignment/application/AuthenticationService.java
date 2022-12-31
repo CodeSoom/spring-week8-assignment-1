@@ -38,9 +38,7 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
 
     /**
-     * Service interface for encoding passwords. It implements BCryptPasswordEncoder.
-     *
-     * @see org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+     * Service interface for password encryption.
      */
     private final PasswordEncoder passwordEncoder;
 
