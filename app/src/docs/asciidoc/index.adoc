@@ -8,10 +8,58 @@ include::{snippets}/get-products/http-request.adoc[]
 
 include::{snippets}/get-products/http-response.adoc[]
 
+.+/products/{id}+
+include::{snippets}/get-products/response-fields.adoc[]
+
 == GET /product/{id}
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
-include::{snippets}/get-product/http-request.adoc[]
+include::{snippets}/get-product-existed-product/http-request.adoc[]
 
-include::{snippets}/get-product/http-response.adoc[]
+include::{snippets}/get-product-existed-product/http-response.adoc[]
+
+include::{snippets}/get-product-existed-product/path-parameters.adoc[]
+
+.+/products/{id}+
+include::{snippets}/get-product-existed-product/response-fields.adoc[]
+
+== POST /product
+
+입력한 정보를 토대로 상품을 만들고 JSON 형태로 돌려준다.
+
+include::{snippets}/post-product-valid-attributes/http-request.adoc[]
+
+include::{snippets}/post-product-valid-attributes/http-response.adoc[]
+
+.+/products+
+include::{snippets}/post-product-valid-attributes/request-fields.adoc[]
+
+.+/products+
+include::{snippets}/post-product-valid-attributes/response-fields.adoc[]
+
+
+== PATCH /products/{id}
+
+입력한 정보를 토대로 상품을 수정하고 JSON 형태로 돌려준다.
+
+include::{snippets}/patch-product-existed-product/http-request.adoc[]
+
+include::{snippets}/patch-product-existed-product/http-response.adoc[]
+
+.+/products+
+include::{snippets}/patch-product-existed-product/request-fields.adoc[]
+
+.+/products+
+include::{snippets}/patch-product-existed-product/response-fields.adoc[]
+
+
+== DELETE /products/{id}
+
+해당하는 id의 제품을 삭제한다.
+
+include::{snippets}/delete-product-existed-product/http-request.adoc[]
+
+include::{snippets}/delete-product-existed-product/http-response.adoc[]
+
+include::{snippets}/delete-product-existed-product/path-parameters.adoc[]

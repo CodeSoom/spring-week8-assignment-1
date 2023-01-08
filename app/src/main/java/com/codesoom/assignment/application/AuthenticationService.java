@@ -12,13 +12,51 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The {@code AuthenticationService} class represents the Authentication service.
+ * The class {@code AuthenticationService} includes methods for
+ * encoding and decoding JSON Web Token to authenticate users and getting roles by the user's id.
+ *
+ * @see org.springframework.stereotype.Service
+ */
 @Service
 public class AuthenticationService {
+
+    /**
+     * Repository for User Domain.
+     */
     private final UserRepository userRepository;
+
+    /**
+     * Repository for Role Domain.
+     */
     private final RoleRepository roleRepository;
+
+    /**
+     * The {@code JwtUtil} class is a utility class that encodes and decodes JSON Web Token.
+     */
     private final JwtUtil jwtUtil;
+
+    /**
+     * Service interface for password encryption.
+     */
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructs a new {@code AuthenticationService} by userRepository, roleRepository, jwtUtil and the passwordEncoder.
+     *
+     * @param userRepository
+     *        The repository of the user
+     *
+     * @param roleRepository
+     *        The repository of the role
+     *
+     * @param jwtUtil
+     *        The utility class about Json Web Token
+     *
+     * @param passwordEncoder
+     *        The Bean of PasswordEncoder
+     */
     public AuthenticationService(UserRepository userRepository,
                                  RoleRepository roleRepository,
                                  JwtUtil jwtUtil,
@@ -29,6 +67,22 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Returns JSON Web Token.
+     * Find the user with the given input user information in the database.
+     * When the user is found, it creates a JSON Web Token and returns the token.
+     * If no such user is found, it throws a {@code LoginFailException}.
+     *
+     * @param email
+     *        The email address of the user
+     *
+     * @param password
+     *        The password of the user
+     *
+     * @return the jwt token created through by the user's id
+     *
+     * @throws LoginFailException if you can't find the user.
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +94,28 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * Returns user's id by decoded jwt.
+     * If the jwt is successfully decoded, this method extracts the user's id from the payload and returns it.
+     *
+     * @param accessToken
+     *        The jwt by the user's id
+     *
+     * @return the user's id through by decoded jwt
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * Returns List of roles by user's id.
+     *
+     * @param userId
+     *        The id of the user
+     *
+     * @return The list of roles by user's id
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }
