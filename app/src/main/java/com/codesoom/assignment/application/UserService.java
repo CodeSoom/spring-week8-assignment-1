@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * Service for User
+ *
+ * @author sim
+ */
 @Service
 @Transactional
 public class UserService {

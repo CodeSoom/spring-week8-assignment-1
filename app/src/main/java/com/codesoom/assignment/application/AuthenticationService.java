@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for Authentication
+ *
+ * @author sim
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
