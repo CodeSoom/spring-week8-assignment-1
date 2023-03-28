@@ -96,9 +96,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-javadoc {
-    options.addStringOption("locale","ko_KR");
-    options.addStringOption("encoding","UTF-8");
-    options.addStringOption("charset","UTF-8");
-    options.addStringOption("docencoding","UTF-8");
+
+asciidoctor{
+    dependsOn(test)
 }
