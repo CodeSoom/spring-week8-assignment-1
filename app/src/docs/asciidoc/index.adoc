@@ -2,7 +2,7 @@
 
 == GET /products
 
-상품 목록을 JSON 형태로 돌려준다.
+상품 목록을 JSON 형태로 조회한다.
 
 include::{snippets}/get-products/http-request.adoc[]
 
