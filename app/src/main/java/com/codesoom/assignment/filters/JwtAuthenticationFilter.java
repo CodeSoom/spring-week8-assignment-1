@@ -16,9 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filter For JWT Authentication
+ */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final AuthenticationService authenticationService;
 
+    /**
+     * JwtAuthenticationFilter 생성자 메서드
+     * 
+     * @param authenticationManager - Authentication 객체 생성 및 인증 처리 담당 클래스
+     * @param authenticationService - 인증 서비스
+     */
     public JwtAuthenticationFilter(
             AuthenticationManager authenticationManager,
             AuthenticationService authenticationService) {
@@ -26,6 +35,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * 필터 메서드
+     * 헤더의 JWT 토큰을 추출하여 인가, 인증 정보를 담은 Authentication 객체 후 SecurityContext에 저장한다.
+     *
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
