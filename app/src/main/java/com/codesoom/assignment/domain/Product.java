@@ -27,6 +27,11 @@ public class Product {
 
     private String imageUrl;
 
+    /**
+     * 현재 유저 정보를 수정한다.
+     * 
+     * @param source - 수정 정보가 들어있는 Product 객체
+     */
     public void changeWith(Product source) {
         this.name = source.name;
         this.maker = source.maker;
