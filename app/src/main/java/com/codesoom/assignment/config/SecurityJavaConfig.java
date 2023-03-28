@@ -28,7 +28,6 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
      * addFilterBefore - JwtAuthenticationFilter 이전 필터에 authenticationErrorFilter 필터 추가 
      * SessionCreationPolicy.STATELESS - 세션을 통한 인증 정책 비활성화 (JWT 를 사용하기 때문)
      * exceptionHandling - 인증 및 인가예외 발생 시 401 에러 응답
-     * @EnableGlobalMethodSecurity(prePostEnabled = true) - 어노테이션 기반 메서드 보안 기능 활성화 (Controller의 @PreAuthorize 사용 중)
      *
      * @param http the {@link HttpSecurity} to modify
      * @throws Exception

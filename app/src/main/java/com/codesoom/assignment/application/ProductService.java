@@ -49,7 +49,7 @@ public class ProductService {
      *
      * @param id - 제품 고유 식별 ID.
      * @return ID에 대한 제품.
-     * @Throws ProductNotFoundException - ID에 대한 제품이 없을 경우 예외 발생.
+     * @throws ProductNotFoundException - ID에 대한 제품이 없을 경우 예외 발생.
      */
     public Product getProduct(Long id) {
         return findProduct(id);

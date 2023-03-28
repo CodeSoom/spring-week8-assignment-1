@@ -39,7 +39,7 @@ public class AuthenticationService {
      *
      * @param email - 요청 이메일
      * @param password - 평문 형태의 비밀번호
-     * @Throws LoginFailException - 유효한 이메일이 없거나, 비밀번호가 일치하지 않을 때 발생.
+     * @throws LoginFailException - 유효한 이메일이 없거나, 비밀번호가 일치하지 않을 때 발생.
      * @return JWT 토큰.
      */
     public String login(String email, String password) {
