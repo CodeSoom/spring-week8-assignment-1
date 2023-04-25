@@ -25,6 +25,17 @@ include::{snippets}/register-user/http-response.adoc[]
 include::{snippets}/register-user-invalidAttributes/httpie-request.adoc[]
 include::{snippets}/register-user-invalidAttributes/http-response.adoc[]
 
+== /PATCH /users/:id
+인가된 유저가 유저의 정보를 변경요청할 경우 해당 유저의 정보를 변경한다.
+include::{snippets}/updateUser-validAttributes/httpie-request.adoc[]
+include::{snippets}/updateUser-validAttributes/http-response.adoc[]
+
+== /DELETE /users/:id
+ADMIN 유저권한이 있는 관리자가 특정 유저를 삭제 요청할 경우 삭제한다.
+
+include::{snippets}/destroy-user/httpie-request.adoc[]
+include::{snippets}/destroy-user/http-response.adoc[]
+
 == GET /products
 
 상품 목록을 JSON 형태로 돌려준다.

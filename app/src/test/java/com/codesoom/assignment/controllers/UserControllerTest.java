@@ -162,7 +162,8 @@ class UserControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"TEST\"")
-                ));
+                ))
+                .andDo(document("updateUser-validAttributes"));
 
         verify(userService)
                 .updateUser(eq(1L), any(UserModificationData.class), eq(1L));
@@ -225,7 +226,8 @@ class UserControllerTest {
                 delete("/users/1")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("destroy-user"));
 
         verify(userService).deleteUser(1L);
     }
