@@ -12,6 +12,18 @@ include::{snippets}/login/response-body.adoc[]
 - 로그인 실패(이메일 존재하지 않는 경우 || 비밀번호 일치하지 않는 경우)
 include::{snippets}/login-wrong-password/response-body.adoc[]
 
+== /POST /users
+유저를 등록하고 id, email name 을 JSON 형태로 돌려준다.
+
+- 유저등록 Request
+include::{snippets}/register-user/httpie-request.adoc[]
+
+- 유저 등록 Response
+include::{snippets}/register-user/http-response.adoc[]
+
+- 유저 등록 실패
+include::{snippets}/register-user-invalidAttributes/httpie-request.adoc[]
+include::{snippets}/register-user-invalidAttributes/http-response.adoc[]
 
 == GET /products
 
