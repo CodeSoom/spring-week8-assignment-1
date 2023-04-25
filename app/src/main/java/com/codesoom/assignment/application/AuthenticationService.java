@@ -29,6 +29,15 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Returns accessToken in application. it is JsonWebToken for Authentication
+     *
+     * @param email Email is the userId.
+     * @param password Password is user`s password to login
+     * @return accessToken
+     * @throws LoginFailException in case password not match user`s password in database or
+     * Wrong email
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +49,23 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     *Returns userId from AccessToken
+     *
+     * @param accessToken is JsonWebToken for Authentication
+     * @return userId
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * Returns user`s roll for Authorization
+     *
+     * @param userId userId is the identifier of the User
+     * @return List of roll for Authorization
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }

@@ -1,5 +1,18 @@
 = 고양이 장난감 가게 API
 
+== POST /login
+유저가 로그인하면 accessToken 을 반환한다.
+
+- 로그인 Reqeust
+include::{snippets}/login/httpie-request.adoc[]
+
+- 로그인 Response
+include::{snippets}/login/response-body.adoc[]
+
+- 로그인 실패(이메일 존재하지 않는 경우 || 비밀번호 일치하지 않는 경우)
+include::{snippets}/login-wrong-password/response-body.adoc[]
+
+
 == GET /products
 
 상품 목록을 JSON 형태로 돌려준다.

@@ -42,7 +42,7 @@ public class ProductService {
      *
      * @param id ID is the identifier of the product.
      * @return the product with given ID.
-     * @throws ProductNotFoundException in case any product doesntt exist with the given ID.
+     * @throws ProductNotFoundException in case any product doesn't exist with the given ID.
      * is not existed.
      */
     public Product getProduct(Long id) {
