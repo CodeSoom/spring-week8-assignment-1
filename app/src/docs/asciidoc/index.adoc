@@ -50,3 +50,19 @@ include::{snippets}/get-products/http-response.adoc[]
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+== POST /products
+인증된 유저가 상품등록 요청을 할 경우 상품을 등록할 수 있다.
+
+include::{snippets}/create-product-validAttributes/httpie-request.adoc[]
+include::{snippets}/create-product-validAttributes/http-response.adoc[]
+
+== PATCH /products/:id
+인증된 유저가 상품 변경을 요청할 경우 상품의 (name, maker, price, imageUrl) 을 변경할 수 있다.
+include::{snippets}/update-product/httpie-request.adoc[]
+include::{snippets}/update-product/http-response.adoc[]
+
+== DELETE /products/:id
+인증된 유저가 상품 삭제 요청을 할 경우 상품을 삭제할 수 있다.
+include::{snippets}/delete-product/httpie-request.adoc[]
+include::{snippets}/delete-product/http-response.adoc[]
