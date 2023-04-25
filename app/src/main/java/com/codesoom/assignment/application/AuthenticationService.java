@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for Authentication
+ *
+ * @author sim
+ */
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -29,6 +34,14 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 이메일과 패스워드를 통해 로그인 한다.
+     *
+     * @param email - 요청 이메일
+     * @param password - 평문 형태의 비밀번호
+     * @throws LoginFailException - 유효한 이메일이 없거나, 비밀번호가 일치하지 않을 때 발생.
+     * @return JWT 토큰.
+     */
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginFailException(email));
@@ -40,11 +53,23 @@ public class AuthenticationService {
         return jwtUtil.encode(user.getId());
     }
 
+    /**
+     * AccessToken에서 userId를 추출한다.
+     *
+     * @param accessToken - JWT AccessToken
+     * @return JWT AccessToken에서 추출한 userID.
+     */
     public Long parseToken(String accessToken) {
         Claims claims = jwtUtil.decode(accessToken);
         return claims.get("userId", Long.class);
     }
 
+    /**
+     * userId에 대한 권한 목록을 조회한다.
+     *
+     * @param userId - 유저 고유 식별 id
+     * @return 유저에 대한 권한 리스트.
+     */
     public List<Role> roles(Long userId) {
         return roleRepository.findAllByUserId(userId);
     }

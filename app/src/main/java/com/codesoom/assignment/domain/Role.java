@@ -19,11 +19,22 @@ public class Role {
     @Getter
     private String name;
 
+    /**
+     * Role에 대한 생성자 메서드
+     *
+     * @param userId - 유저 고유 식별 ID
+     * @param name - 인가할 권한 이름
+     */
     public Role(Long userId, String name) {
         this.userId = userId;
         this.name = name;
     }
 
+    /**
+     * Role에 대한 생성자 메서드
+     * 
+     * @param name - 인가할 권한 이름
+     */
     public Role(String name) {
         this(null, name);
     }
