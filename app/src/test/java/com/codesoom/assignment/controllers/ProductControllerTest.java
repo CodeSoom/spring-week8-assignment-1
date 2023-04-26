@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,13 +111,14 @@ class ProductControllerTest {
 
     @Test
     void deatilWithExsitedProduct() throws Exception {
-        mockMvc.perform(
-                        get("/products/1")
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/products/{id}",1)
                                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("쥐돌이")))
-                .andDo(document("get-product"));
+                .andDo(document("get-product",pathParameters(
+                        parameterWithName("id").description("상품아이디")
+                )));
     }
 
     @Test
