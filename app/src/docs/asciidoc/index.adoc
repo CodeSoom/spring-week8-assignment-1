@@ -52,9 +52,13 @@ include::{snippets}/get-product/http-request.adoc[]
 include::{snippets}/get-product/http-response.adoc[]
 
 == POST /products
-인증된 유저가 상품등록 요청을 할 경우 상품을 등록할 수 있다.
+Request fields:
+include::{snippets}/create-product-validAttributes/request-fields.adoc[]
 
+HTTP reqeust:
 include::{snippets}/create-product-validAttributes/httpie-request.adoc[]
+
+HTTP response:
 include::{snippets}/create-product-validAttributes/http-response.adoc[]
 
 == PATCH /products/:id
