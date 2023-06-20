@@ -33,6 +33,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Returns User from Currently created User
+     *
+      * @param registrationData RegistrationData is RequestData for Creating User
+     * @return User
+     */
     public User registerUser(UserRegistrationData registrationData) {
         String email = registrationData.getEmail();
         if (userRepository.existsByEmail(email)) {

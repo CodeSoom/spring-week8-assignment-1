@@ -1,9 +1,44 @@
 = 고양이 장난감 가게 API
 
+== POST /login
+유저가 로그인하면 accessToken 을 반환한다.
+
+- 로그인 Reqeust
+include::{snippets}/login/httpie-request.adoc[]
+
+- 로그인 Response
+include::{snippets}/login/response-body.adoc[]
+
+- 로그인 실패(이메일 존재하지 않는 경우 || 비밀번호 일치하지 않는 경우)
+include::{snippets}/login-wrong-password/response-body.adoc[]
+
+== /POST /users
+유저를 등록하고 id, email name 을 JSON 형태로 돌려준다.
+
+- 유저등록 Request
+include::{snippets}/register-user/httpie-request.adoc[]
+
+- 유저 등록 Response
+include::{snippets}/register-user/http-response.adoc[]
+
+- 유저 등록 실패
+include::{snippets}/register-user-invalidAttributes/httpie-request.adoc[]
+include::{snippets}/register-user-invalidAttributes/http-response.adoc[]
+
+== /PATCH /users/:id
+인가된 유저가 유저의 정보를 변경요청할 경우 해당 유저의 정보를 변경한다.
+include::{snippets}/updateUser-validAttributes/httpie-request.adoc[]
+include::{snippets}/updateUser-validAttributes/http-response.adoc[]
+
+== /DELETE /users/:id
+ADMIN 유저권한이 있는 관리자가 특정 유저를 삭제 요청할 경우 삭제한다.
+
+include::{snippets}/destroy-user/httpie-request.adoc[]
+include::{snippets}/destroy-user/http-response.adoc[]
+
 == GET /products
 
 상품 목록을 JSON 형태로 돌려준다.
-
 include::{snippets}/get-products/http-request.adoc[]
 
 include::{snippets}/get-products/http-response.adoc[]
@@ -12,6 +47,29 @@ include::{snippets}/get-products/http-response.adoc[]
 
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
+PathVariable:
+include::{snippets}/get-product/path-parameters.adoc[]
+
 include::{snippets}/get-product/http-request.adoc[]
 
 include::{snippets}/get-product/http-response.adoc[]
+
+== POST /products
+Request fields:
+include::{snippets}/create-product-validAttributes/request-fields.adoc[]
+
+HTTP reqeust:
+include::{snippets}/create-product-validAttributes/httpie-request.adoc[]
+
+HTTP response:
+include::{snippets}/create-product-validAttributes/http-response.adoc[]
+
+== PATCH /products/:id
+인증된 유저가 상품 변경을 요청할 경우 상품의 (name, maker, price, imageUrl) 을 변경할 수 있다.
+include::{snippets}/update-product/httpie-request.adoc[]
+include::{snippets}/update-product/http-response.adoc[]
+
+== DELETE /products/:id
+인증된 유저가 상품 삭제 요청을 할 경우 상품을 삭제할 수 있다.
+include::{snippets}/delete-product/httpie-request.adoc[]
+include::{snippets}/delete-product/http-response.adoc[]
