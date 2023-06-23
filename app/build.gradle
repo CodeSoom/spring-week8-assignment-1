@@ -13,6 +13,9 @@ plugins {
     // Spring
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    // Asciidoctor
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 sourceCompatibility = '1.8'
@@ -22,6 +25,7 @@ configurations {
     runtimeClasspath {
         extendsFrom developmentOnly
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -76,6 +80,9 @@ dependencies {
     // Spring Developer Tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+//    // Spring REST Docs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     // Spring Boot Test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -90,4 +97,36 @@ application {
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+//    outputs.dir snippetsDir
+}
+
+//ext {
+//    snippetsDir = file("$buildDir/generated-snippets")
+//}
+
+asciidoctor {
+//    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+asciidoctor.doFirst {
+    delete file("src/main/resources/static/docs")
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("$buildDir/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
 }
