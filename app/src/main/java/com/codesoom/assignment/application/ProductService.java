@@ -24,10 +24,20 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Returns all products in this application
+     * @return all products
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
+    /**
+     * Returns the product with given ID
+     * @param id is the identifier of the product
+     * @return the product with given ID
+     * @throws ProductNotFoundException
+     */
     public Product getProduct(Long id) {
         return findProduct(id);
     }
@@ -52,6 +62,7 @@ public class ProductService {
 
         return product;
     }
+
 
     private Product findProduct(Long id) {
         return productRepository.findById(id)
