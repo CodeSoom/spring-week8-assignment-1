@@ -1,9 +1,23 @@
 = 고양이 장난감 가게 API
+:toc: left
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toclevels: 1
+:sectlinks:
 
-== GET /product/{id}
-
+== 상품 단건 조회
 상품에 대한 자세한 정보를 JSON 형태로 돌려준다.
 
+=== 요청
 include::{snippets}/product-inquiry/http-request.adoc[]
 
+include::{snippets}/product-inquiry/path-parameters.adoc[]
+
+=== 응답
 include::{snippets}/product-inquiry/http-response.adoc[]
+
+include::{snippets}/product-inquiry/response-fields.adoc[]
+
+=== curl
+include::{snippets}/product-inquiry/curl-request.adoc[]
