@@ -21,3 +21,61 @@ include::{snippets}/product-inquiry/response-fields.adoc[]
 
 === curl
 include::{snippets}/product-inquiry/curl-request.adoc[]
+
+== 상품 목록 조회
+상품 전체 목록에 대한 정보를 JSON 형태로 돌려준다.
+
+=== 요청
+include::{snippets}/product-inquiry-all/http-request.adoc[]
+
+=== 응답
+include::{snippets}/product-inquiry-all/http-response.adoc[]
+
+include::{snippets}/product-inquiry-all/response-fields.adoc[]
+
+=== curl
+include::{snippets}/product-inquiry-all/curl-request.adoc[]
+
+== 상품 생성
+상품 생성 후 생성한 상품에 대한 정보를 JSON 형태로 돌려준다.
+
+=== 요청
+include::{snippets}/product-create/http-request.adoc[]
+
+=== 응답
+include::{snippets}/product-create/http-response.adoc[]
+
+include::{snippets}/product-create/response-fields.adoc[]
+
+=== curl
+include::{snippets}/product-create/curl-request.adoc[]
+
+== 상품 수정
+상품 수정 후 생성한 상품에 대한 정보를 JSON 형태로 돌려준다.
+
+=== 요청
+include::{snippets}/product-update/http-request.adoc[]
+
+include::{snippets}/product-update/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/product-update/http-response.adoc[]
+
+include::{snippets}/product-update/response-fields.adoc[]
+
+=== curl
+include::{snippets}/product-update/curl-request.adoc[]
+
+== 상품 삭제
+상품을 삭제할 아이디를 받으면 상품을 삭제한다.
+
+=== 요청
+include::{snippets}/product-delete/http-request.adoc[]
+
+include::{snippets}/product-delete/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/product-delete/http-response.adoc[]
+
+=== curl
+include::{snippets}/product-delete/curl-request.adoc[]
