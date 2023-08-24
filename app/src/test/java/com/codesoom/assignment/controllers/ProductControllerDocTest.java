@@ -143,4 +143,24 @@ public class ProductControllerDocTest extends RestDocsSupporter {
                         )
                 ));
     }
+
+    @Test
+    void RESTDOC_상품_삭제() throws Exception {
+        given(productService.deleteProduct(anyLong()))
+                .willReturn(TEST_PRODUCT);
+
+        ResultActions result = mockMvc.perform(delete("/products/{productId}", 1L)
+                .accept(APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN));
+
+        result.andExpect(status().isOk())
+                .andDo(document("product-delete",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("회원 인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("productId").description("삭제 할 상품 아이디")
+                        )
+                ));
+    }
 }
