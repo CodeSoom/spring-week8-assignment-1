@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:~/data/demo
+    url: jdbc:mariadb://mariadb:3306/test
+    username: root
+    password: root1234
   jpa:
     hibernate:
       ddl-auto: update
